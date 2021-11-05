@@ -1,13 +1,15 @@
 package com.gh.ghdg.sysMgr.core.service.system;
 
 import cn.hutool.core.util.StrUtil;
+import com.gh.ghdg.common.cache.redis.RedisUtil;
+import com.gh.ghdg.common.utils.constant.Constants;
 import com.gh.ghdg.sysMgr.bean.TreeEntity;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
 import com.gh.ghdg.sysMgr.bean.enums.TypeEnum;
 import com.gh.ghdg.sysMgr.core.dao.system.*;
 import com.gh.ghdg.sysMgr.core.service.TreeService;
-import com.gh.ghdg.common.utils.ContextHelper;
 import com.gh.ghdg.common.utils.exception.MyException;
+import com.gh.ghdg.sysMgr.security.JwtUtil;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,9 @@ public class MenuService extends TreeService<Menu, MenuDao> {
     
     @Autowired
     private PermissionService permissionService;
+    
+    @Autowired
+    private RedisUtil cache;
     
     /**
      * 保存
@@ -150,22 +155,22 @@ public class MenuService extends TreeService<Menu, MenuDao> {
         if(roleId==null|| TreeEntity.ROOT_ID.equals(roleId)) {
             return null;
         }
-        
+
         List<Menu> selected = Lists.newArrayList();
         Role r = roleDao.getOne(roleId);
         for(RoleMenu rm : r.getRoleMenus()) {
             Menu m = rm.getMenu();
-            
+
             List<Permission> perms = Lists.newArrayList();
             for(RoleMenuPermission rmp : rm.getRoleMenuPermissions()) {
                 perms.add(rmp.getPermission());
             }
             permissionService.sort(perms);
             m.setAuthPermissions(perms);
-            
+
             selected.add(m);
         }
-        
+
         List<Menu> roots = asTreeCheckable(selected);
         recurSort(roots);
         return roots;
@@ -209,20 +214,20 @@ public class MenuService extends TreeService<Menu, MenuDao> {
      * @return
      */
     public List<Menu> navigation() {
-        List<Menu> roots = ContextHelper.getCurMenuRoots();
+        List<Menu> roots = cache.get(Constants.CUR_MENU_ROOTS);
         if(null == roots) {
             roots = getCur();
         }
         return roots;
     }
-    
+
     /**
      * 当前用户
      * @return
      */
     protected List<Menu> getCur() {
         List<Menu> menus = Lists.newArrayList();
-        for(UserRole ur :  userRoleDao.findByUser(ContextHelper.getCurUser())) {
+        for(UserRole ur :  userRoleDao.findByUser(JwtUtil.getCurUser())) {
             for(RoleMenu rm : ur.getRole().getRoleMenus()) {
                 Menu m = rm.getMenu();
                 if(m.getType().equals(TypeEnum.MenuType.menu) && !menus.contains(m)) {
@@ -236,14 +241,14 @@ public class MenuService extends TreeService<Menu, MenuDao> {
                 }
             }
         }
-        
+
         List<Menu> roots = asTree(menus);
         recurSort(roots);
         recurNavigation(roots, menus);
-        
-        ContextHelper.setCurMenus(menus);
-        ContextHelper.setCurMenuRoots(roots);
-        
+
+        cache.set(Constants.CUR_MENUS,menus);
+        cache.set(Constants.CUR_MENU_ROOTS,roots);
+
         return roots;
     }
     

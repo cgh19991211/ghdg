@@ -17,4 +17,5 @@ public interface UserRoleDao extends BaseDao<UserRole> {
     
     @Query("select u from UserRole u where u.role = ?1")
     List<UserRole> findByRole(Role role);
+    
 }

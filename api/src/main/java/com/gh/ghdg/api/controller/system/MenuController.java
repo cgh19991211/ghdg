@@ -87,7 +87,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
     public List<Menu> navigation() {
         return service.navigation();
     }
-    
+
     /**
      * 保存分配角色(分配)
      * @param t
@@ -126,7 +126,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
     public List<Menu> tree4Role(String roleId) {
         return service.tree4Role(roleId);
     }
-    
+
     /**
      * 角色可分配的菜单
      * @param roleId

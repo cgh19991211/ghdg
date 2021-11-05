@@ -132,7 +132,8 @@ public class MyExceptionHandler {
 
 		return requestForward(req, is400 ? 400 : 500);
 	}
-
+	
+	
 	/**
 	 * 取到实体校验错误
 	 * @param e

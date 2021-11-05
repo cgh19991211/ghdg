@@ -17,7 +17,7 @@ import java.util.List;
 public class ModuleController extends TreeController<Module, ModuleDao, ModuleService> {
     
     @PostMapping("save")
-//    @RequiresPermissions("module:cud")
+    @RequiresPermissions("module:cud")
     public Result save(@ModelAttribute("t")Module t)throws Exception{
         return super.save(t);
     }

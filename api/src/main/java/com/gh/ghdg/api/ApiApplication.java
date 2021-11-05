@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import springfox.documentation.oas.annotations.EnableOpenApi;
 
 @EnableCaching
 @ComponentScan(basePackages = "com.gh.ghdg")
@@ -15,7 +14,6 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EnableJpaRepositories(basePackages = "com.gh.ghdg")
 @EnableJpaAuditing
 @SpringBootApplication
-@EnableOpenApi
 public class ApiApplication {
 
     public static void main(String[] args) {

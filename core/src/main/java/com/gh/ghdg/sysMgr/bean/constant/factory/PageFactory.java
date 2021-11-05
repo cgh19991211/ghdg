@@ -42,9 +42,9 @@ public class PageFactory<T> {
             Page<T> page = new Page<>((offset / limit + 1), limit, sortName);
             Sort sort;
             if (Order.ASC.getDes().equals(order)) {
-                sort = Sort.by(Sort.Direction.ASC, order);
+                sort = Sort.by(Sort.Direction.ASC, sortName);
             } else {
-                sort = Sort.by(Sort.Direction.DESC, order);
+                sort = Sort.by(Sort.Direction.DESC, sortName);
         
             }
             page.setSort(sort);

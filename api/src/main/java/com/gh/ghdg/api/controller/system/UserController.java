@@ -42,7 +42,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
         page.addFilter(SearchFilter.build("status",SearchFilter.Operator.GT,0));
         page = userService.queryPage(page);
         
-        return Result.suc(page.getRecords());
+        return Result.suc(page);
     }
     
     /**

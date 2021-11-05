@@ -8,7 +8,7 @@ public class TypeEnum {
     
     @AllArgsConstructor
     public enum MenuType implements IBaseEnum<Integer> {
-        menu(0),button(1);
+        menu(0),button(1),module(3);
 
         private int value;
     

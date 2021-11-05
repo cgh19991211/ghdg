@@ -57,6 +57,17 @@ public class Result {
     public static Result suc(String message, Object data) {
         return new Result(true, message, data);
     }
+    
+    /**
+     * 成功，带返回数据，与返回码
+     * @param message
+     * @param data
+     * @param code
+     * @return
+     */
+    public static Result suc( String message, Object data, int code){
+        return new Result(true,message,data,code);
+    }
 
     /**
      * 保存成功

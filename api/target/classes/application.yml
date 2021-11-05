@@ -6,7 +6,7 @@ spring:
   application:
     name: springfox-swagger
 swagger:
-  enable: true
+  enable: false
   application-name: ${spring.application.name}
   application-version: 1.0
   application-description: springfox swagger 3.0整合Demo

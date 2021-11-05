@@ -4,13 +4,14 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.gh.ghdg.common.cache.redis.RedisUtil;
-import com.gh.ghdg.common.utils.ContextHelper;
+import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.common.utils.constant.Constants;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.core.service.system.UserService;
 import com.gh.ghdg.sysMgr.security.JwtUtil;
 import io.swagger.annotations.Api;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,12 +71,31 @@ public class LoginController {
     }
     
     /**
+     * 退出登陆，服务器在缓存中清除token，与token为键的用户信息缓存
+     * 客户端收到退出成功的Response之后也清除本地的token:AccessToken,RefreshToken
+     * @param user
+     * @return
+     */
+    @GetMapping("logout")
+    @RequiresAuthentication
+    public Result logout(){
+        User curUser = JwtUtil.getCurUser();
+        if(curUser==null){
+            return Result.error("no such user");
+        }
+        cache.del(Constants.REFRESH_TOKEN_START_TIME+curUser.getUsername(),
+                HttpKit.getAccessToken(),
+                HttpKit.getRefreshToken());
+        return Result.suc("成功退出登陆");
+    }
+    
+    /**
      * 更新token,AccessToken过期后请求这个接口
      *
      * @param refreshToken
      * @return
      */
-    @GetMapping("/accessToken/refresh/{refreshToken}")
+    @GetMapping("/refreshToken/{refreshToken}")
     public Result accessTokenRefresh(@PathVariable("refreshToken") String refreshToken){
         DecodedJWT decode = JWT.decode(refreshToken);
         User user = userService.findByUsername(decode.getClaim("username").asString());
@@ -117,7 +137,7 @@ public class LoginController {
     
     @GetMapping("curUser")
     public User curUser() {
-        return userService.one(ContextHelper.getCurUser().getId()).get();
+        return JwtUtil.getCurUser();
     }
     
 }

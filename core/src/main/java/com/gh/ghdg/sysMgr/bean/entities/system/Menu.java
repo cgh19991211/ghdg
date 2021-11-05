@@ -41,7 +41,7 @@ public class Menu extends TreeEntity<Menu> {
     private String tip;
     
     @Convert(converter = TypeEnum.MenuType.Converter.class)
-    private TypeEnum.MenuType type = TypeEnum.MenuType.menu;//0-menu 1-button, default 0-menu
+    private TypeEnum.MenuType type = TypeEnum.MenuType.menu;//0-menu 1-button 3-module, default 0-menu
     
     @Convert(converter = Status.Converter.class)
     public Status status = Status.生效;//1-生效 0-失效  默认生效
@@ -72,12 +72,11 @@ public class Menu extends TreeEntity<Menu> {
     public String toString() {
         return "Menu{" +
                 "id='" + id + '\'' +
-                ", createdBy='" + createdBy + '\'' +
+                ", createdBy='" + createdBy.getUsername() + '\'' +
                 ", createdDate=" + createdDate +
-                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+                ", lastModifiedBy='" + lastModifiedBy.getUsername() + '\'' +
                 ", lastModifiedDate=" + lastModifiedDate +
-                ", lastModifiedDate0=" + lastModifiedDate0 +
-                ", parent=" + parent +
+                ", parent=" + parent.getMenuName() +
                 ", menuCode='" + menuCode + '\'' +
                 ", menuName='" + menuName + '\'' +
                 ", tip='" + tip + '\'' +
