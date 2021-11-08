@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = "权限接口")
+//@Api(tags = "权限接口")
 @RestController
 @RequestMapping("sys/permission")
 public class PermissionController extends DisplaySeqController<Permission,PermissionDao, PermissionService> {
@@ -24,14 +24,13 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      */
     @PostMapping("save")
     @RequiresPermissions("menu:permission:cud")
-    @Override
-    public Result save(@ModelAttribute("t") Permission t) throws Exception {
+    public Result permissionSave(@ModelAttribute("t") Permission t) throws Exception {
         return super.save(t);
     }
     
     @PostMapping("update")
     @RequiresPermissions("menu:permission:cud")
-    public Result update(@ModelAttribute("t")Permission t) throws Exception{
+    public Result permissionUpdate(@ModelAttribute("t")Permission t) throws Exception{
         return Result.saveSuc(super.save(t));
     }
     
@@ -44,8 +43,7 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      */
     @PostMapping("move")
     @RequiresPermissions("menu:permission:cud")
-    @Override
-    public Result move(@ModelAttribute("t") Permission t, String overId, String position) throws Exception {
+    public Result permissionMove(@ModelAttribute("t") Permission t, String overId, String position) throws Exception {
         return super.move(t, overId, position);
     }
     
@@ -56,8 +54,7 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      */
     @GetMapping("delete/{id}")
     @RequiresPermissions("menu:permission:cud")
-    @Override
-    public Result delete(@ModelAttribute("t") Permission t) throws Exception {
+    public Result permissionDelete(@ModelAttribute("t") Permission t) throws Exception {
         return super.delete(t);
     }
     
@@ -69,7 +66,7 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      */
     @GetMapping("list")
     @RequiresPermissions("menu:permission:r")
-    public List<Permission> list(Permission t) throws Exception {
+    public List<Permission> permissionList(Permission t) throws Exception {
         return service.list(t);
     }
 

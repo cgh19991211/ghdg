@@ -106,9 +106,9 @@ public class JwtUtil {
         if(StrUtil.isEmpty(userId)){
             return null;
         }
-        UserService userService = SpringContextUtil.getBean(UserService.class);
-        Optional<User> one = userService.one(userId);
-        return one.get();
+        UserDao userDao = SpringContextUtil.getBean(UserDao.class);
+        Optional<User> byId = userDao.findById(userId);
+        return byId.get();
     }
     
     /**

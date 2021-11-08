@@ -1,6 +1,6 @@
 package com.gh.ghdg.sysMgr.core.service.system;
 
-import com.gh.ghdg.common.BaseService;
+import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.sysMgr.bean.entities.system.Role;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;

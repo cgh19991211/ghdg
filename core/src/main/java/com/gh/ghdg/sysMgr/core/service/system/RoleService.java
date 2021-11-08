@@ -1,7 +1,7 @@
 package com.gh.ghdg.sysMgr.core.service.system;
 
 import cn.hutool.core.util.StrUtil;
-import com.gh.ghdg.common.BaseService;
+import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.common.utils.exception.MyException;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
 import com.gh.ghdg.sysMgr.core.dao.system.MenuDao;

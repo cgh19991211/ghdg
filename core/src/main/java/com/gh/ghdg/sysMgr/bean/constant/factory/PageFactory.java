@@ -20,16 +20,18 @@ public class PageFactory<T> {
 
     public Page<T> defaultPage() {
         HttpServletRequest request = HttpKit.getRequest();
-        //每页多少条数据
-        int limit = Integer.valueOf(request.getParameter("limit"));
+        //每页多少条数据,默认20条
+        String nums = request.getParameter("limit");
+        int limit = Integer.valueOf(StrUtil.isEmpty(nums)?"20":nums);
         String pageNum = request.getParameter("page");
         //每页的偏移量(本页当前有多少条)
         int offset = 0;
         if (StrUtil.isNotEmpty(pageNum)) {
             offset = (Integer.valueOf(pageNum) - 1) * limit;
         } else {
-
-            offset = Integer.valueOf(request.getParameter("offset"));
+            String offset1 = request.getParameter("offset");
+            offset1 = offset1==null?"0":offset1;
+            offset = Integer.valueOf(offset1);
         }
         //排序字段名称
         String sortName = request.getParameter("sort");

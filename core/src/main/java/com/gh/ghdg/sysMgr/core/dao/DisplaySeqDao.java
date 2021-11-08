@@ -1,6 +1,6 @@
 package com.gh.ghdg.sysMgr.core.dao;
 
-import com.gh.ghdg.common.BaseDao;
+import com.gh.ghdg.sysMgr.BaseDao;
 import com.gh.ghdg.sysMgr.bean.DisplaySeqEntity;
 import org.springframework.data.repository.NoRepositoryBean;
 

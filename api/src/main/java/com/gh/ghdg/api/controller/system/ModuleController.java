@@ -5,20 +5,19 @@ import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.sysMgr.bean.entities.system.Module;
 import com.gh.ghdg.sysMgr.core.dao.system.ModuleDao;
 import com.gh.ghdg.sysMgr.core.service.system.ModuleService;
-import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = "模块接口")
+//@Api(tags = "模块接口")
 @RestController
 @RequestMapping("sys/module")
 public class ModuleController extends TreeController<Module, ModuleDao, ModuleService> {
     
     @PostMapping("save")
     @RequiresPermissions("module:cud")
-    public Result save(@ModelAttribute("t")Module t)throws Exception{
+    public Result moduleSave(@ModelAttribute("t")Module t)throws Exception{
         return super.save(t);
     }
     
@@ -31,7 +30,7 @@ public class ModuleController extends TreeController<Module, ModuleDao, ModuleSe
      */
     @PostMapping("move")
     @RequiresPermissions("module:cud")
-    public Result move(@ModelAttribute("t") Module t, String overId, String position) throws Exception {
+    public Result moduleMove(@ModelAttribute("t") Module t, String overId, String position) throws Exception {
         return super.move(t, overId, position);
     }
     
@@ -40,10 +39,9 @@ public class ModuleController extends TreeController<Module, ModuleDao, ModuleSe
      * @param t
      * @return
      */
-    @Override
     @GetMapping("delete/{id}")
     @RequiresPermissions("module:cud")
-    public Result delete(@ModelAttribute("t") Module t) throws Exception {
+    public Result moduleDelete(@ModelAttribute("t") Module t) throws Exception {
         return super.delete(t);
     }
     
@@ -53,7 +51,7 @@ public class ModuleController extends TreeController<Module, ModuleDao, ModuleSe
      */
     @GetMapping("tree")
     @RequiresPermissions("module:r|code:r")
-    public List<Module> tree() {
+    public List<Module> moduleTree() {
         return service.tree();
     }
 }

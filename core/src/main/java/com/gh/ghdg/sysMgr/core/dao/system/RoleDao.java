@@ -1,6 +1,6 @@
 package com.gh.ghdg.sysMgr.core.dao.system;
 
-import com.gh.ghdg.common.BaseDao;
+import com.gh.ghdg.sysMgr.BaseDao;
 import com.gh.ghdg.sysMgr.bean.entities.system.Role;
 import org.springframework.data.jpa.repository.Query;
 

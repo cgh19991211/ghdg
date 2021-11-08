@@ -15,15 +15,12 @@
       <module name="api" target="1.8" />
       <module name="core" target="1.8" />
       <module name="ghdg" target="1.8" />
-      <module name="manage" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api" options="-parameters" />
       <module name="core" options="-parameters" />
-      <module name="ghdg" options="" />
-      <module name="manage" options="-parameters" />
     </option>
   </component>
 </project>

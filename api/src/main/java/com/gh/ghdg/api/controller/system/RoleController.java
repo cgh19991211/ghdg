@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = "角色接口")
+//@Api(tags = "角色接口")
 @RestController
 @RequestMapping("/sys/role")
 public class RoleController extends BaseController<Role, RoleDao, RoleService> {
@@ -26,7 +26,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      */
     @PostMapping("save")
     @RequiresPermissions("role:cud")
-    public Result save(@ModelAttribute("t") Role t) throws Exception {
+    public Result roleSave(@ModelAttribute("t") Role t) throws Exception {
         return super.save(t);
     }
     
@@ -35,10 +35,9 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      * @param t
      * @return
      */
-    @Override
     @GetMapping("delete/{id}")
     @RequiresPermissions("role:cud")
-    public Result delete(@ModelAttribute("t") Role t) throws Exception {
+    public Result roleDelete(@ModelAttribute("t") Role t) throws Exception {
         return super.delete(t);
     }
     
@@ -49,7 +48,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      */
     @GetMapping("list")
     @RequiresPermissions(("role:r"))
-    public Result list(String name){
+    public Result roleList(String name){
         List roles = null;
         if(StrUtil.isEmpty(name)){
             roles = service.queryAll();
@@ -93,7 +92,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      */
     @GetMapping("tree")
     @RequiresPermissions("role:r")
-    public List<Role> tree(@ModelAttribute("t") Role t) {
+    public List<Role> roleTree(@ModelAttribute("t") Role t) {
         return service.tree(t);
     }
     
@@ -104,7 +103,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      */
     @GetMapping("tree4User")
     @RequiresPermissions("user:role:r")
-    public List<Role> tree4User(String userId){
+    public List<Role> roleTree4User(String userId){
         return service.tree4User(userId);
     }
     
@@ -115,7 +114,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      */
     @GetMapping("selectableTree4User")
     @RequiresPermissions("user:role:r")
-    public List<Role> selectableTree4User(String userId){
+    public List<Role> roleSelectableTree4User(String userId){
         return service.selectableTree4User(userId);
     }
     
@@ -127,7 +126,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      */
     @GetMapping("tree4Menu")
     @RequiresPermissions("menu:role:r")
-    public List<Role> tree4Menu( String menuId) {
+    public List<Role> roleTree4Menu( String menuId) {
         return service.tree4Menu( menuId);
     }
     
@@ -139,7 +138,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      */
     @GetMapping("treeSelectable4Menu")
     @RequiresPermissions("menu:role:cud")
-    public List<Role> treeSelectable4Menu(String menuId) {
+    public List<Role> roleTreeSelectable4Menu(String menuId) {
         return service.selectableTree4Menu( menuId);
     }
 }

@@ -2,7 +2,7 @@ package com.gh.ghdg.common.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.sysMgr.bean.Unique;
-import com.gh.ghdg.common.BaseEntity;
+import com.gh.ghdg.sysMgr.BaseEntity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

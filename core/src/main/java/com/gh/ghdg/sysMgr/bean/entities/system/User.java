@@ -2,7 +2,7 @@ package com.gh.ghdg.sysMgr.bean.entities.system;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gh.ghdg.common.BaseEntity;
+import com.gh.ghdg.sysMgr.BaseEntity;
 import com.gh.ghdg.sysMgr.bean.Unique;
 import com.gh.ghdg.sysMgr.bean.enums.Status;
 import lombok.Data;
@@ -22,17 +22,17 @@ import java.util.List;
 @Data
 public class User extends BaseEntity {
 
-    @NotBlank
+    @NotBlank(message = "用户名")
     @Unique(name = "用户名")
     @Length(max = 40,message = "用户密码不得超过40位")
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "密码不能为空")
     @Length(max = 40, message = "密码长度不超过40位")
     @JsonIgnore // Json输出忽略
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "盐不能为空")
     @Length(max = 8,message = "盐值长度不超过8位")
     @JsonIgnore // Json 忽略
     private String salt;
@@ -76,10 +76,6 @@ public class User extends BaseEntity {
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
-                ", createdBy=" + createdBy.getUsername() +
-                ", createdDate=" + createdDate +
-                ", lastModifiedBy=" + lastModifiedBy.getUsername() +
-                ", lastModifiedDate=" + lastModifiedDate +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", salt='" + salt + '\'' +

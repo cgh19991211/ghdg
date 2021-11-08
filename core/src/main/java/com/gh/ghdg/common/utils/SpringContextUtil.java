@@ -30,6 +30,7 @@ public class SpringContextUtil implements ApplicationContextAware {
     
     /**
      * 根据bean的clazz获取bean -- 适合用来取dao，或者service，因为是单例的
+     * 坑，要是需要获取bean来查询数据库，则需要获取dao，因为service最终也是调用dao的，但是获取service的话不会自动注入dao
      * @param clazz
      * @param <T>
      * @return

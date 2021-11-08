@@ -73,6 +73,11 @@ public class ShiroConfig {
         // 访问401和404页面不通过我们的Filter
         filterRuleMap.put("/401", "anon");
         filterRuleMap.put("/login", "anon");
+//        filterRuleMap.put("/swagger**/**", "anon");
+//        filterRuleMap.put("/webjars/**", "anon");
+//        filterRuleMap.put("/v3/**", "anon");
+//        filterRuleMap.put("/doc.html", "anon");
+        
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;
     }

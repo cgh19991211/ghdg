@@ -1,4 +1,4 @@
-package com.gh.ghdg.common;
+package com.gh.ghdg.sysMgr;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

@@ -12,14 +12,16 @@ import com.gh.ghdg.sysMgr.core.service.system.UserService;
 import com.gh.ghdg.sysMgr.security.JwtUtil;
 import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-@Api(tags = "登陆接口")
+//@Api(tags = "登陆控制器")
+//@Tag(name = "登陆控制器")
 @RestController
 public class LoginController {
     
@@ -36,6 +38,8 @@ public class LoginController {
      * 3，登录成功
      *                              ==4. 把token添加进缓存==
      */
+//    @Operation(summary = "登陆接口方法")
+//    @Parameter(name = "用户信息入参")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Result login(User userF) {
         String userName = userF.getUsername();
@@ -76,7 +80,8 @@ public class LoginController {
      * @param user
      * @return
      */
-    @GetMapping("logout")
+//    @Operation(summary = "登出接口方法")
+    @GetMapping("/logout")
     @RequiresAuthentication
     public Result logout(){
         User curUser = JwtUtil.getCurUser();
@@ -95,6 +100,8 @@ public class LoginController {
      * @param refreshToken
      * @return
      */
+//    @Operation(summary = "刷新token")
+//    @Parameter(description = "需要RefreshToken作为入参，以判断是否需要重新登陆")
     @GetMapping("/refreshToken/{refreshToken}")
     public Result accessTokenRefresh(@PathVariable("refreshToken") String refreshToken){
         DecodedJWT decode = JWT.decode(refreshToken);
@@ -135,9 +142,10 @@ public class LoginController {
         return Result.suc(map);
     }
     
-    @GetMapping("curUser")
-    public User curUser() {
-        return JwtUtil.getCurUser();
+//    @Operation(summary = "获取当前用户信息")
+    @GetMapping("/curUser")
+    public Result curUser() {
+        return Result.suc(JwtUtil.getCurUser());
     }
     
 }

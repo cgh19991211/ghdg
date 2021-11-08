@@ -1,7 +1,7 @@
 package com.gh.ghdg.sysMgr.bean.entities;
 
 import cn.hutool.core.util.StrUtil;
-import com.gh.ghdg.common.BaseEntity;
+import com.gh.ghdg.sysMgr.BaseEntity;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.UUIDHexGenerator;
 

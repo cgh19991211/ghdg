@@ -1,4 +1,4 @@
-package com.gh.ghdg.common;
+package com.gh.ghdg.sysMgr;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
@@ -40,6 +40,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
     
     private Class<T> klass;
 
+    //获取实体的clazz
     public BaseService(){
         klass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
@@ -113,7 +114,8 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      */
     @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public Optional<T> one(String id) {
-        return dao.findById(id);
+        Optional<T> byId = dao.findById(id);
+        return byId;
     }
     
     /**
@@ -197,14 +199,14 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
     @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public Page<T> queryPage(Page<T> page) {
         Pageable pageable = null;
-        if(page.getSort()!=null) {
+        if(page.getSort()!=null) {//按照自定义的sort来排序
             pageable = PageRequest.of(page.getCurrent()-1, page.getSize(), page.getSort());
-        }else{
+        }else{//默认根据id排序
             pageable = PageRequest.of(page.getCurrent()-1,page.getSize(), Sort.Direction.DESC,"id");
         }
         //获取当前实体的类型
-        Class <T> entityClass = (Class <T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        Specification<T> specification = DynamicSpecifications.bySearchFilter(page.getFilters(),entityClass);
+//        Class <T> entityClass = (Class <T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        Specification<T> specification = DynamicSpecifications.bySearchFilter(page.getFilters(),klass);
         org.springframework.data.domain.Page<T> pageResult  = dao.findAll(specification,pageable);
         page.setTotal(Integer.valueOf(pageResult.getTotalElements()+""));
         page.setRecords(pageResult.getContent());
@@ -289,7 +291,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      */
     public void checkTimestamp(T t) {
         if(StrUtil.isNotEmpty(t.getId())) {
-            if(DateUtil.compare(t.getLastModifiedDate(), t.getLastModifiedDate0())==0) {
+            if(DateUtil.compare(t.getLastModifiedDate(), t.getLastModifiedDate0())!=0) {
                 throw new MyException("数据不是最新，请刷新后再操作");
             }
         }

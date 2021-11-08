@@ -1,6 +1,8 @@
 package com.gh.ghdg.sysMgr.core.service.system;
 
-import com.gh.ghdg.common.BaseService;
+import cn.hutool.core.util.StrUtil;
+import com.gh.ghdg.common.utils.ReflectHelper;
+import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.common.utils.ToolUtil;
 import com.gh.ghdg.common.utils.constant.CommonRex;
 import com.gh.ghdg.common.utils.exception.MyException;
@@ -10,13 +12,19 @@ import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;
 import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.dao.system.UserRoleDao;
+import com.gh.ghdg.sysMgr.security.JwtUtil;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.hibernate.internal.util.StringHelper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -51,16 +59,20 @@ public class UserService extends BaseService<User, UserDao> {
     @Transactional
     public User save(User t) throws Exception{
         //TODO:检查用户名,手机号,email是否唯一
+        check(t);
         String id = t.getId();
-        check(id,t.getUsername(),"用户名");
-        //check(id, t.getIdNo(), "身份证号");
-        //check(id, t.getCellphoneNo(), "手机号");
-        //check(id, t.getEmail(), "Email");
-        if(StringHelper.isEmpty(t.getId())){
+        /**
+         * id为空，则是新增用户，否则是修改用户信息。
+         */
+        if(StrUtil.isEmpty(id)){
+            String password = t.getPassword();
+            checkValid(password);
             String salt = ToolUtil.getRandomString(4);
             t.setSalt(salt);
-            this.encryptPassword(t);
+            String encryptPassword = this.encryptPassword(password, salt);
+            t.setPassword(encryptPassword);
         }
+
         return super.save(t);
     }
 
@@ -141,50 +153,77 @@ public class UserService extends BaseService<User, UserDao> {
         }
     }
 
-//    @Transactional
-//    public User login(User user){
-//        String username = user.getUsername();
-//        User dbUser = userDao.findByUsername(username);
-//        String password = encryptPassword(user.getPassword(),dbUser.getSalt());
-//
-//
-//
-//        // 缓存
-//        user = dao.findByUsername(username);
-//        user.setLastLoginDate(new Date());
-//        user.setIp(ContextHelper.getRemoteIp());
-//        ContextHelper.setCurUser(user);
-//        return user;
-//    }
-
     /**
-     * 检查用户名、手机号、Email或身份证号是否被使用
+     * 检查用户名、手机号、Email是否被使用
      * @param id
      * @param value
      */
-    protected void check(String id, String value, String name){
-
+    protected void check(User user){
+        String id = user.getId();
+        String username = user.getUsername();
+        String phone = user.getPhone();
+        String email = user.getEmail();
+        Specification s1 = (Specification<User>)(root,query,cb)->{
+            List<Predicate> list = new ArrayList<>();
+            list.add(cb.equal(root.get("username"),username));
+            list.add(cb.equal(root.get("phone"),phone));
+            list.add(cb.equal(root.get("email"),email));
+            Predicate[] ps = new Predicate[list.size()];
+            return cb.or(list.toArray(ps));
+        };
+        //如果前端传进来的用户，带上了id，那就先检测id是否为空，
+        // 不为空的话需要查询id不等与传进来的id的用户，
+        Specification s2 = null;
+        if (StringHelper.isNotEmpty(id)) {
+            s2 = (Specification<User>) (root, query, cb) -> {
+                Predicate p = cb.notEqual(root.get("id"), id);
+                return cb.and(p);
+            };
+        }
+    
+        List<User> all = dao.findAll(s1.and(s2));
+        StringBuffer usedFields = new StringBuffer();usedFields.append('[');
+        StringBuffer usedValues = new StringBuffer();usedValues.append(('['));
+        for(User u:all){
+            String username1 = u.getUsername();
+            String phone1 = u.getPhone();
+            String email1 = u.getEmail();
+            if(StrUtil.equals(username,username1)){
+                usedFields.append("username").append(',');
+                usedValues.append(username).append(',');
+            }else if(StrUtil.equals(phone1,phone)) {
+                usedFields.append("phone").append(',');
+                usedValues.append(phone).append(',');
+            } else if(StrUtil.equals(email1,email)) {
+                usedFields.append("email").append(',');
+                usedValues.append(email).append(',');
+            }
+        }
+        if (all.size() > 0) {
+            usedFields.replace(usedFields.length()-1,usedFields.length(),"]");
+            usedValues.replace(usedValues.length()-1,usedValues.length(),"]");
+            throw new MyException(usedFields.toString() + " " + usedValues.toString() + " 已被使用");
+        }
     }
 
     /**
-     * 加密密码
-     * @param t
+     * 加密密码 根据当前用户盐
+     * @param
+     * @Return Hashed pwd
      */
-    @Transactional
-    protected void encryptPassword(User t) {
-        String password = t.getPassword();
+    protected String encryptPassword(String password) {
+        String encrypt = encryptPassword(password, JwtUtil.getCurUser().getSalt());
         // 验证
         checkValid(password);
         // 加密
-        String encrypt = encryptPassword(password, t.getSalt());
-        t.setPassword(encrypt);
+        return encrypt;
     }
 
     /**
      * 加密密码
      * @param password
      * @param salt
-     * @return
+     * @return hashed password
      */
     public String encryptPassword(String password, String salt) {
         return new SimpleHash(matcher.getHashAlgorithmName(), password, salt, matcher.getHashIterations()).toString();
@@ -192,11 +231,20 @@ public class UserService extends BaseService<User, UserDao> {
     
     /**
      * 重置密码
-     * @param t
+     * @param
      */
     @Transactional
-    public void resetPassword(User t) {
-        this.encryptPassword(t);
+    public void resetPassword(String password) {
+        checkValid(password);
+        User curUser = JwtUtil.getCurUser();
+        String salt = curUser.getSalt();
+        String encryptedPassword = this.encryptPassword(password,salt);
+        String oldPassword = curUser.getPassword();
+        if(StrUtil.equals(oldPassword,encryptedPassword)){
+            throw new MyException("新旧密码不能一样");
+        }
+        curUser.setPassword(encryptedPassword);
+        dao.save(curUser);
     }
 
     /**

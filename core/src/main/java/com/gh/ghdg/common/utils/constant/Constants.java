@@ -33,10 +33,10 @@ public class Constants {
     public static String CUR_APP_MENU_ROOTS = "AppMenuRoots";
     
     //错误码
-    public static int SUCCESS = 200;
-    public static int FAILED = 999;
-    public static int ACCESS_TOKEN_EXPIRE_CODE = 50014;
-    public static int REFRESH_TOKEN_EXPIRE_CODE = 50015;
-    public static int INVALID_TOKEN_CODE = 50000;
+    public static int SUCCESS = 200;//成功
+    public static int FAILED = 999;//失败
+    public static int ACCESS_TOKEN_EXPIRE_CODE = 50014;//请求token过期
+    public static int REFRESH_TOKEN_EXPIRE_CODE = 50015;//刷新token过期
+    public static int INVALID_TOKEN_CODE = 50000;//无效token
 
 }

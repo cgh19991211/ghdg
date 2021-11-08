@@ -1,7 +1,7 @@
 package com.gh.ghdg.sysMgr.core.service;
 
 import cn.hutool.core.util.StrUtil;
-import com.gh.ghdg.common.BaseService;
+import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.sysMgr.bean.DisplaySeqEntity;
 import com.gh.ghdg.sysMgr.core.dao.DisplaySeqDao;
 import com.gh.ghdg.common.utils.exception.MyException;

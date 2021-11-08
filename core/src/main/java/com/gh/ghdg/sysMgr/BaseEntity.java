@@ -1,4 +1,4 @@
-package com.gh.ghdg.common;
+package com.gh.ghdg.sysMgr;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
