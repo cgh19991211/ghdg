@@ -143,9 +143,17 @@ public class LoginController {
     }
     
 //    @Operation(summary = "获取当前用户信息")
+    
+    /**
+     * 需要返回用户信息，包括基本信息profile，角色，权限，菜单等
+     * 返回的信息给前端做权限控制 -- 在前端的store user.js 里
+     * @return
+     */
     @GetMapping("/curUser")
     public Result curUser() {
-        return Result.suc(JwtUtil.getCurUser());
+        User curUser = JwtUtil.getCurUser();
+        //TODO: 根据该用户获取角色，菜单，权限资源路径，全部返回给前端，还有用户profile。
+        return Result.suc(null);
     }
     
 }

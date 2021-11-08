@@ -1,7 +1,6 @@
 import request from '@/utils/request'
 
 export function login(username, password) {
-  console.log("请求工具类中的login")
   return request({
     url: '/login',
     method: 'post',

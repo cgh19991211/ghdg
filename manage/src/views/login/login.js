@@ -48,7 +48,6 @@ export default {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
-            console.log("登陆成功，接受到token，但是跳转之后报错")
             this.$router.push({ path: '/' })
           }).catch((err) => {
             this.$message({

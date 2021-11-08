@@ -34,6 +34,9 @@ public class Permission extends TreeEntity<Permission> {
     @Unique(name = "操作代码", extraFields = "menu")
     private String permissionCode;
     
+    @Unique(name = "资源路径")
+    private String url;
+    
     @Length(max = 50, message = "备注不得超过 50 位")
     private String remark;
 

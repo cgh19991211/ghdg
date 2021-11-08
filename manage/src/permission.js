@@ -14,6 +14,9 @@ function hasPermission(roles, permissionRoles) {
   return roles.some(role => permissionRoles.indexOf(role) >= 0)
 }
 
+/**
+ * 路由拦截器
+ */
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getAccessToken()) {
@@ -29,7 +32,9 @@ router.beforeEach((to, from, next) => {
           const routers = res.data.routers
           //角色列表
           const roles = res.data.roles
-
+          console.log(menus)
+          console.log(routers)
+          console.log(roles)
           //根据后台返回的路由信息调用GenerateRoutes方法生成路由表
           store.dispatch('GenerateRoutes', { roles:roles,routers:routers,menus:menus }).then(() => { // 根据roles权限生成可访问的路由表
             // 添加可访问路由表
