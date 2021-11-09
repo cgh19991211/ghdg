@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
 @Table(name = "sys_permission")
 public class Permission extends TreeEntity<Permission> {
     
@@ -20,34 +19,102 @@ public class Permission extends TreeEntity<Permission> {
         ignoreChildren = false;
     }
     
+    protected Permission parent;
+    
+    private String permissionName;
+    
+    private String permissionCode;
+    
+    private String url;
+    
+    private String remark;
+
+    private Menu menu;
+
+    private List<RoleMenuPermission> roleMenuPermissions = new ArrayList<>();
+    
+    public Permission(Permission parent, String permissionName, String permissionCode, String url, String remark, Menu menu, List<RoleMenuPermission> roleMenuPermissions) {
+        this.parent = parent;
+        this.permissionName = permissionName;
+        this.permissionCode = permissionCode;
+        this.url = url;
+        this.remark = remark;
+        this.menu = menu;
+        this.roleMenuPermissions = roleMenuPermissions;
+    }
+    
+    @Override
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    protected Permission parent;
+    @JoinColumn(name = "parent_id",referencedColumnName = "id")
+    public Permission getParent() {
+        return parent;
+    }
+    
+    @Override
+    public void setParent(Permission parent) {
+        this.parent = parent;
+    }
     
     @NotBlank(message = "操作名称不得为空")
     @Length(max = 40, message = "操作名称不得超过 40 位")
     @Unique(name = "操作名称", extraFields = "menu")
-    private String permissionName;
+    public String getPermissionName() {
+        return permissionName;
+    }
+    
+    public void setPermissionName(String permissionName) {
+        this.permissionName = permissionName;
+    }
     
     @NotBlank(message = "操作代码不得为空")
     @Length(max = 40, message = "操作代码不得超过 40 位")
     @Unique(name = "操作代码", extraFields = "menu")
-    private String permissionCode;
+    public String getPermissionCode() {
+        return permissionCode;
+    }
+    
+    public void setPermissionCode(String permissionCode) {
+        this.permissionCode = permissionCode;
+    }
     
     @Unique(name = "资源路径")
-    private String url;
+    public String getUrl() {
+        return url;
+    }
+    
+    public void setUrl(String url) {
+        this.url = url;
+    }
     
     @Length(max = 50, message = "备注不得超过 50 位")
-    private String remark;
-
+    public String getRemark() {
+        return remark;
+    }
+    
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+    
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    private Menu menu;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "permission") // 级联
-    private List<RoleMenuPermission> roleMenuPermissions = new ArrayList<>();
+    public Menu getMenu() {
+        return menu;
+    }
     
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "permission",cascade = CascadeType.ALL)
+    public List<RoleMenuPermission> getRoleMenuPermissions() {
+        return roleMenuPermissions;
+    }
+    
+    public void setRoleMenuPermissions(List<RoleMenuPermission> roleMenuPermissions) {
+        this.roleMenuPermissions = roleMenuPermissions;
+    }
     
     @Override
     public String toString() {

@@ -10,17 +10,40 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Data
 @Table(name = "sys_user_role")
 public class UserRole extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull(message = "用户不得为空")
     private User user;
 
+    private Role role;
+    
+    public UserRole() {
+    }
+    
+    public UserRole(User user, Role role) {
+        this.user = user;
+        this.role = role;
+    }
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "用户不得为空")
+    public User getUser() {
+        return user;
+    }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "角色不得为空")
-    private Role role;
+    public Role getRole() {
+        return role;
+    }
+    
+    public void setRole(Role role) {
+        this.role = role;
+    }
     
     @Override
     public String toString() {

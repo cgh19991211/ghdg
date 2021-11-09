@@ -7,7 +7,6 @@ import org.hibernate.annotations.Table;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-@Data
 @Entity(name = "sys_notice")
 @Table(appliesTo = "sys_notice", comment = "历史消息")
 public class Notice extends BaseEntity {
@@ -23,4 +22,76 @@ public class Notice extends BaseEntity {
     private String remark;
     @Column
     private Integer status=0;
+    
+    public Notice() {
+    }
+    
+    public Notice(String senderId, String receiver, String tplCode, String type, String remark, Integer status) {
+        this.senderId = senderId;
+        Receiver = receiver;
+        this.tplCode = tplCode;
+        this.type = type;
+        this.remark = remark;
+        this.status = status;
+    }
+    
+    public String getSenderId() {
+        return senderId;
+    }
+    
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+    
+    public String getReceiver() {
+        return Receiver;
+    }
+    
+    public void setReceiver(String receiver) {
+        Receiver = receiver;
+    }
+    
+    public String getTplCode() {
+        return tplCode;
+    }
+    
+    public void setTplCode(String tplCode) {
+        this.tplCode = tplCode;
+    }
+    
+    public String getType() {
+        return type;
+    }
+    
+    public void setType(String type) {
+        this.type = type;
+    }
+    
+    public String getRemark() {
+        return remark;
+    }
+    
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+    
+    public Integer getStatus() {
+        return status;
+    }
+    
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+    
+    @Override
+    public String toString() {
+        return "Notice{" +
+                "senderId='" + senderId + '\'' +
+                ", Receiver='" + Receiver + '\'' +
+                ", tplCode='" + tplCode + '\'' +
+                ", type='" + type + '\'' +
+                ", remark='" + remark + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

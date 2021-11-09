@@ -5,8 +5,29 @@ import lombok.Data;
 
 import javax.persistence.MappedSuperclass;
 
-@Data
 @MappedSuperclass
 public abstract class DisplaySeqEntity extends BaseEntity {
     protected Integer displaySeq;
+    
+    public DisplaySeqEntity() {
+    }
+    
+    public DisplaySeqEntity(Integer displaySeq) {
+        this.displaySeq = displaySeq;
+    }
+    
+    public Integer getDisplaySeq() {
+        return displaySeq;
+    }
+    
+    public void setDisplaySeq(Integer displaySeq) {
+        this.displaySeq = displaySeq;
+    }
+    
+    @Override
+    public String toString() {
+        return "DisplaySeqEntity{" +
+                "displaySeq=" + displaySeq +
+                '}';
+    }
 }

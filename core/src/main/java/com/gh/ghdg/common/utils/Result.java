@@ -3,7 +3,6 @@ package com.gh.ghdg.common.utils;
 import com.gh.ghdg.common.utils.constant.Constants;
 import lombok.Data;
 
-@Data
 public class Result {
     protected static final String SAVE_SUC = "保存成功";
     protected static final String DEL_SUC = "删除成功";
@@ -148,5 +147,63 @@ public class Result {
      */
     public static Result moveSuc(Object data) {
         return suc(MOVE_SUC, data);
+    }
+    
+    public static String getSaveSuc() {
+        return SAVE_SUC;
+    }
+    
+    public static String getDelSuc() {
+        return DEL_SUC;
+    }
+    
+    public static String getCreateSuc() {
+        return CREATE_SUC;
+    }
+    
+    public static String getMoveSuc() {
+        return MOVE_SUC;
+    }
+    
+    public boolean isSuccess() {
+        return success;
+    }
+    
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+    
+    public String getMessage() {
+        return message;
+    }
+    
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    
+    public Object getData() {
+        return data;
+    }
+    
+    public void setData(Object data) {
+        this.data = data;
+    }
+    
+    public int getCode() {
+        return code;
+    }
+    
+    public void setCode(int code) {
+        this.code = code;
+    }
+    
+    @Override
+    public String toString() {
+        return "Result{" +
+                "success=" + success +
+                ", message='" + message + '\'' +
+                ", data=" + data +
+                ", code=" + code +
+                '}';
     }
 }

@@ -10,16 +10,39 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Data
 @Table(name = "sys_user_menu")
 public class UserMenu extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull(message = "用户不能为空")
     private User user;
 
+    private Menu menu;
+    
+    public UserMenu() {
+    }
+    
+    public UserMenu(User user, Menu menu) {
+        this.user = user;
+        this.menu = menu;
+    }
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "用户不能为空")
+    public User getUser() {
+        return user;
+    }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "菜单不能为空")
-    private Menu menu;
+    public Menu getMenu() {
+        return menu;
+    }
+    
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
     
     @Override
     public String toString() {

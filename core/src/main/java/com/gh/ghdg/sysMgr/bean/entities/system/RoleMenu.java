@@ -6,25 +6,60 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
 @Table(name = "sys_role_menu")
 public class RoleMenu extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull(message = "角色不得为空")
     private Role role;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @NotNull(message = "菜单不得为空")
     private Menu menu;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "roleMenu") // 级联
     private List<RoleMenuPermission> roleMenuPermissions = new ArrayList<>();
+    
+    public RoleMenu() {
+    }
+    
+    public RoleMenu(String id, User createdBy, Date createdDate, User lastModifiedBy, Timestamp lastModifiedDate, Timestamp lastModifiedDate0, Role role, Menu menu, List<RoleMenuPermission> roleMenuPermissions) {
+        super(id, createdBy, createdDate, lastModifiedBy, lastModifiedDate, lastModifiedDate0);
+        this.role = role;
+        this.menu = menu;
+        this.roleMenuPermissions = roleMenuPermissions;
+    }
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "角色不得为空")
+    public Role getRole() {
+        return role;
+    }
+    
+    public void setRole(Role role) {
+        this.role = role;
+    }
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "菜单不得为空")
+    public Menu getMenu() {
+        return menu;
+    }
+    
+    public void setMenu(Menu menu) {
+        this.menu = menu;
+    }
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "roleMenu",cascade = CascadeType.ALL)
+    public List<RoleMenuPermission> getRoleMenuPermissions() {
+        return roleMenuPermissions;
+    }
+    
+    public void setRoleMenuPermissions(List<RoleMenuPermission> roleMenuPermissions) {
+        this.roleMenuPermissions = roleMenuPermissions;
+    }
     
     @Override
     public String toString() {

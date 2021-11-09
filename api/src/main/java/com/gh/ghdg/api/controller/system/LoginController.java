@@ -10,6 +10,8 @@ import com.gh.ghdg.common.utils.constant.Constants;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.core.service.system.UserService;
 import com.gh.ghdg.sysMgr.security.JwtUtil;
+import com.gh.ghdg.sysMgr.security.ShiroFactory;
+import com.gh.ghdg.sysMgr.security.ShiroUser;
 import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -153,7 +155,8 @@ public class LoginController {
     public Result curUser() {
         User curUser = JwtUtil.getCurUser();
         //TODO: 根据该用户获取角色，菜单，权限资源路径，全部返回给前端，还有用户profile。
-        return Result.suc(null);
+        ShiroUser shiroUser = ShiroFactory.me().shiroUser(curUser);
+        return Result.suc(shiroUser);
     }
     
 }

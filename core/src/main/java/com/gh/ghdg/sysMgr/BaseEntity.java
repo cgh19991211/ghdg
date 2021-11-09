@@ -19,47 +19,116 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
-@Data
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"}) // 解决懒加载异常
 public abstract class BaseEntity implements Serializable {
+    
+    protected String id;
+    
+    protected User createdBy;
+    
+    protected Date createdDate;
+    
+    protected User lastModifiedBy;
+    
+    protected Timestamp lastModifiedDate;
+    
+    protected Timestamp lastModifiedDate0;
+    
+    public BaseEntity() {
+    }
+    
+    public BaseEntity(String id, User createdBy, Date createdDate, User lastModifiedBy, Timestamp lastModifiedDate, Timestamp lastModifiedDate0) {
+        this.id = id;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+        this.lastModifiedBy = lastModifiedBy;
+        this.lastModifiedDate = lastModifiedDate;
+        this.lastModifiedDate0 = lastModifiedDate0;
+    }
+    
     @Id
     @GenericGenerator(name = "myid", strategy = "com.gh.ghdg.sysMgr.bean.entities.IdGenerator")
     @GeneratedValue(generator = "myid")
     @Length(max = 32, message = "ID 不得超过 32 位")
-    protected String id;
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
     
     @CreatedBy
     @JsonIgnore // Json 忽略
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", updatable = false,columnDefinition = "string COMMENT '创建人'")
     @JSONField(serialize = false)
-    protected User createdBy;
+    public User getCreatedBy() {
+        return createdBy;
+    }
+    
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
     
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     @Column(name = "created_date", columnDefinition = "DATETIME COMMENT '创建时间/注册时间'")
-    protected Date createdDate;
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+    
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
     
     @LastModifiedBy
     @JsonIgnore // Json 忽略
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_modified_by",columnDefinition = "string COMMENT '最后更新时间'")
     @JSONField(serialize = false) // JSON.toJSONString 时忽略
-    protected User lastModifiedBy;
+    public User getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+    
+    public void setLastModifiedBy(User lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
     
     @LastModifiedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "GMT+8")
     @Column(name = "last_modified_date", columnDefinition = "DATETIME COMMENT '最后更新人'")
-    protected Timestamp lastModifiedDate;
+    public Timestamp getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+    
+    public void setLastModifiedDate(Timestamp lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
     
     // 判断时间戳用
     @Transient // 瞬时（不持久化）
     @JsonIgnore
     @JSONField(serialize = false)
-    protected Timestamp lastModifiedDate0;
+    public Timestamp getLastModifiedDate0() {
+        return lastModifiedDate0;
+    }
     
-
+    public void setLastModifiedDate0(Timestamp lastModifiedDate0) {
+        this.lastModifiedDate0 = lastModifiedDate0;
+    }
     
+    @Override
+    public String toString() {
+        return "BaseEntity{" +
+                "id='" + id + '\'' +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                ", lastModifiedBy=" + lastModifiedBy +
+                ", lastModifiedDate=" + lastModifiedDate +
+                ", lastModifiedDate0=" + lastModifiedDate0 +
+                '}';
+    }
 }
