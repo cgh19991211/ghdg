@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.CredentialException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @DependsOn("springContextUtil")
@@ -58,6 +55,10 @@ public class ShiroFactory {
         shiroUser.setAccount(user.getUsername());//用户名
 //        shiroUser.setPassword(user.getPassword());
         shiroUser.setNickname(user.getNickname());//昵称
+        shiroUser.setAvatar(user.getAvatar());
+        shiroUser.setEmail(user.getEmail());
+        shiroUser.setPhone(user.getPhone());
+        
         //roles
         List<ShiroRole> roleList = shiroRoles(user);//角色列表，角色对象包括id，名字，code
         shiroUser.setRoles(roleList);
@@ -110,6 +111,8 @@ public class ShiroFactory {
                 sm.setIcon(m.getIcon());
                 sm.setStatus(m.getStatus().getValue());
                 menuSet.add(sm);
+                
+                shiroPermissions(m,shiroUser);
             }
         }
         shiroUser.setMenus(menuSet);
@@ -122,13 +125,19 @@ public class ShiroFactory {
             res.add(menu.getParent().getMenuCode());
             menu = menu.getParent();
         }
-        return (String[])res.toArray();
+        return Arrays.stream(res.toArray()).toArray(String[]::new);
     }
     
-    public Set<ShiroPermission> shiroPermissions(User user){
+    public void shiroPermissions(Menu menu,ShiroUser shiroUser){
         Set<ShiroPermission> set = new HashSet<>();
-        
-        return set;
+        List<Permission> permissions = menu.getPermissions();
+        for(Permission p:permissions){
+            ShiroPermission sp = new ShiroPermission();
+            sp.setPermissionCode(p.getPermissionCode());
+            sp.setUrl(p.getUrl());
+            set.add(sp);
+        }
+        shiroUser.setPermissions(set);
     }
     
 }

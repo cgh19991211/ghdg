@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="user">
       <strong>{{ user.name }}</strong><br>
-      <small>{{ user.dept }} &nbsp;&nbsp; {{ user.roles }}</small>
+      <small><span v-for='role in user.roles' :key='role'>{{role.roleName}}</span></small>
     </div>
     <el-row class="user-content" style="">
       <el-col :span="6" class="profile">
@@ -26,18 +26,12 @@
           <el-form-item label="性别">
             <span> {{ user.sex = 1 ? '男' : '女' }}</span>
           </el-form-item>
-          <el-form-item label="生日">
-            <span> {{ user.birthday }}</span>
-          </el-form-item>
           <h3>联系信息</h3>
           <el-form-item label="手机">
             <span>{{ user.phone }}</span>
           </el-form-item>
           <el-form-item label="邮箱">
             <span> {{ user.email }}</span>
-          </el-form-item>
-          <el-form-item label="地址">
-            <span> {{user.address}}</span>
           </el-form-item>
         </el-form>
       </el-col>

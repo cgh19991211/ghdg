@@ -22,7 +22,7 @@ export function logout() {
   console.log('logout')
   return request({
     url: '/logout',
-    method: 'post'
+    method: 'get'
   })
 }
 

@@ -173,4 +173,5 @@ public class ShiroMenu implements Serializable {
                 ", pcodes=" + Arrays.toString(pcodes) +
                 '}';
     }
+    
 }

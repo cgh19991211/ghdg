@@ -15,6 +15,9 @@ public class ShiroUser implements Serializable {
     private String account;      // 用户名，既账号
     private String password;
     private String nickname;         // 昵称
+    private String avatar;
+    private String phone;
+    private String email;
     private List<ShiroRole> roles; // 角色集
     private Set<ShiroMenu> menus;//菜单（封装成waimai中的menu）带资源路径
     private Set<ShiroPermission> permissions;//资源编码
@@ -22,11 +25,14 @@ public class ShiroUser implements Serializable {
     public ShiroUser() {
     }
     
-    public ShiroUser(String id, String account, String password, String nickname, List<ShiroRole> roles, Set<ShiroMenu> menus, Set<ShiroPermission> permissions) {
+    public ShiroUser(String id, String account, String password, String nickname, String avatar, String phone, String email, List<ShiroRole> roles, Set<ShiroMenu> menus, Set<ShiroPermission> permissions) {
         this.id = id;
         this.account = account;
         this.password = password;
         this.nickname = nickname;
+        this.avatar = avatar;
+        this.phone = phone;
+        this.email = email;
         this.roles = roles;
         this.menus = menus;
         this.permissions = permissions;
@@ -72,6 +78,30 @@ public class ShiroUser implements Serializable {
         this.nickname = nickname;
     }
     
+    public String getAvatar() {
+        return avatar;
+    }
+    
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+    
+    public String getPhone() {
+        return phone;
+    }
+    
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
     public List<ShiroRole> getRoles() {
         return roles;
     }
@@ -103,6 +133,9 @@ public class ShiroUser implements Serializable {
                 ", account='" + account + '\'' +
                 ", password='" + password + '\'' +
                 ", nickname='" + nickname + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
                 ", roles=" + roles +
                 ", menus=" + menus +
                 ", permissions=" + permissions +

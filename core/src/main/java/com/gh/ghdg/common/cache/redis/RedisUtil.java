@@ -68,6 +68,7 @@ public class RedisUtil {
     public void del(String... key) {
         if (key != null && key.length > 0) {
             for (int i = 0; i < key.length; ++i) {
+                if(hasKey(key[i]))
                 redisTemplate.delete(key[i]);
             }
         }
@@ -171,7 +172,7 @@ public class RedisUtil {
 
 // ================================Map=================================
     /**
-     * HashGet
+     * KhGet
      * @param key 键 不能为null
      * @param item 项 不能为null
      * @return 值

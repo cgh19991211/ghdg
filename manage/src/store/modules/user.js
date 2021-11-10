@@ -8,7 +8,8 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    profile: {}
+    phone: '',
+    email: ''
   },
 
   mutations: {
@@ -21,9 +22,6 @@ const user = {
     SET_NAME: (state, name) => {
       state.name = name
     },
-    SET_PROFILE: (state,profile) => {
-      state.profile = profile
-    },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
@@ -32,7 +30,14 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_PHONE: (state, phone) => {
+      state.phone = phone
+    },
+    SET_EMAIL: (state,email) => {
+      state.email = email
     }
+
   },
 
   actions: {
@@ -46,6 +51,8 @@ const user = {
           setRefreshToken(data.RefreshToken)
           commit('SET_ACCESS_TOKEN', data.AccessToken)
           commit('SET_REFRESH_TOKEN', data.RefreshToken)
+          commit('SET_PHONE',data.phone)
+          commit('SET_EMAIL',data.email)
           resolve()
         }).catch(error => {
           reject(error)
@@ -65,9 +72,10 @@ const user = {
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
-          commit('SET_NAME', data.name)
+          commit('SET_NAME', data.account)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_PROFILE',data.profile)
+          commit('SET_PHONE',data.phone)
+          commit('SET_EMAIL',data.email)
           resolve(response)
         }).catch(error => {
           reject(error)

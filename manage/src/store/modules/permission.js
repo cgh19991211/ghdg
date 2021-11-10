@@ -9,6 +9,8 @@ import { asyncRouterMap, constantRouterMap } from '@/router'
  */
 function hasMenu(menus, route) {
   if (route.path) {
+    console.log("route是否有值")
+    console.log(route)
      return menus.some(menu => ( menu[4]!=null && menu[4].indexOf(route.path) >= 0))
   } else {
     return true
@@ -23,6 +25,10 @@ function hasMenu(menus, route) {
  */
 function filterAsyncRouterByMenu(asyncRouterMap, menus) {
   const accessedRouters = asyncRouterMap.filter(route => {
+    console.log("store.permission.menus")
+    console.log(menus)
+    console.log("store.permission.route")
+    console.log(route)
     if (hasMenu(menus, route)) {
       if (route.children && route.children.length) {
         route.children = filterAsyncRouterByMenu(route.children, menus)
@@ -73,6 +79,8 @@ const permission = {
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
+      // console.log("store.permission.router")
+      // console.log(routers)
       state.addRouters = routers
       state.routers = constantRouterMap.concat(routers)
     }

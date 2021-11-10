@@ -3,7 +3,7 @@ import { updatePwd } from '@/api/login'
 export default {
   data() {
     return {
-      activeName: 'profile',
+      activeName: 'profile',//名称，性别，头像；手机，邮箱，
       user:{}
     }
   },
@@ -12,8 +12,9 @@ export default {
   },
   methods: {
     init(){
-      this.user = this.$store.state.user.profile
-      console.log(this.user)
+      this.user = this.$store.state.user
+      // console.log("profile")
+      // console.log(this.user)
     },
     handleClick(tab, event){
       this.$router.push({ path: '/account/'+tab.name})
