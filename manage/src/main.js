@@ -27,8 +27,8 @@ Vue.config.productionTip = false
 
 new Vue({
   el: '#app',
-  router,
+  router,//加载了constantRouterMap
   store,
   i18n,
-  render: h => h(App)
+  render: h => h(App)//将App.vue渲染到index.html中
 })

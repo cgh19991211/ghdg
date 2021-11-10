@@ -26,11 +26,12 @@ import Layout from '../views/layout/Layout'
 export const constantRouterMap = [
   {path: '/login', component: () => import('@/views/login/index'), hidden: true},
   {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
+    path: '/',//路由的路径
+    component: Layout,//路由映射的组件，  这里的layout作为父组件
+    redirect: '/dashboard',//重定向路径
     name: 'dashboard',
     hidden: false,
+    //children是子组件，子组件会全部渲染到父组件中     此处既是二级路由
     children: [{
       path: 'dashboard',
       component: () => import('@/views/dashboard/index'),
@@ -85,55 +86,56 @@ export const asyncRouterMap = [
       title: 'businessMgr',
       icon: 'shopping'
     },
-    children: [
-
-      {
-        path: 'sdetail',
-        name: 'sdetail',
-        component: () => import('@/views/business/sdetail/index'),
-        meta: {title: 'sdetail'}
-      },
-      {
-        path: 'shop/add',
-        name: 'shop_add',
-        component: () => import('@/views/business/shop/add.vue'),
-        meta: {title: '添加商铺'}
-      },
-      {
-        path: 'shop',
-        name: 'shop',
-        component: () => import('@/views/business/shop/index'),
-        meta: {title: 'shopMgr'}
-      },
-
-      {
-        path: 'food',
-        name: 'food',
-        component: () => import('@/views/business/food/index'),
-        meta: {title: 'foodMgr'}
-      },
-      {
-        path: 'order',
-        name: 'order',
-        component: () => import('@/views/business/order/index'),
-        meta: {title: 'orderMgr'}
-      },
-      {
-        path: 'orderdetail',
-        name: 'orderdetail',
-        hidden:true,
-        component: () => import('@/views/business/orderdetail/index'),
-        meta: {title: '订单详情'}
-      },
-
-      {
-        path: 'food/add',
-        name: 'food_add',
-        hidden: true,
-        component: () => import('@/views/business/food/add.vue'),
-        meta: {title: '添加食品'}
-      }
-    ]
+    //商家部分,可以参考这写博客业务部分
+    // children: [
+    //
+    //   {
+    //     path: 'sdetail',
+    //     name: 'sdetail',
+    //     component: () => import('@/views/business/sdetail/index'),
+    //     meta: {title: 'sdetail'}
+    //   },
+    //   {
+    //     path: 'shop/add',
+    //     name: 'shop_add',
+    //     component: () => import('@/views/business/shop/add.vue'),
+    //     meta: {title: '添加商铺'}
+    //   },
+    //   {
+    //     path: 'shop',
+    //     name: 'shop',
+    //     component: () => import('@/views/business/shop/index'),
+    //     meta: {title: 'shopMgr'}
+    //   },
+    //
+    //   {
+    //     path: 'food',
+    //     name: 'food',
+    //     component: () => import('@/views/business/food/index'),
+    //     meta: {title: 'foodMgr'}
+    //   },
+    //   {
+    //     path: 'order',
+    //     name: 'order',
+    //     component: () => import('@/views/business/order/index'),
+    //     meta: {title: 'orderMgr'}
+    //   },
+    //   {
+    //     path: 'orderdetail',
+    //     name: 'orderdetail',
+    //     hidden:true,
+    //     component: () => import('@/views/business/orderdetail/index'),
+    //     meta: {title: '订单详情'}
+    //   },
+    //
+    //   {
+    //     path: 'food/add',
+    //     name: 'food_add',
+    //     hidden: true,
+    //     component: () => import('@/views/business/food/add.vue'),
+    //     meta: {title: '添加食品'}
+    //   }
+    // ]
   },
   {
     path: '/system',
@@ -155,20 +157,23 @@ export const asyncRouterMap = [
           title: 'menuMgr'
         }
       },
-      {
-        path: 'dept',
-        name: 'Department',
-        component: () => import('@/views/system/dept/index'),
-        meta: {
-          title: 'deptMgr'
-        }
-      },
+      //部门
+      // {
+      //   path: 'dept',
+      //   name: 'Department',
+      //   component: () => import('@/views/system/dept/index'),
+      //   meta: {
+      //     title: 'deptMgr'
+      //   }
+      // },
+      //用户管理
       {
         path: 'mgr',
         name: 'Account',
         component: () => import('@/views/system/user/index'),
         meta: {title: 'userMgr'}
       },
+      //角色管理
       {
         path: 'role',
         name: 'roleMgr',

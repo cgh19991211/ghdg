@@ -4,6 +4,9 @@ import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.common.utils.Result;
 import lombok.Data;
 
+/**
+ * 似乎用不上，先留着
+ */
 public class LoginResult extends Result {
 
     private String field;

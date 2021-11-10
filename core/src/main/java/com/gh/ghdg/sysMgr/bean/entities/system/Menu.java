@@ -30,7 +30,11 @@ public class Menu extends TreeEntity<Menu> {
     
     private String tip;
     
-    private TypeEnum.MenuType type = TypeEnum.MenuType.menu;//0-menu 1-button 3-module, default 0-menu
+    private Integer isopen;
+    
+    private String icon;
+    
+    private TypeEnum.MenuType type = TypeEnum.MenuType.menu;//1-menu 0-button 3-module, default 0-button
     
     public Status status = Status.生效;//1-生效 0-失效  默认生效
 
@@ -49,7 +53,7 @@ public class Menu extends TreeEntity<Menu> {
 
     private List<Permission> authPermissions = new ArrayList<>();
     
-    public Menu(Menu parent, String menuCode, String menuName, String tip, TypeEnum.MenuType type, Status status, List<Permission> permissions, List<RoleMenu> roleMenus, List<UserMenu> userMenus, boolean navigation, List<Permission> authPermissions) {
+    public Menu(Menu parent, String menuCode, String menuName, String tip, TypeEnum.MenuType type, Status status, List<Permission> permissions, List<RoleMenu> roleMenus, List<UserMenu> userMenus, boolean navigation, List<Permission> authPermissions, Integer isopen, String icon) {
         this.parent = parent;
         this.menuCode = menuCode;
         this.menuName = menuName;
@@ -61,6 +65,8 @@ public class Menu extends TreeEntity<Menu> {
         this.userMenus = userMenus;
         this.navigation = navigation;
         this.authPermissions = authPermissions;
+        this.isopen = isopen;
+        this.icon = icon;
     }
     
     @Override
@@ -171,6 +177,22 @@ public class Menu extends TreeEntity<Menu> {
     
     public void setAuthPermissions(List<Permission> authPermissions) {
         this.authPermissions = authPermissions;
+    }
+    
+    public Integer getIsopen() {
+        return isopen;
+    }
+    
+    public void setIsopen(Integer isopen) {
+        this.isopen = isopen;
+    }
+    
+    public String getIcon() {
+        return icon;
+    }
+    
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
     
     @Override

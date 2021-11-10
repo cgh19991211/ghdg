@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.api.controller.TreeController;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.Result;
+import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.gh.ghdg.sysMgr.bean.entities.system.Menu;
 import com.gh.ghdg.sysMgr.core.dao.system.MenuDao;
 import com.gh.ghdg.sysMgr.core.service.system.MenuService;
@@ -31,7 +32,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
 //    @Operation(summary = "菜单新增")
 //    @Parameter(name = "菜单入参")
     @PostMapping("save")
-    @RequiresPermissions("menu:cud")
+    @RequiresPermissions(PermissionCode.MENU_EDIT)
     public Result menuSave(@ModelAttribute("t")Menu t)throws Exception{
         return super.save(t);
     }
@@ -45,7 +46,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
 //    @Operation(summary = "菜单删除")
 //    @Parameter(name = "菜单入参")
     @PostMapping("delete/{id")
-    @RequiresPermissions(("menu:cud"))
+    @RequiresPermissions(PermissionCode.MENU_EDIT)
     public Result menuDelete(@ModelAttribute("t")Menu t)throws Exception{
         return super.delete(t);
     }
@@ -58,7 +59,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
 //    @Operation(summary = "菜单列表")
 //    @Parameter(name = "菜单名字")
     @GetMapping("list")
-    @RequiresPermissions("menu:r")
+    @RequiresPermissions(PermissionCode.MENU)
     public Result menuList(String name){
         List menus = null;
         if(StrUtil.isEmptyIfStr(name))menus = service.queryAll();
@@ -76,7 +77,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
 //    @Operation(summary = "菜单移动")
 //    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "移动到哪个位置"),@Parameter(name = "前后")})
     @PostMapping("move")
-    @RequiresPermissions("menu:cud")
+    @RequiresPermissions(PermissionCode.MENU_EDIT)
     public Result menuMove(@ModelAttribute("t") Menu t, String overId, String position) throws Exception {
         return super.move(t, overId, position);
     }
@@ -87,7 +88,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
      */
 //    @Operation(summary = "菜单树")
     @GetMapping("tree")
-    @RequiresPermissions("menu:r")
+    @RequiresPermissions(PermissionCode.MENU)
     public List<Menu> menuTree() {
         return service.tree();
     }
@@ -112,7 +113,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
 //    @Operation(summary = "为菜单分配角色")
 //    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "角色id"),@Parameter(name = "权限代码")})
     @PostMapping("assignRoles")
-    @RequiresPermissions("menu:role:cud")
+    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
     public Result menuAssignRoles(@ModelAttribute("t") Menu t,String roleIds, String modifiedPermissions) {
         service.saveRoles(t, roleIds, modifiedPermissions);
         return Result.saveSuc();
@@ -128,7 +129,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
 //    @Operation(summary = "回收菜单角色")
 //    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "角色id")})
     @GetMapping("recycleRoles")
-    @RequiresPermissions("menu:role:cud")
+    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
     public Result menuRecycleRoles(@ModelAttribute("t") Menu t,  String roleIds) {
         service.deleteRoles(t, roleIds);
         return Result.delSuc();
@@ -142,7 +143,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
 //    @Operation(summary = "角色分配的菜单树列表")
 //    @Parameter(name = "角色id")
     @GetMapping("tree4Role")
-    @RequiresPermissions("role:menu:r")
+    @RequiresPermissions(PermissionCode.ROLE_MENU)
     public List<Menu> menuTree4Role(String roleId) {
         return service.tree4Role(roleId);
     }
@@ -155,7 +156,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
 //    @Operation(summary = "角色可分配的菜单")
 //    @Parameter(name = "角色id")
     @GetMapping("treeSelectable")
-    @RequiresPermissions("role:menu:cud")
+    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
     public List<Menu> menuTreeSelectable(String roleId) {
         return service.treeSelectable(roleId);
     }

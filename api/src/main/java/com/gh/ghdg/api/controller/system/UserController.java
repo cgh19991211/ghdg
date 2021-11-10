@@ -5,6 +5,7 @@ import com.gh.ghdg.api.controller.BaseController;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.Result;
+import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.gh.ghdg.sysMgr.bean.constant.factory.PageFactory;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
@@ -30,7 +31,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @return
      */
     @RequestMapping(value = "/list",method = RequestMethod.GET)
-    @RequiresPermissions(value = "user:r")
+    @RequiresPermissions(PermissionCode.USER)
     public Result userList(@RequestParam(required = false) String username,
                        @RequestParam(required = false) String nickname){
         Page page = new PageFactory().defaultPage();
@@ -53,7 +54,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @throws Exception
      */
     @PostMapping("save")
-    @RequiresPermissions("user:cud")
+    @RequiresPermissions(PermissionCode.USER_EDIT)
     public Result userSave(@ModelAttribute("t") User t)throws Exception{
         return super.save(t);
     }
@@ -65,7 +66,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @return
      */
     @PostMapping("resetPassword")
-    @RequiresPermissions("user:cud")
+    @RequiresPermissions(PermissionCode.USER_EDIT)
     public Result userResetPassword(@RequestParam(required = true) String newPassword){
         service.resetPassword(newPassword);
         return Result.suc("密码重置成功");
@@ -78,7 +79,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @throws Exception
      */
     @PostMapping("delete/{id}")
-    @RequiresPermissions("user:cud")
+    @RequiresPermissions(PermissionCode.USER_EDIT)
     public Result userDelete(@ModelAttribute("t")User t)throws Exception{
         return super.delete(t);
     }
@@ -100,7 +101,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @return
      */
     @PostMapping("setRoles")
-    @RequiresPermissions("user:role:cud")
+    @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
     public Result userSetRoles(@ModelAttribute("t")User t,String ids){
         service.saveRoles(t,ids);
         return Result.saveSuc();
@@ -113,7 +114,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @return
      */
     @PostMapping("deleteRoles/{id}/{roleIds}")
-    @RequiresPermissions("user:role:cud")
+    @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
     public Result userDeleteRoles(@ModelAttribute("t")User t, @PathVariable String roleIds){
         service.deleteRoles(t, roleIds);
         return Result.delSuc();

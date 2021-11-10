@@ -13,8 +13,10 @@ import com.gh.ghdg.sysMgr.security.JwtUtil;
 import com.gh.ghdg.sysMgr.security.ShiroFactory;
 import com.gh.ghdg.sysMgr.security.ShiroUser;
 import io.swagger.annotations.Api;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.checkerframework.checker.units.qual.K;
 import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static cn.hutool.core.map.MapUtil.newHashMap;
+
 //@Api(tags = "登陆控制器")
 //@Tag(name = "登陆控制器")
 @RestController

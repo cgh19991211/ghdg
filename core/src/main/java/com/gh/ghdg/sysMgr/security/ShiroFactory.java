@@ -3,6 +3,7 @@ package com.gh.ghdg.sysMgr.security;
 import com.gh.ghdg.common.utils.SpringContextUtil;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
 import com.gh.ghdg.sysMgr.bean.enums.Status;
+import com.gh.ghdg.sysMgr.core.dao.system.MenuDao;
 import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import org.apache.shiro.authc.CredentialsException;
@@ -27,6 +28,8 @@ public class ShiroFactory {
     private UserDao userDao;
     @Autowired
     private RoleDao roleDao;
+    @Autowired
+    private MenuDao menuDao;
     
     public static ShiroFactory me(){return SpringContextUtil.getBean(ShiroFactory.class);}
     
@@ -51,16 +54,15 @@ public class ShiroFactory {
         
         //2. 再把user包装成ShiroUser
         ShiroUser shiroUser = new ShiroUser();
-        shiroUser.setId(user.getId());
-        shiroUser.setAccount(user.getUsername());
+        shiroUser.setId(user.getId());//用户id
+        shiroUser.setAccount(user.getUsername());//用户名
 //        shiroUser.setPassword(user.getPassword());
-        shiroUser.setNickname(user.getNickname());
-        //role
-        List<ShiroRole> roleList = shiroRoles(user);
-        shiroUser.setRoleList(roleList);
-        //permission
-        Set<ShiroPermission> shiroPermissions = shiroPermissions(user);
-        shiroUser.setPermissions(shiroPermissions);
+        shiroUser.setNickname(user.getNickname());//昵称
+        //roles
+        List<ShiroRole> roleList = shiroRoles(user);//角色列表，角色对象包括id，名字，code
+        shiroUser.setRoles(roleList);
+        //permissions && menus
+        shiroMenus(user,shiroUser);
         return shiroUser;
     }
     
@@ -78,9 +80,14 @@ public class ShiroFactory {
         return list;
     }
     
-    public Set<ShiroPermission> shiroPermissions(User user){
-        Set<ShiroPermission> list = new HashSet<>();
+    /**
+     * id,icon,pid(0||pid),name,url,level,,type,seq,code,status
+     * @param user
+     * @return
+     */
+    public void shiroMenus(User user,ShiroUser shiroUser){
         List<UserRole> userRoles = user.getUserRoles();
+        Set<ShiroMenu> menuSet = new HashSet<>();
         for(UserRole ur:userRoles){
             //角色实体类中虽然有permissions字段，但没办法直接查出来，
             // 应该是跟表结构有关系，role表跟permission表实际上并没有关联，
@@ -89,16 +96,39 @@ public class ShiroFactory {
             //所以，要获取权限，还是得根据菜单来，毕竟在权限表里就有菜单的外键
             List<RoleMenu> roleMenus = role.getRoleMenus();
             for(RoleMenu rm:roleMenus){
-                Menu menu = rm.getMenu();
-                List<Permission> permissions = menu.getPermissions();
-                for(Permission p:permissions){
-                    ShiroPermission shiroPermission = new ShiroPermission();
-                    shiroPermission.setPermissionCode(p.getPermissionCode());
-                    shiroPermission.setUrl(p.getUrl());
-                    list.add(shiroPermission);
-                }
+                Menu m = rm.getMenu();//id,pid,name,code,tip,seq,type,isopen,icon,status
+                //TODO: menu -> shiroMenu
+                ShiroMenu sm = new ShiroMenu();
+                sm.setId(m.getId());
+                sm.setPcode(m.getParent().getMenuCode());
+                sm.setPcodes(recurPcode(m));
+                sm.setMenuName(m.getMenuName());
+                sm.setTips(m.getTip());
+                sm.setDisplay_seq(m.getDisplaySeq());
+                sm.setIsmenu(m.getType().getValue());
+                sm.setIsopen(m.getIsopen());
+                sm.setIcon(m.getIcon());
+                sm.setStatus(m.getStatus().getValue());
+                menuSet.add(sm);
             }
         }
-        return list;
+        shiroUser.setMenus(menuSet);
     }
+    
+    private String[] recurPcode(Menu m){
+        Menu menu = m;
+        ArrayList<String> res = new ArrayList<>();
+        if(menu.getParent()!=null){
+            res.add(menu.getParent().getMenuCode());
+            menu = menu.getParent();
+        }
+        return (String[])res.toArray();
+    }
+    
+    public Set<ShiroPermission> shiroPermissions(User user){
+        Set<ShiroPermission> set = new HashSet<>();
+        
+        return set;
+    }
+    
 }

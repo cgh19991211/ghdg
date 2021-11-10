@@ -1,7 +1,7 @@
 package com.gh.ghdg.api.controller.system;
-
 import com.gh.ghdg.api.controller.DisplaySeqController;
 import com.gh.ghdg.common.utils.Result;
+import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.gh.ghdg.sysMgr.bean.entities.system.Permission;
 import com.gh.ghdg.sysMgr.core.dao.system.PermissionDao;
 import com.gh.ghdg.sysMgr.core.service.system.PermissionService;
@@ -23,13 +23,13 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      * @throws Exception
      */
     @PostMapping("save")
-    @RequiresPermissions("menu:permission:cud")
+    @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
     public Result permissionSave(@ModelAttribute("t") Permission t) throws Exception {
         return super.save(t);
     }
     
     @PostMapping("update")
-    @RequiresPermissions("menu:permission:cud")
+    @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
     public Result permissionUpdate(@ModelAttribute("t")Permission t) throws Exception{
         return Result.saveSuc(super.save(t));
     }
@@ -42,7 +42,7 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      * @throws Exception
      */
     @PostMapping("move")
-    @RequiresPermissions("menu:permission:cud")
+    @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
     public Result permissionMove(@ModelAttribute("t") Permission t, String overId, String position) throws Exception {
         return super.move(t, overId, position);
     }
@@ -53,7 +53,7 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      * @return
      */
     @GetMapping("delete/{id}")
-    @RequiresPermissions("menu:permission:cud")
+    @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
     public Result permissionDelete(@ModelAttribute("t") Permission t) throws Exception {
         return super.delete(t);
     }
@@ -65,7 +65,7 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      * @return
      */
     @GetMapping("list")
-    @RequiresPermissions("menu:permission:r")
+    @RequiresPermissions(PermissionCode.PERMISSION)
     public List<Permission> permissionList(Permission t) throws Exception {
         return service.list(t);
     }

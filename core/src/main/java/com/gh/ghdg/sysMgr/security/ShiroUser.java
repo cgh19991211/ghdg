@@ -8,24 +8,27 @@ import java.util.Set;
 
 public class ShiroUser implements Serializable {
     private static long serialVersionUID = 1L;
-    
+    /**
+     * menus, name, profile, roleName, roleCodes, permissions
+     */
     private String id;
     private String account;      // 用户名，既账号
     private String password;
     private String nickname;         // 昵称
-    private List<ShiroRole> roleList; // 角色集
-//    private Set<String> urls;//资源路径
+    private List<ShiroRole> roles; // 角色集
+    private Set<ShiroMenu> menus;//菜单（封装成waimai中的menu）带资源路径
     private Set<ShiroPermission> permissions;//资源编码
     
     public ShiroUser() {
     }
     
-    public ShiroUser(String id, String account, String password, String nickname, List<ShiroRole> roleList, Set<ShiroPermission> permissions) {
+    public ShiroUser(String id, String account, String password, String nickname, List<ShiroRole> roles, Set<ShiroMenu> menus, Set<ShiroPermission> permissions) {
         this.id = id;
         this.account = account;
         this.password = password;
         this.nickname = nickname;
-        this.roleList = roleList;
+        this.roles = roles;
+        this.menus = menus;
         this.permissions = permissions;
     }
     
@@ -69,12 +72,20 @@ public class ShiroUser implements Serializable {
         this.nickname = nickname;
     }
     
-    public List<ShiroRole> getRoleList() {
-        return roleList;
+    public List<ShiroRole> getRoles() {
+        return roles;
     }
     
-    public void setRoleList(List<ShiroRole> roleList) {
-        this.roleList = roleList;
+    public void setRoles(List<ShiroRole> roles) {
+        this.roles = roles;
+    }
+    
+    public Set<ShiroMenu> getMenus() {
+        return menus;
+    }
+    
+    public void setMenus(Set<ShiroMenu> menus) {
+        this.menus = menus;
     }
     
     public Set<ShiroPermission> getPermissions() {
@@ -92,7 +103,8 @@ public class ShiroUser implements Serializable {
                 ", account='" + account + '\'' +
                 ", password='" + password + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", roleList=" + roleList +
+                ", roles=" + roles +
+                ", menus=" + menus +
                 ", permissions=" + permissions +
                 '}';
     }
