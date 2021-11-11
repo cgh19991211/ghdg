@@ -20,7 +20,7 @@ import java.util.Date;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"}) // 解决懒加载异常
+@JsonIgnoreProperties(value = {"handler", "hibernateLazyInitializer", "fieldHandler"}) // 序列化时忽略，防止jpa懒加载异常(hibernate Proxy无法被序列化)
 public abstract class BaseEntity implements Serializable {
     
     protected String id;
