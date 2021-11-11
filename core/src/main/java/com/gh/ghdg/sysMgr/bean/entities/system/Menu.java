@@ -131,7 +131,6 @@ public class Menu extends TreeEntity<Menu> {
     
     @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
     @OrderBy("displaySeq")
-    @JsonIgnore//
     public List<Permission> getPermissions() {
         return permissions;
     }

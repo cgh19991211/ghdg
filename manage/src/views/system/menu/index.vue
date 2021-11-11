@@ -12,12 +12,12 @@
 
       <el-table-column label="名称" >
         <template slot-scope="scope">
-          <el-button type="text" @click="edit(scope.row)">{{scope.row.name}}</el-button>
+          <el-button type="text" @click="edit(scope.row)">{{scope.row.menuName}}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="编码" >
         <template slot-scope="scope">
-          <span >{{scope.row.code}}</span>
+          <span >{{scope.row.menuCode}}</span>
         </template>
       </el-table-column>
       <el-table-column label="ID" >
@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column label="是否是菜单" >
         <template slot-scope="scope">
-          <span >{{scope.row.isMenuName}}</span>
+          <span >{{scope.row.type}}</span>
         </template>
       </el-table-column>
         <el-table-column label="URL">
@@ -37,12 +37,12 @@
       </el-table-column>
       <el-table-column label="是否启用">
         <template slot-scope="scope">
-          <span >{{scope.row.statusName}}</span>
+          <span >{{scope.row.status}}</span>
         </template>
       </el-table-column>
       <el-table-column label="顺序">
         <template slot-scope="scope">
-          <span >{{scope.row.num}}</span>
+          <span >{{scope.row.displaySeq}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" >

@@ -40,7 +40,6 @@ public abstract class TreeEntity<T extends TreeEntity> extends DisplaySeqEntity 
     // 仅输出到前端用
     @OneToMany(mappedBy = "parent")
     @OrderBy("displaySeq")
-//    @JsonIgnore//JSON没办法序列化懒加载时的代理hibernate Proxy
     public List<T> getChildren() {
         return ignoreChildren ? null : children;
     }

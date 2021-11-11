@@ -106,12 +106,12 @@ export default {
     },
     edit(row) {
       this.form = row
-      if (row.isMenuName === '是') {
+      if (row.type === 'menu') {
         this.form.ismenu = 1
       } else {
         this.form.ismenu = 0
       }
-      if (row.statusName === '启用') {
+      if (row.status === '生效') {
         this.form.status = 1
       } else {
         this.form.status = 0
