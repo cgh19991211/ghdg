@@ -1,7 +1,6 @@
 package com.gh.ghdg.common.utils;
 
 import com.gh.ghdg.common.utils.constant.Constants;
-import lombok.Data;
 
 public class Result {
     protected static final String SAVE_SUC = "保存成功";

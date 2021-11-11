@@ -98,7 +98,7 @@ public class ShiroRealm extends AuthorizingRealm {
      * 认证
      * 验证当前登录的用户，获取认证信息
      *
-     * @param  token, 包含用户的账号密码等信息
+     * @param  auth, 包含用户的账号密码等信息
      * @return an {@link AuthenticationInfo} 查询成功之后，从AuthenticationInfo中返回用户账户信息
      * @throws AuthenticationException 查询或者授权逻辑发生错误则抛出这个异常
      */

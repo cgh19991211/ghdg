@@ -3,7 +3,6 @@ package com.gh.ghdg.sysMgr.bean.entities.system;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gh.ghdg.sysMgr.bean.TreeEntity;
 import com.gh.ghdg.sysMgr.bean.Unique;
-import lombok.Data;
 import org.hibernate.annotations.Table;
 import org.hibernate.validator.constraints.Length;
 

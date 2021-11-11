@@ -9,8 +9,10 @@ import { asyncRouterMap, constantRouterMap } from '@/router'
  */
 function hasMenu(menus, route) {
   if (route.path) {
-    console.log("route是否有值")
-    console.log(route)
+    // console.log("route与菜单是否匹配")
+    // console.log(route)
+    // console.log(menus)
+    //返回菜单代码是否在route路由的meta中
      return menus.some(menu => ( menu[4]!=null && menu[4].indexOf(route.path) >= 0))
   } else {
     return true
@@ -25,17 +27,16 @@ function hasMenu(menus, route) {
  */
 function filterAsyncRouterByMenu(asyncRouterMap, menus) {
   const accessedRouters = asyncRouterMap.filter(route => {
-    console.log("store.permission.menus")
-    console.log(menus)
-    console.log("store.permission.route")
-    console.log(route)
+    // console.log("store.permission.menus")
+    // console.log(menus)
+    // console.log("store.permission.route")
+    // console.log(route)
     if (hasMenu(menus, route)) {
       if (route.children && route.children.length) {
         route.children = filterAsyncRouterByMenu(route.children, menus)
       }
       return true
     }
-    console.log(route.path)
     return false
   })
   return accessedRouters
@@ -47,7 +48,7 @@ function filterAsyncRouterByMenu(asyncRouterMap, menus) {
  */
 function hasPermission(roles, route) {
   if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.indexOf(role) >= 0)
+    return roles.some(role => route.meta.roles.indexOf(role.roleCode) >= 0)
   } else {
     return true
   }
@@ -89,13 +90,19 @@ const permission = {
     GenerateRoutes({ commit }, data) {
       return new Promise(resolve => {
         const roles = data.roles
-        const routers = data.routers
         const menus = data.menus
         let accessedRouters = null
-        if (roles.indexOf('admin') >= 0) {
+        if (roles.indexOf('admin') >= 0) {//administrator
           accessedRouters = asyncRouterMap
         } else {
-          accessedRouters = filterAsyncRouterByMenu(asyncRouterMap, menus)
+          // console.log("==debug===================")
+          // console.log(asyncRouterMap)
+          // console.log(menus)
+          /**
+           * 根据菜单生成accessedRouters
+           */
+          accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
+          // accessedRouters = filterAsyncRouterByMenu(asyncRouterMap, menus)
         }
         commit('SET_ROUTERS', accessedRouters)
         resolve()

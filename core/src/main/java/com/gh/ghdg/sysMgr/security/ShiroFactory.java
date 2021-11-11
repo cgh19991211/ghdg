@@ -101,7 +101,9 @@ public class ShiroFactory {
                 //TODO: menu -> shiroMenu
                 ShiroMenu sm = new ShiroMenu();
                 sm.setId(m.getId());
-                sm.setPcode(m.getParent().getMenuCode());
+                Menu parent = m.getParent();
+                if(parent!=null)
+                    sm.setPcode(parent.getMenuCode());
                 sm.setPcodes(recurPcode(m));
                 sm.setMenuName(m.getMenuName());
                 sm.setTips(m.getTip());
@@ -110,6 +112,10 @@ public class ShiroFactory {
                 sm.setIsopen(m.getIsopen());
                 sm.setIcon(m.getIcon());
                 sm.setStatus(m.getStatus().getValue());
+                List<Permission> permissions = m.getPermissions();
+                for(Permission p:permissions){
+                    sm.setUrl(p.getUrl());
+                }
                 menuSet.add(sm);
                 
                 shiroPermissions(m,shiroUser);

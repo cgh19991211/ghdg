@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gh.ghdg.sysMgr.BaseEntity;
 import com.gh.ghdg.sysMgr.bean.Unique;
 import com.gh.ghdg.sysMgr.bean.enums.Status;
-import lombok.Data;
 import org.hibernate.annotations.Table;
 import org.hibernate.validator.constraints.Length;
 

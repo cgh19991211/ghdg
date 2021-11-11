@@ -3,7 +3,8 @@ package com.gh.ghdg.sysMgr.bean;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
-import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
@@ -39,6 +40,7 @@ public abstract class TreeEntity<T extends TreeEntity> extends DisplaySeqEntity 
     // 仅输出到前端用
     @OneToMany(mappedBy = "parent")
     @OrderBy("displaySeq")
+    @Fetch(FetchMode.JOIN)
     public List<T> getChildren() {
         return ignoreChildren ? null : children;
     }

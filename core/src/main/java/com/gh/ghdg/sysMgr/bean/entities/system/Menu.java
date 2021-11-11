@@ -5,7 +5,8 @@ import com.gh.ghdg.sysMgr.bean.TreeEntity;
 import com.gh.ghdg.sysMgr.bean.Unique;
 import com.gh.ghdg.sysMgr.bean.enums.Status;
 import com.gh.ghdg.sysMgr.bean.enums.TypeEnum;
-import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
@@ -133,6 +134,7 @@ public class Menu extends TreeEntity<Menu> {
     
     @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
     @OrderBy("displaySeq")
+    @Fetch(FetchMode.JOIN)
     public List<Permission> getPermissions() {
         return permissions;
     }

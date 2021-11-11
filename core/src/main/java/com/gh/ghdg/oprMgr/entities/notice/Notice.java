@@ -1,7 +1,6 @@
 package com.gh.ghdg.oprMgr.entities.notice;
 
 import com.gh.ghdg.sysMgr.BaseEntity;
-import lombok.Data;
 import org.hibernate.annotations.Table;
 
 import javax.persistence.Column;

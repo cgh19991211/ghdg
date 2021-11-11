@@ -59,34 +59,6 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
         return Result.suc(roles);
     }
     
-//    /** 放到UserController中来做
-//     * 为用户分配角色
-//     * @param t
-//     * @param userIds
-//     * @return
-//     */
-//    @PostMapping("assignUsers/{userIds}")
-//    @RequiresPermissions("user:role:cud")
-//    public Result assignUsers(@ModelAttribute("t") Role t,@PathVariable String userIds){
-//        service.assignUsers(t,userIds);
-//        return Result.saveSuc();
-//    }
-//
-//    /**
-//     * 回收角色
-//     * @param t
-//     * @param userIds
-//     * @return
-//     */
-//    @GetMapping("recycleUsers/{id}/{userIds}")
-//    @RequiresPermissions(("role:user:cud"))
-//    public Result recycleUsers(@ModelAttribute("t")Role t,@PathVariable String userIds){
-//        service.recycleUsers(t,userIds);
-//        return Result.delSuc();
-//    }
-    
-    
-    
     /**
      * 完整树
      * @return

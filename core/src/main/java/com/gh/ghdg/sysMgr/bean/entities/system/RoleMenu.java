@@ -2,7 +2,6 @@ package com.gh.ghdg.sysMgr.bean.entities.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gh.ghdg.sysMgr.BaseEntity;
-import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

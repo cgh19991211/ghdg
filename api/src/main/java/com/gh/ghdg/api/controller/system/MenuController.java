@@ -113,7 +113,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
 //    @Operation(summary = "为菜单分配角色")
 //    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "角色id"),@Parameter(name = "权限代码")})
     @PostMapping("assignRoles")
-    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
+    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)//role.menu.edit
     public Result menuAssignRoles(@ModelAttribute("t") Menu t,String roleIds, String modifiedPermissions) {
         service.saveRoles(t, roleIds, modifiedPermissions);
         return Result.saveSuc();

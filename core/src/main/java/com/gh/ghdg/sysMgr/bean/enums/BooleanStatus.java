@@ -2,15 +2,18 @@ package com.gh.ghdg.sysMgr.bean.enums;
 
 import com.gh.ghdg.sysMgr.bean.IBaseEnum;
 import com.gh.ghdg.sysMgr.bean.entities.EnumConverter;
-import lombok.Getter;
 
 public enum BooleanStatus implements IBaseEnum<Boolean> {
     生效(true),
     失效(false);
 
-    @Getter
     private final Boolean value;
-
+    
+    @Override
+    public Boolean getValue() {
+        return value;
+    }
+    
     BooleanStatus(Boolean value) {
         this.value = value;
     }

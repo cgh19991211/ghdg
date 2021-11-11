@@ -2,7 +2,6 @@ package com.gh.ghdg.api.utils;
 
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.common.utils.Result;
-import lombok.Data;
 
 /**
  * 似乎用不上，先留着

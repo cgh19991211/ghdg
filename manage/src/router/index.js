@@ -63,9 +63,8 @@ export const constantRouterMap = [
       }
     ]
   },
-
+  //404一定要在最后再加载
   {path: '/404', component: () => import('@/views/404'), hidden: true}
-
 ]
 
 export default new Router({
@@ -82,7 +81,7 @@ export const asyncRouterMap = [
     name: 'Bussiness',
     alwaysShow: true,
     meta: {
-      // roles: ['administrator'],
+      roles: ['administrator'],
       title: 'businessMgr',
       icon: 'shopping'
     },

@@ -1,6 +1,5 @@
 package com.gh.ghdg.sysMgr.security;
 
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
