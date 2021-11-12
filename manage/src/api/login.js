@@ -33,3 +33,12 @@ export function updatePwd(params) {
     params
   })
 }
+
+export function refreshToken(refreshToken){
+  console.log("refresh token")
+  return request({
+    url: '/refreshToken',
+    method: 'get',
+    params: refreshToken
+  })
+}

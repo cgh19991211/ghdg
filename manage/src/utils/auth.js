@@ -19,5 +19,6 @@ export function getRefreshToken(){
 }
 
 export function removeToken() {
-  return Cookies.remove(AccessToken)&&Cookies.remove(RefreshToken)
+  Cookies.remove(AccessToken)
+  return Cookies.remove(RefreshToken)
 }

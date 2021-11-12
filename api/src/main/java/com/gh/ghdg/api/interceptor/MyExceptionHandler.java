@@ -1,18 +1,21 @@
 package com.gh.ghdg.api.interceptor;
 
 import cn.hutool.core.util.StrUtil;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.common.utils.constant.Constants;
 import com.gh.ghdg.common.utils.exception.MyErrorAttribute;
+import com.gh.ghdg.common.utils.exception.MyException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.TransactionSystemException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.persistence.RollbackException;
@@ -24,7 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@ControllerAdvice
+@RestControllerAdvice
+@ResponseBody
 public class MyExceptionHandler {
 
 	/**
@@ -32,7 +36,7 @@ public class MyExceptionHandler {
 	 * @param req
 	 * @return
 	 */
-	@ExceptionHandler(Exception.class)
+	@ExceptionHandler(value = Exception.class)
 	public String exceptionHandler(HttpServletRequest req, Exception e) {
 		e.printStackTrace();
 		return requestForward(req);
@@ -44,7 +48,7 @@ public class MyExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler(value = AuthenticationException.class)
     public String exceptionHandler(HttpServletRequest req, AuthenticationException e) {
 		e.printStackTrace();
 		String msg;
@@ -61,7 +65,7 @@ public class MyExceptionHandler {
 		return requestForward(req);
 	}
 	
-	@ExceptionHandler(UnauthenticatedException.class)
+	@ExceptionHandler(value = UnauthenticatedException.class)
 	public String exceptionHandler(HttpServletRequest req, UnauthenticatedException e){
     	e.printStackTrace();
     	req.setAttribute(MyErrorAttribute.MESSAGE,"用户未授权");
@@ -73,16 +77,10 @@ public class MyExceptionHandler {
 	 * @param res
 	 * @param e
 	 */
-	@ExceptionHandler(UnauthorizedException.class)
+	@ExceptionHandler(value = UnauthorizedException.class)
 	public void exceptionHandler(HttpServletResponse res, UnauthorizedException e) throws IOException {
 		e.printStackTrace();
 		res.sendError(403);
-	}
-	
-	@ExceptionHandler(TokenExpiredException.class)
-	public void exceptionHandler(HttpServletResponse res, TokenExpiredException e) throws IOException{
-		e.printStackTrace();
-		res.sendError(Constants.ACCESS_TOKEN_EXPIRE_CODE);
 	}
 
 	/**
@@ -90,7 +88,7 @@ public class MyExceptionHandler {
 	 * @param res
 	 * @param e
 	 */
-	@ExceptionHandler(NoHandlerFoundException.class)
+	@ExceptionHandler(value = NoHandlerFoundException.class)
 	public void exceptionHandler(HttpServletResponse res, NoHandlerFoundException e) throws IOException {
 		e.printStackTrace();
 		res.sendError(404);
@@ -102,7 +100,7 @@ public class MyExceptionHandler {
 	 * @param e
 	 * @return
 	 */
-	@ExceptionHandler(ConstraintViolationException.class)
+	@ExceptionHandler(value = ConstraintViolationException.class)
 	public String exceptionHandler(HttpServletRequest req, ConstraintViolationException e) {
 		e.printStackTrace();
 
@@ -120,7 +118,7 @@ public class MyExceptionHandler {
 		return requestForward(req, is400 ? 400 : 500);
 	}
 
-	@ExceptionHandler(TransactionSystemException.class)
+	@ExceptionHandler(value = TransactionSystemException.class)
 	public String exceptionHandler(HttpServletRequest req, TransactionSystemException e) {
 		e.printStackTrace();
 
@@ -170,5 +168,7 @@ public class MyExceptionHandler {
 		req.setAttribute("javax.servlet.error.status_code", code);
 		return FORWARD;
 	}
+	
+
 	
 }

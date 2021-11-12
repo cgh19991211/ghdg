@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
-import { getAccessToken } from '@/utils/auth'
+import { getAccessToken, getRefreshToken,setAccessToken,setRefreshToken,removeToken } from '@/utils/auth'
+import {refreshToken} from "../api/login";
+import path from "path";
 // axios.defaults.withCredentials=true
 // 创建axios实例
 const service = axios.create({
@@ -38,9 +40,27 @@ service.interceptors.response.use(
     const res = response.data
     if (res.code !== 200) {
       // 50000:无效的token; 50014:请求token过期;  50015:刷新Token过期了;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        //TODO: token过期应该发送刷新token请求；
-        //TODO：无效token则重定向到登陆页面
+      if(res.code === 50014||res.code===50000){
+        refreshToken(getRefreshToken()).then(response => {
+          let data = response.data
+          setAccessToken(data.AccessToken)
+          setRefreshToken(data.RefreshToken)
+          location.reload()
+        }).catch(error => {
+          removeToken()
+          this.$router.push({ path: '/' })
+        })
+      }
+      if ( res.code === 50015) {
+        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
+          confirmButtonText: 'Re-Login',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('user/LogOut').then(() => {
+            location.reload()
+          })
+        })
       }
       return Promise.reject(res.msg)
     } else {
@@ -48,6 +68,8 @@ service.interceptors.response.use(
     }
   },
   error => {
+    console.log("=======debug===========")
+    console.log(error)
     //debug
     if (error.response && error.response.data.errors) {
       Message({

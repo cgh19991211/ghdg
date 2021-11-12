@@ -1,4 +1,4 @@
-package com.gh.ghdg.oprMgr.entities.notice;
+package com.gh.ghdg.oprMgr.entities.message;
 
 import com.gh.ghdg.sysMgr.BaseEntity;
 import org.hibernate.annotations.Table;
@@ -6,9 +6,9 @@ import org.hibernate.annotations.Table;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-@Entity(name = "sys_notice")
-@Table(appliesTo = "sys_notice", comment = "历史消息")
-public class Notice extends BaseEntity {
+@Entity(name = "sys_message")
+@Table(appliesTo = "sys_message", comment = "历史消息")
+public class Message extends BaseEntity {
     @Column
     private String senderId;
     @Column
@@ -22,10 +22,10 @@ public class Notice extends BaseEntity {
     @Column
     private Integer status=0;
     
-    public Notice() {
+    public Message() {
     }
     
-    public Notice(String senderId, String receiver, String tplCode, String type, String remark, Integer status) {
+    public Message(String senderId, String receiver, String tplCode, String type, String remark, Integer status) {
         this.senderId = senderId;
         Receiver = receiver;
         this.tplCode = tplCode;

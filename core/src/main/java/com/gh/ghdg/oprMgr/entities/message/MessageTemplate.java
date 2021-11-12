@@ -1,4 +1,4 @@
-package com.gh.ghdg.oprMgr.entities.notice;
+package com.gh.ghdg.oprMgr.entities.message;
 
 import com.gh.ghdg.sysMgr.BaseEntity;
 import org.hibernate.annotations.Table;
@@ -7,9 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Entity(name = "sys_notice_template")
-@Table(appliesTo = "sys_notice_template",comment = "通知模板")
-public class NoticeTemplate extends BaseEntity {
+@Entity(name = "sys_message_template")
+@Table(appliesTo = "sys_message_template",comment = "通知模板")
+public class MessageTemplate extends BaseEntity {
     @Column(name="code",columnDefinition = "VARCHAR(32) COMMENT '编号'")
     @NotBlank(message = "编号不能为空")
     private String code;
@@ -26,12 +26,12 @@ public class NoticeTemplate extends BaseEntity {
     private Integer type;
     @JoinColumn(name="notice_sender_id", referencedColumnName = "id",  columnDefinition = "VARCHAR(32) comment '发送者id'", insertable = false, updatable = false)
     @ManyToOne(fetch = FetchType.EAGER)
-    private NoticeSender noticeSender;
+    private MessageSender noticeSender;
     
-    public NoticeTemplate() {
+    public MessageTemplate() {
     }
     
-    public NoticeTemplate(String code, String title, String content, String noticeSenderId, Integer type, NoticeSender noticeSender) {
+    public MessageTemplate(String code, String title, String content, String noticeSenderId, Integer type, MessageSender noticeSender) {
         this.code = code;
         this.title = title;
         this.content = content;
@@ -80,11 +80,11 @@ public class NoticeTemplate extends BaseEntity {
         this.type = type;
     }
     
-    public NoticeSender getNoticeSender() {
+    public MessageSender getNoticeSender() {
         return noticeSender;
     }
     
-    public void setNoticeSender(NoticeSender noticeSender) {
+    public void setNoticeSender(MessageSender noticeSender) {
         this.noticeSender = noticeSender;
     }
     

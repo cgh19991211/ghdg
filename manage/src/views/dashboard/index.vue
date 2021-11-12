@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">欢迎光临:{{name}}(<span v-for='role in roles' :key='role'>{{role.roleName}}</span>)</div>
+    <div class="dashboard-text">欢迎光临:{{name}}(<span v-for='role in roles' :key='role.roleName'>{{role.roleName}}</span>)</div>
 
     <el-row :gutter="20">
       <el-col :span="6">
