@@ -41,6 +41,11 @@ public class MyExceptionHandler {
 		e.printStackTrace();
 		return requestForward(req);
     }
+    
+    @ExceptionHandler(value = TokenExpiredException.class)
+	public Result exceptionHandler(HttpServletRequest req, TokenExpiredException e) {
+		return Result.error(false,"access token已过期",null,Constants.ACCESS_TOKEN_EXPIRE_CODE);
+    }
 
     /**
      * 验证异常

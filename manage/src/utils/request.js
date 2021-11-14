@@ -45,13 +45,15 @@ service.interceptors.response.use(
           let data = response.data
           setAccessToken(data.AccessToken)
           setRefreshToken(data.RefreshToken)
+          //成功刷新token就重新加载页面
           location.reload()
         }).catch(error => {
-          removeToken()
+          //刷新失败则跳转到登陆页面
+          // removeToken()
           this.$router.push({ path: '/' })
         })
       }
-      if ( res.code === 50015) {
+      if ( res.code === 50015) {//刷新token也过期了
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
           cancelButtonText: 'Cancel',

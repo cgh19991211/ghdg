@@ -73,6 +73,7 @@ public class ShiroConfig {
         // 访问401和404页面不通过我们的Filter
         filterRuleMap.put("/401", "anon");
         filterRuleMap.put("/login", "anon");
+        filterRuleMap.put("/refreshToken", "anon");//刷新token的请求也要匿名可访问，否则请求将永远进不来
 //        filterRuleMap.put("/swagger**/**", "anon");
 //        filterRuleMap.put("/webjars/**", "anon");
 //        filterRuleMap.put("/v3/**", "anon");

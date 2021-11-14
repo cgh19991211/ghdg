@@ -5,6 +5,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.gh.ghdg.common.cache.redis.RedisUtil;
 import com.gh.ghdg.common.utils.HttpKit;
@@ -15,6 +17,9 @@ import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.service.system.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -35,12 +40,28 @@ public class JwtUtil {
      * @param secret 用户的密码
      * @return 是否正确
      */
-    public static void verify(String token, String username, String secret) throws Exception{
+    public static void verify(String token, String username, String secret){
         Algorithm algorithm = Algorithm.HMAC256(secret);
         JWTVerifier verifier = JWT.require(algorithm)
                 .withClaim("username", username)
                 .build();
-        DecodedJWT jwt = verifier.verify(token);
+        try {
+            DecodedJWT jwt = verifier.verify(token);
+        } catch (TokenExpiredException e) {
+            //TODO: 转发TokenExpiredException到TokenExpiredController
+            HttpServletRequest request = HttpKit.getRequest();
+            request.setAttribute("accessTokenException",e);
+            try {
+                request.getRequestDispatcher("/accessTokenException").forward(request,HttpKit.getResponse());
+            } catch (ServletException servletException) {
+                servletException.printStackTrace();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }catch (JWTVerificationException e){
+            System.out.println("Jwt解码出错");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -143,8 +164,8 @@ public class JwtUtil {
     /**
      * 生成刷新token
      * @param user
-     * @param token
-     * @param refreshDate
+     * @param
+     * @param
      * @return
      */
     public static String signRereshToken(User user){
@@ -155,8 +176,8 @@ public class JwtUtil {
      * 生成AccountToken
      * 只管返回token。
      * 在刷新token的接口中，两个新token再存入map，再把map返回给前端就行。
-     * @param token
-     * @param date
+     * @param
+     * @param
      * @return
      */
     public static String signAccessToken(User user){

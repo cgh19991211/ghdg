@@ -109,8 +109,8 @@ public class LoginController {
      */
 //    @Operation(summary = "刷新token")
 //    @Parameter(description = "需要RefreshToken作为入参，以判断是否需要重新登陆")
-    @GetMapping("/refreshToken/{refreshToken}")
-    public Result accessTokenRefresh(@PathVariable("refreshToken") String refreshToken){
+    @GetMapping("/refreshToken")
+    public Result accessTokenRefresh(@RequestParam("refreshToken") String refreshToken){
         DecodedJWT decode = JWT.decode(refreshToken);
         User user = userService.findByUsername(decode.getClaim("username").asString());
         //TODO:生成新的access token

@@ -39,6 +39,6 @@ export function refreshToken(refreshToken){
   return request({
     url: '/refreshToken',
     method: 'get',
-    params: refreshToken
+    params: {"refreshToken":refreshToken}
   })
 }

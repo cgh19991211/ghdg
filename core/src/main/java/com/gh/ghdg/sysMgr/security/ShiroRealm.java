@@ -2,6 +2,7 @@ package com.gh.ghdg.sysMgr.security;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.gh.ghdg.common.MongoRepository;
+import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.service.system.MenuService;
@@ -17,10 +18,10 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class ShiroRealm extends AuthorizingRealm {
@@ -98,12 +99,13 @@ public class ShiroRealm extends AuthorizingRealm {
      * 认证
      * 验证当前登录的用户，获取认证信息
      *
-     * @param  auth, 包含用户的账号密码等信息
+     * @param  auth--自定义的JwtToken
      * @return an {@link AuthenticationInfo} 查询成功之后，从AuthenticationInfo中返回用户账户信息
      * @throws AuthenticationException 查询或者授权逻辑发生错误则抛出这个异常
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken auth) throws AuthenticationException, TokenExpiredException {
+        
         String token = (String) auth.getCredentials();
         // 解密获得username，用于和数据库进行对比
         AccountInfo accountInfo = JwtUtil.getAccountInfo(token);
@@ -121,14 +123,7 @@ public class ShiroRealm extends AuthorizingRealm {
 //        }
         
         //参考login controller做try catch判定token是否过期或有效
-        try {
-            JwtUtil.verify(token, accountInfo.getUsername(), user.getPassword());
-        } catch (Exception e) {
-            e.printStackTrace();
-            if(e instanceof TokenExpiredException){
-                throw new TokenExpiredException("登陆已过期");
-            }
-        }
+        JwtUtil.verify(token, accountInfo.getUsername(), user.getPassword());
     
         //SimpleAuthenticationInfo(Object principal, Object credentials, String realmName)，
         // 这里principal用于标识用户，比如用户账号，credentials用于验证，比如密码（这里可以是类似md5加密后的）。
