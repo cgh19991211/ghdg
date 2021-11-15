@@ -22,15 +22,15 @@ export default {
       },
       formVisible: false,
       formTitle: '添加用户',
-      deptTree: {
-        show: false,
-        data: [],
-        defaultProps: {
-          id: 'id',
-          label: 'simplename',
-          children: 'children'
-        }
-      },
+      // deptTree: {
+      //   show: false,
+      //   data: [],
+      //   defaultProps: {
+      //     id: 'id',
+      //     label: 'simplename',
+      //     children: 'children'
+      //   }
+      // },
       isAdd: true,
       form: {
         id: '',
@@ -41,10 +41,10 @@ export default {
         email: '',
         password: '',
         rePassword: '',
-        dept: '',
-        status: true,
-        deptid: 1,
-        deptName: ''
+        // dept: '',
+        status: true
+        // deptid: 1,
+        // deptName: ''
       },
       rules: {
         account: [
@@ -86,18 +86,20 @@ export default {
   },
   methods: {
     init() {
-      deptList().then(response => {
-        this.deptTree.data = response.data
-      })
+      // deptList().then(response => {
+      //   this.deptTree.data = response.data
+      // })
       this.fetchData()
     },
     fetchData() {
       this.listLoading = true
       getList(this.listQuery).then(response => {
+        console.log("response")
         this.list = response.data.records
+        console.log(response)
         this.listLoading = false
         this.total = response.data.total
-      })
+      })//TODO: 捕获异常，否则页面一直显示loading
     },
     search() {
       this.fetchData()
@@ -143,9 +145,9 @@ export default {
         email: '',
         password: '',
         rePassword: '',
-        dept: '',
-        status: true,
-        deptid: 1
+        // dept: '',
+        status: true
+        // deptid: 1
       }
     },
     add() {
@@ -247,11 +249,11 @@ export default {
         })
       }
     },
-    handleNodeClick(data, node) {
-      this.form.deptid = data.id
-      this.form.deptName = data.simplename
-      this.deptTree.show = false
-    },
+    // handleNodeClick(data, node) {
+    //   this.form.deptid = data.id
+    //   this.form.deptName = data.simplename
+    //   this.deptTree.show = false
+    // },
 
     openRole() {
       if (this.checkSel()) {

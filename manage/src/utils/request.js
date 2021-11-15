@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
+import router from '../router'
 import { getAccessToken, getRefreshToken,setAccessToken,setRefreshToken,removeToken } from '@/utils/auth'
 import {refreshToken} from "../api/login";
 import path from "path";
@@ -40,28 +41,36 @@ service.interceptors.response.use(
     const res = response.data
     if (res.code !== 200) {
       // 50000:无效的token; 50014:请求token过期;  50015:刷新Token过期了;
-      if(res.code === 50014||res.code===50000){
+      console.log(res.code)
+      if(res.code === 50014){
         refreshToken(getRefreshToken()).then(response => {
           let data = response.data
           setAccessToken(data.AccessToken)
           setRefreshToken(data.RefreshToken)
           //成功刷新token就重新加载页面
           location.reload()
-        }).catch(error => {
-          //刷新失败则跳转到登陆页面
-          // removeToken()
-          this.$router.push({ path: '/' })
-        })
+        })//失败会返回AccessToken过期码
+          // .catch(error => {
+          //   //刷新失败则跳转到登陆页面
+          //   store.dispatch('LogOut').then(() => {
+          //     location.reload()
+          //   })
+          //   // this.$router.push({path:'/'})
+          // })
       }
-      if ( res.code === 50015) {//刷新token也过期了
+      if ( res.code === 50015||res.code === 50000) {//刷新token也过期了||token非法
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          store.dispatch('user/LogOut').then(() => {
-            location.reload()
-          })
+          //TODO:返回登陆页面
+          redirectLogin()
+          return
+          // window.location.href = "/"
+          // store.dispatch('LogOut').then(() => {
+          //   location.reload()
+          // })//不能用登出，得删除浏览器本地token后重定向
         })
       }
       return Promise.reject(res.msg)
@@ -99,3 +108,11 @@ service.interceptors.response.use(
 )
 
 export default service
+
+function redirectLogin () {
+  // router.currentRoute 当前路由对象，和你在组件中访问的 this.$route 是同一个东西
+  // query 参数的数据格式就是：?key=value&key=value
+  //TODO:重定向到登陆页面
+  console.log(router)
+  router.push('/login?redirect=' + router.currentRoute.fullPath)
+}

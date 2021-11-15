@@ -1,5 +1,6 @@
 package com.gh.ghdg.api.controller.system;
 
+import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -19,7 +20,9 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.checkerframework.checker.units.qual.K;
 import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +40,10 @@ public class LoginController {
     
     @Autowired
     private RedisUtil cache;
+    
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver resolver;
     
     /**
      * 用户登录<br>
@@ -110,23 +117,19 @@ public class LoginController {
 //    @Operation(summary = "刷新token")
 //    @Parameter(description = "需要RefreshToken作为入参，以判断是否需要重新登陆")
     @GetMapping("/refreshToken")
-    public Result accessTokenRefresh(@RequestParam("refreshToken") String refreshToken){
+    public Result accessTokenRefresh(@RequestParam(value = "refreshToken",required = false) String refreshToken){
+        if(StrUtil.isEmpty(refreshToken)){
+            return Result.error(false,"invalid token",null,Constants.INVALID_TOKEN_CODE);
+        }
+        
         DecodedJWT decode = JWT.decode(refreshToken);
         User user = userService.findByUsername(decode.getClaim("username").asString());
         //TODO:生成新的access token
             //TODO: 判断refresh token是否过期 有效
-        try {
-            if(user!=null){
-                JwtUtil.verify(refreshToken,user.getUsername(),user.getPassword());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            if(e instanceof TokenExpiredException) {
-                return Result.error(false, "RefreshToken已过期，请重新登陆", null, Constants.REFRESH_TOKEN_EXPIRE_CODE);
-            }else {
-                return Result.error(false,"invalid token",null,Constants.INVALID_TOKEN_CODE);
-            }
+        if(user!=null){
+            JwtUtil.verifyRefreshToken(refreshToken,user.getUsername(),user.getPassword());
         }
+
         String accessToken =JwtUtil.signAccessToken(user);
         
         //TODO: 判断是否需要更新refresh token  RefreshToken>=2*AccessToken

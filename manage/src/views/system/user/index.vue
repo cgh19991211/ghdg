@@ -16,13 +16,13 @@
       <br>
       <el-row>
         <el-col :span="24">
-          <el-button type="success" icon="el-icon-plus" @click.native="add" v-permission="['/mgr/add']">
+          <el-button type="success" icon="el-icon-plus" @click.native="add" v-permission="['/user/add']">
             {{$t('button.add') }}
           </el-button>
-          <el-button type="primary" icon="el-icon-edit" @click.native="edit" v-permission="['/mgr/edit']">
+          <el-button type="primary" icon="el-icon-edit" @click.native="edit" v-permission="['/user/edit']">
             {{$t('button.edit') }}
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" @click.native="remove" v-permission="['/mgr/delete']">
+          <el-button type="danger" icon="el-icon-delete" @click.native="remove" v-permission="['/user/delete']">
             {{$t('button.delete') }}
           </el-button>
           <el-button type="info" icon="el-icon-role" @click.native="openRole">角色分配</el-button>
@@ -36,17 +36,17 @@
 
       <el-table-column label="账号">
         <template slot-scope="scope">
-          {{scope.row.account}}
+          {{scope.row.username}}
         </template>
       </el-table-column>
       <el-table-column label="姓名">
         <template slot-scope="scope">
-          {{scope.row.name}}
+          {{scope.row.nickname}}
         </template>
       </el-table-column>
       <el-table-column label="性别">
         <template slot-scope="scope">
-          {{scope.row.sexName}}
+          {{scope.row.gender}}
         </template>
       </el-table-column>
       <el-table-column label="角色">
@@ -54,11 +54,11 @@
           {{scope.row.roleName}}
         </template>
       </el-table-column>
-      <el-table-column label="部门">
-        <template slot-scope="scope">
-          {{scope.row.deptName}}
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="部门">-->
+<!--        <template slot-scope="scope">-->
+<!--          {{scope.row.deptName}}-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="邮箱">
         <template slot-scope="scope">
           {{scope.row.email}}
@@ -71,12 +71,12 @@
       </el-table-column>
       <el-table-column label="创建时间">
         <template slot-scope="scope">
-          {{scope.row.createtime}}
+          {{scope.row.createdDate}}
         </template>
       </el-table-column>
       <el-table-column label="状态">
         <template slot-scope="scope">
-          {{scope.row.statusName}}
+          {{scope.row.status}}
         </template>
       </el-table-column>
 
@@ -140,25 +140,25 @@
               <el-input v-model="form.phone"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="所属部门" >
-              <el-input
-                placeholder="请选择所属部门"
-                v-model="form.deptName"
-                readonly="readonly"
-                @click.native="deptTree.show  = !deptTree.show">
-              </el-input>
-              <el-tree v-if="deptTree.show"
-                       empty-text="暂无数据"
-                       :expand-on-click-node="false"
-                       :data="deptTree.data"
-                       :props="deptTree.defaultProps"
-                       @node-click="handleNodeClick"
-                       class="input-tree">
-              </el-tree>
+<!--          <el-col :span="12">-->
+<!--            <el-form-item label="所属部门" >-->
+<!--              <el-input-->
+<!--                placeholder="请选择所属部门"-->
+<!--                v-model="form.deptName"-->
+<!--                readonly="readonly"-->
+<!--                @click.native="deptTree.show  = !deptTree.show">-->
+<!--              </el-input>-->
+<!--              <el-tree v-if="deptTree.show"-->
+<!--                       empty-text="暂无数据"-->
+<!--                       :expand-on-click-node="false"-->
+<!--                       :data="deptTree.data"-->
+<!--                       :props="deptTree.defaultProps"-->
+<!--                       @node-click="handleNodeClick"-->
+<!--                       class="input-tree">-->
+<!--              </el-tree>-->
 
-            </el-form-item>
-          </el-col>
+<!--            </el-form-item>-->
+<!--          </el-col>-->
           <el-col :span="12">
             <el-form-item label="是否启用" prop="status">
               <el-switch v-model="form.status"></el-switch>

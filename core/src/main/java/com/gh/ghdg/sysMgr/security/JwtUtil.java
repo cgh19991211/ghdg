@@ -46,13 +46,37 @@ public class JwtUtil {
                 .withClaim("username", username)
                 .build();
         try {
-            DecodedJWT jwt = verifier.verify(token);
+            verifier.verify(token);
         } catch (TokenExpiredException e) {
             //TODO: 转发TokenExpiredException到TokenExpiredController
             HttpServletRequest request = HttpKit.getRequest();
             request.setAttribute("accessTokenException",e);
             try {
                 request.getRequestDispatcher("/accessTokenException").forward(request,HttpKit.getResponse());
+            } catch (ServletException servletException) {
+                servletException.printStackTrace();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        }catch (JWTVerificationException e){
+            System.out.println("Jwt解码出错");
+            e.printStackTrace();
+        }
+    }
+    
+    public static void verifyRefreshToken(String token, String username, String secret) throws JWTVerificationException{
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        JWTVerifier verifier = JWT.require(algorithm)
+                .withClaim("username", username)
+                .build();
+        try{
+            verifier.verify(token);
+        }catch (TokenExpiredException e){
+            //TODO: 转发TokenExpiredException到TokenExpiredController
+            HttpServletRequest request = HttpKit.getRequest();
+            request.setAttribute("refreshTokenException",e);
+            try {
+                request.getRequestDispatcher("/refreshTokenException").forward(request,HttpKit.getResponse());
             } catch (ServletException servletException) {
                 servletException.printStackTrace();
             } catch (IOException ioException) {

@@ -5,8 +5,11 @@ import com.gh.ghdg.common.utils.constant.Constants;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -17,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
  * 拦截请求
  */
 public class JwtFilter extends BasicHttpAuthenticationFilter {
-
     /**
      * 判断用户是否想要登入。
      * 检测header里面是否包含Authorization字段即可

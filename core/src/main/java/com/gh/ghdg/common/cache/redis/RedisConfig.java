@@ -23,7 +23,7 @@ import java.time.Duration;
 @PropertySource("classpath:cache.properties")
 public class RedisConfig {
     //Key的过期时间
-    private Duration timeToLive = Duration.ofDays(1);
+    private Duration timeToLive = Duration.ofHours(1);//Duration.ofDays(1);
 //    private Duration timeToLive = Duration.ofMinutes(1);//一分钟过期，做测试用
     
     @Bean
@@ -54,7 +54,7 @@ public class RedisConfig {
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.
                 defaultCacheConfig().
-                entryTtl(this.timeToLive).			//Key过期时间 此处设置1天
+                entryTtl(this.timeToLive).			//Key过期时间
                 serializeKeysWith(RedisSerializationContext.SerializationPair.
                 fromSerializer(new StringRedisSerializer())).
                 serializeValuesWith(RedisSerializationContext.SerializationPair.

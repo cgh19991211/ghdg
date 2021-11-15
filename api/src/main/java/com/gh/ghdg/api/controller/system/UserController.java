@@ -14,6 +14,7 @@ import com.gh.ghdg.sysMgr.security.JwtUtil;
 import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -42,8 +43,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
             page.addFilter(SearchFilter.build("username", SearchFilter.Operator.LIKE, username));
         }
         page.addFilter(SearchFilter.build("status",SearchFilter.Operator.EQ,0));
-        page = userService.queryPage(page);
-        
+        page = userService.queryPage (page);
         return Result.suc(page);
     }
     
@@ -53,7 +53,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @return
      * @throws Exception
      */
-    @PostMapping("save")
+    @PostMapping("/save")
     @RequiresPermissions(PermissionCode.USER_EDIT)
     public Result userSave(@ModelAttribute("t") User t)throws Exception{
         return super.save(t);
@@ -65,7 +65,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @param t
      * @return
      */
-    @PostMapping("resetPassword")
+    @PostMapping("/resetPassword")
     @RequiresPermissions(PermissionCode.USER_EDIT)
     public Result userResetPassword(@RequestParam(required = true) String newPassword){
         service.resetPassword(newPassword);
@@ -78,7 +78,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @return
      * @throws Exception
      */
-    @PostMapping("delete/{id}")
+    @PostMapping("/delete/{id}")
     @RequiresPermissions(PermissionCode.USER_EDIT)
     public Result userDelete(@ModelAttribute("t")User t)throws Exception{
         return super.delete(t);
@@ -100,7 +100,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @param ids 角色ids
      * @return
      */
-    @PostMapping("setRoles")
+    @PostMapping("/setRoles")
     @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
     public Result userSetRoles(@ModelAttribute("t")User t,String ids){
         service.saveRoles(t,ids);
@@ -113,7 +113,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @param roleIds
      * @return
      */
-    @PostMapping("deleteRoles/{id}/{roleIds}")
+    @PostMapping("/deleteRoles/{id}/{roleIds}")
     @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
     public Result userDeleteRoles(@ModelAttribute("t")User t, @PathVariable String roleIds){
         service.deleteRoles(t, roleIds);

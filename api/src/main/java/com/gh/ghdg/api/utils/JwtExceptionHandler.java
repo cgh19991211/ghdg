@@ -1,6 +1,5 @@
 package com.gh.ghdg.api.utils;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.common.utils.constant.Constants;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +22,11 @@ public class JwtExceptionHandler {
     @RequestMapping("/accessTokenException")
     public Result expiredJwtException(HttpServletRequest request) {
         return Result.error(false,"access token已过期",null, Constants.ACCESS_TOKEN_EXPIRE_CODE);
+    }
+    
+    @RequestMapping("/refreshTokenException")
+    public Result expiredRefreshTokenException(HttpServletRequest request) {
+        return Result.error(false,"refresh token已过期",null, Constants.REFRESH_TOKEN_EXPIRE_CODE);
     }
     
     

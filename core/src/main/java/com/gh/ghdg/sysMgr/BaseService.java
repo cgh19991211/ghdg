@@ -28,6 +28,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * value:当前缓存分组名称
+ * key：缓存key
+ * unless：使用场景，如果unless的表达式返回null则不缓存
+ * @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
+ *
+ *
+ * @CacheEvict(value = CacheName.APPLICATION,key = "#root.targetClass.simpleName+':'+#id")
+ * @param <T>
+ * @param <D>
+ */
 public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
     static{
 

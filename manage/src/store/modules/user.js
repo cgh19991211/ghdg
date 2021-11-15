@@ -37,7 +37,6 @@ const user = {
     SET_EMAIL: (state,email) => {
       state.email = email
     }
-
   },
 
   actions: {
@@ -86,6 +85,7 @@ const user = {
 
     // 登出
     LogOut({ commit, state }) {
+      console.log("LogOut")
       return new Promise((resolve, reject) => {
         logout(state.AccessToken).then(() => {
           commit('SET_ACCESS_TOKEN', '')

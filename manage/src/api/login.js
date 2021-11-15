@@ -28,9 +28,9 @@ export function logout() {
 
 export function updatePwd(params) {
   return request({
-    url: '/account/updatePwd',
+    url: '/sys/user/resetPassword',
     method: 'post',
-    params
+    params: {'newPassword':params}
   })
 }
 
