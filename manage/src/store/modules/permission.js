@@ -9,8 +9,8 @@ import { asyncRouterMap, constantRouterMap } from '@/router'
  */
 function hasMenu(menus, route) {
   if (route.path) {
-    // console.log("route与菜单是否匹配")
-    // console.log(route)
+    console.log("route与菜单是否匹配")
+    console.log(route)
     // console.log(menus)
     //返回菜单代码是否在route路由的meta中
      return menus.some(menu => ( menu[4]!=null && menu[4].indexOf(route.path) >= 0))

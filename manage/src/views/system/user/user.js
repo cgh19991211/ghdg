@@ -85,7 +85,7 @@ export default {
     this.init()
   },
   methods: {
-    init() {
+    init() {//当RefreshToken过期后，数据被清楚，这里的init会为undefined，控制台会报错。
       // deptList().then(response => {
       //   this.deptTree.data = response.data
       // })
@@ -99,7 +99,9 @@ export default {
         console.log(response)
         this.listLoading = false
         this.total = response.data.total
-      })//TODO: 捕获异常，否则页面一直显示loading
+      }).catch(()=>{
+
+      })
     },
     search() {
       this.fetchData()

@@ -12,7 +12,6 @@ const store = new Vuex.Store({
     app,
     permission,
     user
-
   },
   getters
 })

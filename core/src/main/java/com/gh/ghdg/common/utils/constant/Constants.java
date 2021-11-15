@@ -11,7 +11,7 @@ public class Constants {
     public static String TOKEN = "token";
     public static String TOKEN_TYPE = "type";
     // 过期时间30分钟
-    public static final long ACCESS_EXPIRE_TIME = 2 * 1000;//30mins
+    public static final long ACCESS_EXPIRE_TIME =30 * 60 * 1000;//30mins
     //真实过期时间3倍access token过期时间
     public static final long REFRESH_EXPIRE_TIME = ACCESS_EXPIRE_TIME*2;
 

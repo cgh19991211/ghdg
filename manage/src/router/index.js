@@ -24,7 +24,11 @@ import Layout from '../views/layout/Layout'
   }
  **/
 export const constantRouterMap = [
-  {path: '/login', component: () => import('@/views/login/index'), hidden: true},
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
   {
     path: '/',//路由的路径
     component: Layout,//路由映射的组件，  这里的layout作为父组件
@@ -66,12 +70,15 @@ export const constantRouterMap = [
   //404一定要在最后再加载
   {path: '/404', component: () => import('@/views/404'), hidden: true}
 ]
-
-export default new Router({
-  // mode: 'history', //后端支持可开
-  scrollBehavior: () => ({y: 0}),
+const createRouter = () => new Router({
+  // mode: 'history', // require service support
+  scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+
+const router = createRouter()
+
+export default router
 
 export const asyncRouterMap = [
   {

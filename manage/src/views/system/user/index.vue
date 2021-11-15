@@ -51,7 +51,16 @@
       </el-table-column>
       <el-table-column label="角色">
         <template slot-scope="scope">
-          {{scope.row.roleName}}
+<!--          <div>-->
+<!--            <ul>-->
+<!--              <li v-for="item in scope.row.rolename">-->
+<!--                {{ item }}-->
+<!--              </li>-->
+<!--            </ul>-->
+<!--          </div>-->
+          <span v-for="(item,index) in scope.row.rolename">
+            {{ item }} <span v-if="index<scope.row.rolename.length-1">,&nbsp;</span>
+          </span>
         </template>
       </el-table-column>
 <!--      <el-table-column label="部门">-->
@@ -76,7 +85,8 @@
       </el-table-column>
       <el-table-column label="状态">
         <template slot-scope="scope">
-          {{scope.row.status}}
+          <span v-if="scope.row.status===0">生效</span>
+          <span v-else-if="scope.row.status===1">冻结</span>
         </template>
       </el-table-column>
 

@@ -4,18 +4,26 @@ import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.api.controller.BaseController;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
+import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.gh.ghdg.sysMgr.bean.constant.factory.PageFactory;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
+import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;
+import com.gh.ghdg.sysMgr.bean.vo.UserVo;
+import com.gh.ghdg.sysMgr.bean.vo.UserVoFactory;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.service.system.UserService;
 import com.gh.ghdg.sysMgr.security.JwtUtil;
 import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 //@Api(tags = "用户接口")
@@ -44,6 +52,11 @@ public class UserController extends BaseController<User, UserDao, UserService> {
         }
         page.addFilter(SearchFilter.build("status",SearchFilter.Operator.EQ,0));
         page = userService.queryPage (page);
+        List<UserVo> users = new ArrayList<>();
+        for(User u:(List<User>)page.getRecords()){
+            users.add(UserVoFactory.me().userVo(u));
+        }
+        page.setRecords(users);
         return Result.suc(page);
     }
     

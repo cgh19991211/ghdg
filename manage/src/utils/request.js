@@ -49,7 +49,8 @@ service.interceptors.response.use(
           setRefreshToken(data.RefreshToken)
           //成功刷新token就重新加载页面
           location.reload()
-        })//失败会返回AccessToken过期码
+        })
+        //失败会返回AccessToken过期码
           // .catch(error => {
           //   //刷新失败则跳转到登陆页面
           //   store.dispatch('LogOut').then(() => {
@@ -58,20 +59,19 @@ service.interceptors.response.use(
           //   // this.$router.push({path:'/'})
           // })
       }
-      if ( res.code === 50015||res.code === 50000) {//刷新token也过期了||token非法
+      if ( res.code === 50015) {//刷新token也过期了
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
+          removeToken()
           //TODO:返回登陆页面
           redirectLogin()
-          return
-          // window.location.href = "/"
-          // store.dispatch('LogOut').then(() => {
-          //   location.reload()
-          // })//不能用登出，得删除浏览器本地token后重定向
         })
+      }
+      if(res.code === 50000){//token非法
+
       }
       return Promise.reject(res.msg)
     } else {
@@ -114,5 +114,6 @@ function redirectLogin () {
   // query 参数的数据格式就是：?key=value&key=value
   //TODO:重定向到登陆页面
   console.log(router)
-  router.push('/login?redirect=' + router.currentRoute.fullPath)
+  console.log(router.currentRoute.fullPath)
+  router.push('/login')
 }

@@ -55,7 +55,16 @@ public class LoginController {
 //    @Operation(summary = "登陆接口方法")
 //    @Parameter(name = "用户信息入参")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public Result login(User userF) {
+    public Result login(User userF) throws Exception {
+        //TODO:先查缓存看是否已经登陆
+        String s = (String) cache.get(HttpKit.getAccessToken());
+        if(StrUtil.isNotEmpty(s)){
+            Map<String, String> result = new HashMap<>(1);
+            result.put(Constants.ACCESS_TOKEN_NAME, s);
+            result.put(Constants.REFRESH_TOKEN_NAME,HttpKit.getRefreshToken());
+            return Result.suc(result);
+        }
+    
         String userName = userF.getUsername();
         String userPassword = userF.getPassword();
         String token = null;
@@ -84,7 +93,9 @@ public class LoginController {
         cache.set(Constants.REFRESH_TOKEN_START_TIME+userName,System.currentTimeMillis(),Constants.REFRESH_EXPIRE_TIME);
         //token与user作为键值对存入缓存
         cache.set(token,user);
-        cache.set(refreshToken,user);
+//        cache.set(refreshToken,user);
+        //更新登陆时间
+        userService.save(user);
         return Result.suc(result);
     }
     
@@ -103,8 +114,8 @@ public class LoginController {
             return Result.error("no such user");
         }
         cache.del(Constants.REFRESH_TOKEN_START_TIME+curUser.getUsername(),
-                HttpKit.getAccessToken(),
-                HttpKit.getRefreshToken());
+                HttpKit.getAccessToken());
+//                HttpKit.getRefreshToken());
         return Result.suc("成功退出登陆");
     }
     
@@ -128,6 +139,8 @@ public class LoginController {
             //TODO: 判断refresh token是否过期 有效
         if(user!=null){
             JwtUtil.verifyRefreshToken(refreshToken,user.getUsername(),user.getPassword());
+        }else{
+            return Result.error(false,"用户不存在",null,Constants.INVALID_TOKEN_CODE);
         }
 
         String accessToken =JwtUtil.signAccessToken(user);
@@ -135,12 +148,12 @@ public class LoginController {
         //TODO: 判断是否需要更新refresh token  RefreshToken>=2*AccessToken
         //下面判断是否刷新 refreshToken，如果refreshToken 快过期了 需要重新生成一个替换掉
         //refreshToken 有效时长是应该为accessToken有效时长的2倍
-        long minTimeOfRefreshToken = 2*Constants.ACCESS_TOKEN_EXPIRE_CODE;
+        long minTimeOfRefreshToken = 2*Constants.ACCESS_EXPIRE_TIME;
         //refreshToken创建的起始时间点
         Long refreshTokenStartTime = cache.get(Constants.REFRESH_TOKEN_START_TIME+user.getUsername());
         //(refreshToken上次创建的时间点 + refreshToken的有效时长 - 当前时间点) 表示refreshToken还剩余的有效时长，
         // 如果小于2倍accessToken时长 ，则刷新 refreshToken
-        if(refreshTokenStartTime == null || (refreshTokenStartTime + Constants.REFRESH_TOKEN_EXPIRE_CODE *1000) - System.currentTimeMillis() <= minTimeOfRefreshToken*1000){
+        if(refreshTokenStartTime == null || (refreshTokenStartTime + Constants.REFRESH_EXPIRE_TIME *1000) - System.currentTimeMillis() <= minTimeOfRefreshToken*1000){
             //刷新refreshToken
             refreshToken = JwtUtil.signRereshToken(user);
             cache.set(Constants.REFRESH_TOKEN_START_TIME+user.getUsername(),System.currentTimeMillis(),(int)Constants.REFRESH_EXPIRE_TIME);
@@ -152,7 +165,6 @@ public class LoginController {
         return Result.suc(map);
     }
     
-//    @Operation(summary = "获取当前用户信息")
     
     /**
      * 需要返回用户信息，包括基本信息profile，角色，权限，菜单等
