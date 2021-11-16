@@ -5,8 +5,8 @@ import com.gh.ghdg.sysMgr.bean.entities.EnumConverter;
 
 public enum Status implements IBaseEnum<Integer> {
     
-    生效(0),
-    失效(1);
+    生效(1),
+    失效(0);
 
     private Integer value;
 

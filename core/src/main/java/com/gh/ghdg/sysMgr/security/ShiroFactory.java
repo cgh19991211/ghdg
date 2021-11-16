@@ -109,7 +109,6 @@ public class ShiroFactory {
                 sm.setTips(m.getTip());
                 sm.setDisplay_seq(m.getDisplaySeq());
                 sm.setIsmenu(m.getType().getValue());
-                sm.setIsopen(m.getIsopen());
                 sm.setIcon(m.getIcon());
                 sm.setStatus(m.getStatus().getValue());
                 List<Permission> permissions = m.getPermissions();

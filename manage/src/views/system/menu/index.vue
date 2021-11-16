@@ -25,17 +25,17 @@
           <span >{{scope.row.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否是菜单" >
+      <el-table-column label="类型" >
         <template slot-scope="scope">
-          <span >{{scope.row.type}}</span>
+          <span>{{scope.row.type}}</span>
         </template>
       </el-table-column>
-        <el-table-column label="URL">
+        <el-table-column label="tip">
           <template slot-scope="scope">
-            <span >{{scope.row.url}}</span>
+            <span >{{scope.row.tip}}</span>
           </template>
       </el-table-column>
-      <el-table-column label="是否启用">
+      <el-table-column label="是否生效">
         <template slot-scope="scope">
           <span >{{scope.row.status}}</span>
         </template>
@@ -60,35 +60,35 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="120px">
           <el-row>
             <el-col :span="12">
-              <el-form-item label="名称" prop="name">
-                <el-input v-model="form.name" minlength=1></el-input>
+              <el-form-item label="名称" prop="menuName">
+                <el-input v-model="form.menuName" minlength=1></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
-              <el-form-item label="请求地址" prop="url">
-                <el-input v-model="form.url"  minlength=1></el-input>
+           <el-col :span="12">
+              <el-form-item label="tip" prop="tip">
+                <el-input v-model="form.tip"  minlength=0></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="12">
-              <el-form-item label="是否是菜单">
-                <el-radio-group v-model="form.ismenu">
-                  <el-radio :label="1">是</el-radio>
-                  <el-radio :label="0">否</el-radio>
+              <el-form-item label="类型">
+                <el-radio-group v-model="form.type">
+                  <el-radio v-model="form.type" label="menu">菜单</el-radio>
+                  <el-radio v-model="form.type" label="button">按钮</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="是否启用">
+              <el-form-item label="是否生效">
                 <el-radio-group v-model="form.status">
-                  <el-radio :label="1">是</el-radio>
-                  <el-radio :label="0">否</el-radio>
+                  <el-radio v-model="form.status" label="生效">是</el-radio>
+                  <el-radio v-model="form.status" label="冻结">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="菜单编号" prop="code">
-                <el-input v-model="form.code"></el-input>
+              <el-form-item label="菜单编码" prop="menuCode">
+                <el-input v-model="form.menuCode"></el-input>
               </el-form-item>
             </el-col>
 
@@ -98,8 +98,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="排序" prop="num">
-                <el-input type="number" v-model="form.num"></el-input>
+              <el-form-item label="排序" prop="displaySeq">
+                <el-input type="number" v-model="form.displaySeq"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -118,7 +118,6 @@
                          @node-click="handleNodeClick"
                          class="input-tree">
                 </el-tree>
-
               </el-form-item>
             </el-col>
 

@@ -8,39 +8,38 @@ export default {
     return {
       showTree: false,
       defaultProps: {
-        id: 'code',
-        label: 'name',
+        id: 'id',
+        label: 'menuName',
         children: 'children'
       },
 
       listLoading: true,
-      expandAll: false,
+      expandAll: true,
       formTitle: '',
       formVisible: false,
       isAdd: false,
       form: {
         id: '',
+        parent: '',
         pname: '',
-        name: '',
-        code: '',
-        url: '',
+        menuName: '',
+        menuCode: '',
         pcode: '',
-        ismenu: 1,
-        num: 1
+        type: 'menu',
+        displaySeq: 1,
+        status: '生效',
+        tip: ''
       },
       rules: {
-        name: [
+        menuName: [
           { required: true, message: '请输入菜单名称', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          { min: 2, max: 20, message: '长度在 2 到 40 个字符', trigger: 'blur' }
         ],
-        code: [
+        menuCode: [
           { required: true, message: '请输入编码', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          { min: 2, max: 20, message: '长度在 2 到 40 个字符', trigger: 'blur' }
         ],
-        url: [
-          { required: true, message: '请输入请求地址', trigger: 'blur' }
-        ],
-        num: [
+        displaySeq: [
           { required: true, message: '请输入排序', trigger: 'blur' }
         ]
       },
@@ -64,8 +63,9 @@ export default {
       })
     },
     handleNodeClick(data, node) {
-      this.form.pcode = data.code
-      this.form.pname = data.name
+      this.form.pcode = data.menuCode
+      this.form.pname = data.menuName
+      this.form.parent = data.id
       this.showTree = false
     },
     checkSel() {
@@ -89,8 +89,10 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           const menuData = self.form
-          menuData.parent = null
+          // menuData.parent = null
           menuData.children = null
+          // 把表单提交上去 -- 但是为啥把表单parent与children都置空
+          console.log(menuData)
           save(menuData).then(response => {
             this.$message({
               message: '提交成功',
@@ -106,19 +108,19 @@ export default {
     },
     edit(row) {
       this.form = row
-      if (row.type === 'menu') {
-        this.form.ismenu = 1
-      } else {
-        this.form.ismenu = 0
-      }
-      if (row.status === '生效') {
-        this.form.status = 1
-      } else {
-        this.form.status = 0
-      }
+      // if (row.type === 'menu') {
+      //   this.form.type = 1
+      // } else {
+      //   this.form.type = 0
+      // }
+      // if (row.status === '生效') {
+      //   this.form.status = 1
+      // } else {
+      //   this.form.status = 0
+      // }
       if (row.parent) {
-        this.form.pcode = row.parent.code
-        this.form.pname = row.parent.name
+        this.form.pcode = row.parent.menuCode
+        this.form.pname = row.parent.menuName
       }
       console.log(this.form.pcode)
       this.formTitle = '编辑菜单'

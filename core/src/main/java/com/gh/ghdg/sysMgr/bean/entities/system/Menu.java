@@ -28,8 +28,6 @@ public class Menu extends TreeEntity<Menu> {
     
     private String tip;
     
-    private Integer isopen;
-    
     private String icon;
     
     private TypeEnum.MenuType type = TypeEnum.MenuType.menu;//1-menu 0-button 3-module, default 0-button
@@ -51,7 +49,7 @@ public class Menu extends TreeEntity<Menu> {
 
     private List<Permission> authPermissions = new ArrayList<>();
     
-    public Menu(Menu parent, String menuCode, String menuName, String tip, TypeEnum.MenuType type, Status status, List<Permission> permissions, List<RoleMenu> roleMenus, List<UserMenu> userMenus, boolean navigation, List<Permission> authPermissions, Integer isopen, String icon) {
+    public Menu(Menu parent, String menuCode, String menuName, String tip, TypeEnum.MenuType type, Status status, List<Permission> permissions, List<RoleMenu> roleMenus, List<UserMenu> userMenus, boolean navigation, List<Permission> authPermissions, String icon) {
         this.parent = parent;
         this.menuCode = menuCode;
         this.menuName = menuName;
@@ -63,7 +61,6 @@ public class Menu extends TreeEntity<Menu> {
         this.userMenus = userMenus;
         this.navigation = navigation;
         this.authPermissions = authPermissions;
-        this.isopen = isopen;
         this.icon = icon;
     }
     
@@ -81,7 +78,7 @@ public class Menu extends TreeEntity<Menu> {
     }
     
     @NotBlank(message = "菜单代码不得为空")
-    @Length(max = 40, message = "菜单代码不得超过 40 位")
+    @Length(min = 2, max = 40, message = "菜单代码不得超过 40 位")
     @Unique(name = "菜单代码")
     public String getMenuCode() {
         return menuCode;
@@ -92,7 +89,7 @@ public class Menu extends TreeEntity<Menu> {
     }
     
     @NotBlank(message = "菜单名称不得为空")
-    @Length(max = 40, message = "菜单名称不得超过 40 位")
+    @Length(min = 2, max = 40, message = "菜单名称不得超过 40 位")
     @Unique(name = "菜单名称", extraFields = "parent")
     public String getMenuName() {
         return menuName;
@@ -175,14 +172,6 @@ public class Menu extends TreeEntity<Menu> {
     
     public void setAuthPermissions(List<Permission> authPermissions) {
         this.authPermissions = authPermissions;
-    }
-    
-    public Integer getIsopen() {
-        return isopen;
-    }
-    
-    public void setIsopen(Integer isopen) {
-        this.isopen = isopen;
     }
     
     public String getIcon() {

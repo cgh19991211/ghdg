@@ -15,7 +15,6 @@ public class ShiroMenu implements Serializable {
     private String menuCode;
     private String icon;
     private Integer ismenu;//type: 1-menu  o-button
-    private Integer isopen;//是否默认打开
     private String level;//级别
     private Integer display_seq;
     private Integer status;
@@ -27,13 +26,12 @@ public class ShiroMenu implements Serializable {
     public ShiroMenu() {
     }
     
-    public ShiroMenu(String id, String menuName, String menuCode, String icon, Integer ismenu, Integer isopen, String level, Integer display_seq, Integer status, String tips, String url, String pcode, String[] pcodes) {
+    public ShiroMenu(String id, String menuName, String menuCode, String icon, Integer ismenu, String level, Integer display_seq, Integer status, String tips, String url, String pcode, String[] pcodes) {
         this.id = id;
         this.menuName = menuName;
         this.menuCode = menuCode;
         this.icon = icon;
         this.ismenu = ismenu;
-        this.isopen = isopen;
         this.level = level;
         this.display_seq = display_seq;
         this.status = status;
@@ -89,14 +87,6 @@ public class ShiroMenu implements Serializable {
     
     public void setIsmenu(Integer ismenu) {
         this.ismenu = ismenu;
-    }
-    
-    public Integer getIsopen() {
-        return isopen;
-    }
-    
-    public void setIsopen(Integer isopen) {
-        this.isopen = isopen;
     }
     
     public String getLevel() {
@@ -163,7 +153,6 @@ public class ShiroMenu implements Serializable {
                 ", menuCode='" + menuCode + '\'' +
                 ", icon='" + icon + '\'' +
                 ", ismenu=" + ismenu +
-                ", isopen='" + isopen + '\'' +
                 ", level='" + level + '\'' +
                 ", display_seq=" + display_seq +
                 ", status=" + status +

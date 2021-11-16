@@ -9,7 +9,7 @@ export function getList() {
 
 export function save(params) {
   return request({
-    url: 'sys/menu',
+    url: 'sys/menu/save',
     method: 'post',
     params: params
   })
@@ -17,8 +17,8 @@ export function save(params) {
 
 export function delMenu(id) {
   return request({
-    url: 'sys/menu',
-    method: 'delete',
+    url: 'sys/menu/delete',
+    method: 'post',
     params: {
       id: id
     }
