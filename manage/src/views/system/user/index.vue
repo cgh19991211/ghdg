@@ -3,10 +3,10 @@
     <div class="block">
       <el-row  :gutter="20">
         <el-col :span="6">
-          <el-input v-model="listQuery.account" placeholder="请输入帐号"></el-input>
+          <el-input v-model="listQuery.username" placeholder="请输入帐号名"></el-input>
         </el-col>
         <el-col :span="6">
-          <el-input v-model="listQuery.name" placeholder="请输入姓名"></el-input>
+          <el-input v-model="listQuery.nickname" placeholder="请输入昵称"></el-input>
         </el-col>
         <el-col :span="6">
           <el-button type="success" icon="el-icon-search" @click.native="search">{{ $t('button.search') }}</el-button>
@@ -16,13 +16,13 @@
       <br>
       <el-row>
         <el-col :span="24">
-          <el-button type="success" icon="el-icon-plus" @click.native="add" v-permission="['/user/add']">
+          <el-button type="success" icon="el-icon-plus" @click.native="add" v-permission="['/user/edit']">
             {{$t('button.add') }}
           </el-button>
           <el-button type="primary" icon="el-icon-edit" @click.native="edit" v-permission="['/user/edit']">
             {{$t('button.edit') }}
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" @click.native="remove" v-permission="['/user/delete']">
+          <el-button type="danger" icon="el-icon-delete" @click.native="remove" v-permission="['/user/edit']">
             {{$t('button.delete') }}
           </el-button>
           <el-button type="info" icon="el-icon-role" @click.native="openRole">角色分配</el-button>
@@ -34,12 +34,12 @@
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row
     @current-change="handleCurrentChange">
 
-      <el-table-column label="账号">
+      <el-table-column label="账号名">
         <template slot-scope="scope">
           {{scope.row.username}}
         </template>
       </el-table-column>
-      <el-table-column label="姓名">
+      <el-table-column label="昵称">
         <template slot-scope="scope">
           {{scope.row.nickname}}
         </template>
@@ -51,23 +51,11 @@
       </el-table-column>
       <el-table-column label="角色">
         <template slot-scope="scope">
-<!--          <div>-->
-<!--            <ul>-->
-<!--              <li v-for="item in scope.row.rolename">-->
-<!--                {{ item }}-->
-<!--              </li>-->
-<!--            </ul>-->
-<!--          </div>-->
           <span v-for="(item,index) in scope.row.rolename">
             {{ item }} <span v-if="index<scope.row.rolename.length-1">,&nbsp;</span>
           </span>
         </template>
       </el-table-column>
-<!--      <el-table-column label="部门">-->
-<!--        <template slot-scope="scope">-->
-<!--          {{scope.row.deptName}}-->
-<!--        </template>-->
-<!--      </el-table-column>-->
       <el-table-column label="邮箱">
         <template slot-scope="scope">
           {{scope.row.email}}
@@ -78,18 +66,19 @@
           {{scope.row.phone}}
         </template>
       </el-table-column>
-      <el-table-column label="创建时间">
-        <template slot-scope="scope">
-          {{scope.row.createdDate}}
-        </template>
-      </el-table-column>
+      <el-table-column label="创建时间" prop="createdDate" :formatter="dateFormat"/>
       <el-table-column label="状态">
         <template slot-scope="scope">
           <span v-if="scope.row.status===0">生效</span>
           <span v-else-if="scope.row.status===1">冻结</span>
         </template>
       </el-table-column>
-
+      <el-table-column prop="lastLoginDate" label="上次登陆时间" :formatter="dateFormat"/>
+      <el-table-column label="备注">
+        <template slot-scope="scope">
+          {{scope.row.remark}}
+        </template>
+      </el-table-column>
 
     </el-table>
 
@@ -112,19 +101,19 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="账户" prop="account">
-              <el-input v-model="form.account" minlength=1></el-input>
+            <el-form-item label="账户名" prop="username">
+              <el-input v-model="form.username" minlength=1></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="form.name"  minlength=1></el-input>
+            <el-form-item label="昵称" prop="nickname">
+              <el-input v-model="form.nickname"  minlength=1></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="性别">
-              <el-radio-group v-model="form.sex">
+              <el-radio-group v-model="form.gender">
                 <el-radio :label="1">男</el-radio>
                 <el-radio :label="2">女</el-radio>
               </el-radio-group>
@@ -150,35 +139,9 @@
               <el-input v-model="form.phone"></el-input>
             </el-form-item>
           </el-col>
-<!--          <el-col :span="12">-->
-<!--            <el-form-item label="所属部门" >-->
-<!--              <el-input-->
-<!--                placeholder="请选择所属部门"-->
-<!--                v-model="form.deptName"-->
-<!--                readonly="readonly"-->
-<!--                @click.native="deptTree.show  = !deptTree.show">-->
-<!--              </el-input>-->
-<!--              <el-tree v-if="deptTree.show"-->
-<!--                       empty-text="暂无数据"-->
-<!--                       :expand-on-click-node="false"-->
-<!--                       :data="deptTree.data"-->
-<!--                       :props="deptTree.defaultProps"-->
-<!--                       @node-click="handleNodeClick"-->
-<!--                       class="input-tree">-->
-<!--              </el-tree>-->
-
-<!--            </el-form-item>-->
-<!--          </el-col>-->
           <el-col :span="12">
             <el-form-item label="是否启用" prop="status">
               <el-switch v-model="form.status"></el-switch>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="出生日期">
-                <el-date-picker type="date" placeholder="选择日期" v-model="form.birthday" style="width: 100%;">
-
-                </el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -204,7 +167,6 @@
               :default-checked-keys="roleDialog.checkedRoleKeys"
               :props="roleDialog.defaultProps">
             </el-tree>
-
           </el-col>
         </el-row>
         <el-form-item>
@@ -215,8 +177,8 @@
   </div>
 </template>
 
+
 <script src="./user.js"></script>
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "src/styles/common.scss";
 </style>
-

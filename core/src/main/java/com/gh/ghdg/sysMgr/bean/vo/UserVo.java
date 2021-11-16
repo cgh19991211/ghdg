@@ -2,24 +2,29 @@ package com.gh.ghdg.sysMgr.bean.vo;
 
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 public class UserVo {
+    
+    private String id;
     private String username;
     private String nickname;
     private String gender;
     private String email;
     private String phone;
-    private Date createdDate;
+    private Long createdDate;
     private Integer status;
-    private Date lastLoginDate;
+    private Long lastLoginDate;
     private List<String> rolename;
+    private String remark;
     
     public UserVo() {
     }
     
-    public UserVo(String username, String nickname, String gender, String email, String phone, Date createdDate, Integer status, Date lastLoginDate, List<String> rolename) {
+    public UserVo(String id, String username, String nickname, String gender, String email, String phone, Long createdDate, Integer status, Long lastLoginDate, List<String> rolename, String remark) {
+        this.id = id;
         this.username = username;
         this.nickname = nickname;
         this.gender = gender;
@@ -29,6 +34,15 @@ public class UserVo {
         this.status = status;
         this.lastLoginDate = lastLoginDate;
         this.rolename = rolename;
+        this.remark = remark;
+    }
+    
+    public String getId() {
+        return id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
     }
     
     public String getUsername() {
@@ -71,11 +85,11 @@ public class UserVo {
         this.phone = phone;
     }
     
-    public Date getCreatedDate() {
+    public Long getCreatedDate() {
         return createdDate;
     }
     
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Long createdDate) {
         this.createdDate = createdDate;
     }
     
@@ -87,11 +101,11 @@ public class UserVo {
         this.status = status;
     }
     
-    public Date getLastLoginDate() {
+    public Long getLastLoginDate() {
         return lastLoginDate;
     }
     
-    public void setLastLoginDate(Date lastLoginDate) {
+    public void setLastLoginDate(Long lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
     }
     
@@ -101,5 +115,13 @@ public class UserVo {
     
     public void setRolename(List<String> rolename) {
         this.rolename = rolename;
+    }
+    
+    public String getRemark() {
+        return remark;
+    }
+    
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

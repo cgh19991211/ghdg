@@ -2,8 +2,9 @@ import { deleteUser, getList, saveUser, remove, setRole } from '@/api/system/use
 import { list as deptList } from '@/api/system/dept'
 import { parseTime } from '@/utils/index'
 import { roleTreeListByIdUser } from '@/api/system/role'
+import moment from 'moment'
 // 权限判断指令
-import permission from '@/directive/permission/index.js'
+import permission from '@/store'
 
 export default {
   directives: { permission },
@@ -16,7 +17,7 @@ export default {
         checkedRoleKeys: [],
         defaultProps: {
           id: 'id',
-          label: 'name',
+          label: 'nickname',
           children: 'children'
         }
       },
@@ -34,26 +35,25 @@ export default {
       isAdd: true,
       form: {
         id: '',
-        account: '',
-        name: '',
-        birthday: '',
-        sex: 1,
+        username: '',
+        nickname: '',
+        gender: 1,
         email: '',
-        password: '',
-        rePassword: '',
-        // dept: '',
-        status: true
-        // deptid: 1,
-        // deptName: ''
+        status: true,
+        avatar: '',
+        phone: '',
+        remark: '',
+        createdDate: '',
+        lastLoginDate: null,
       },
       rules: {
-        account: [
+        username: [
           { required: true, message: '请输入登录账号', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+          { min: 3, max: 20, message: '长度在 3 到 40 个字符', trigger: 'blur' }
         ],
-        name: [
+        nickname: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          { min: 2, max: 20, message: '长度在 2 到 40 个字符', trigger: 'blur' }
         ],
         email: [
           { required: true, message: '请输入email', trigger: 'blur' }
@@ -62,8 +62,8 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        account: undefined,
-        name: undefined
+        username: undefined,
+        nickname: undefined
       },
       total: 0,
       list: null,
@@ -107,8 +107,8 @@ export default {
       this.fetchData()
     },
     reset() {
-      this.listQuery.account = ''
-      this.listQuery.name = ''
+      this.listQuery.username = ''
+      this.listQuery.nickname = ''
       this.fetchData()
     },
     handleFilter() {
@@ -135,15 +135,17 @@ export default {
       this.fetchData()
     },
     handleCurrentChange(currentRow, oldCurrentRow) {
+      console.log("选中行")
+      console.log(currentRow)
+      console.log(oldCurrentRow)
       this.selRow = currentRow
     },
     resetForm() {
       this.form = {
         id: '',
-        account: '',
-        name: '',
-        birthday: '',
-        sex: 1,
+        username: '',
+        nickname: '',
+        gender: 1,
         email: '',
         password: '',
         rePassword: '',
@@ -183,7 +185,6 @@ export default {
               //冻结
               form.status = 2
             }
-            form.birthday = parseTime(form.birthday, '{y}-{m}-{d}')
             form.createtime = parseTime(form.createtime)
             saveUser(form).then(response => {
               this.$message({
@@ -284,6 +285,13 @@ export default {
           type: 'success'
         })
       })
+    },
+    dateFormat(row, column) {
+      var date = row[column.property];
+      if (date == undefined) {
+        return "";
+      }
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
     }
 
   }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,14 +22,20 @@ public class UserVoFactory {
     
     public UserVo userVo(User u){
         UserVo uvo = new UserVo();
+        uvo.setId(u.getId());
         uvo.setUsername(u.getUsername());
         uvo.setNickname(u.getNickname());
         uvo.setGender(u.getGender());
         uvo.setEmail(u.getEmail());
         uvo.setPhone(u.getPhone());
-        uvo.setCreatedDate(u.getCreatedDate());
+        Date uCreatedDate = u.getCreatedDate();
+        if(uCreatedDate!=null)
+            uvo.setCreatedDate(uCreatedDate.getTime());
         uvo.setStatus(u.getStatus().getValue());
-        uvo.setLastLoginDate(u.getLastLoginDate());
+        Date uLastLoginDate = u.getLastLoginDate();
+        if(uLastLoginDate!=null)
+            uvo.setLastLoginDate(uLastLoginDate.getTime());
+        uvo.setRemark(u.getRemark());
         
         List<String> rolenames = new ArrayList<>();
         for(UserRole ur:u.getUserRoles()){
@@ -37,4 +44,5 @@ public class UserVoFactory {
         uvo.setRolename(rolenames);
         return uvo;
     }
+    
 }

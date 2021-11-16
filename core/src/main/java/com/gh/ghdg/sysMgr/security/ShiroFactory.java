@@ -96,6 +96,7 @@ public class ShiroFactory {
             Role role = ur.getRole();
             //所以，要获取权限，还是得根据菜单来，毕竟在权限表里就有菜单的外键
             List<RoleMenu> roleMenus = role.getRoleMenus();
+            Set<ShiroPermission> permSet = new HashSet<>();
             for(RoleMenu rm:roleMenus){
                 Menu m = rm.getMenu();//id,pid,name,code,tip,seq,type,isopen,icon,status
                 //TODO: menu -> shiroMenu
@@ -117,8 +118,9 @@ public class ShiroFactory {
                 }
                 menuSet.add(sm);
                 
-                shiroPermissions(m,shiroUser);
+                shiroPermissions(m,permSet);
             }
+            shiroUser.setPermissions(permSet);
         }
         shiroUser.setMenus(menuSet);
     }
@@ -133,16 +135,14 @@ public class ShiroFactory {
         return Arrays.stream(res.toArray()).toArray(String[]::new);
     }
     
-    public void shiroPermissions(Menu menu,ShiroUser shiroUser){
-        Set<ShiroPermission> set = new HashSet<>();
+    public void shiroPermissions(Menu menu,Set<ShiroPermission> permSet){
         List<Permission> permissions = menu.getPermissions();
         for(Permission p:permissions){
             ShiroPermission sp = new ShiroPermission();
             sp.setPermissionCode(p.getPermissionCode());
             sp.setUrl(p.getUrl());
-            set.add(sp);
+            permSet.add(sp);
         }
-        shiroUser.setPermissions(set);
     }
     
 }
