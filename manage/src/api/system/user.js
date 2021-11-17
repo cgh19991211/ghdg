@@ -16,6 +16,14 @@ export function saveUser(params) {
   })
 }
 
+export function modifyUser(params) {
+  return request({
+    url: 'sys/user/modifyInfo',
+    method: 'post',
+    params
+  })
+}
+
 export function remove(userId) {
   return request({
     url: 'sys/user/delete'+ userId,

@@ -13,16 +13,25 @@ import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.constant.Constants;
 import org.nutz.json.Json;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.beans.PropertyEditorSupport;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -204,4 +213,43 @@ public abstract class BaseController<T extends BaseEntity, S extends BaseDao<T>,
     public String getToken(HttpServletRequest request) {
         return request.getHeader(Constants.ACCESS_TOKEN_NAME);
     }
+    
+    /*
+    注册将字符串转换为Date的属性编辑器，该编辑器仅仅对当前controller有效
+	 */
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        /**
+         * 方式二：使用WebDataBinder注册一个自定义的编辑器，编辑器是日期类型
+         * 使用属性编辑器实现：重载setAsText,getAsText
+         */
+        binder.registerCustomEditor(Date.class, new PropertyEditorSupport() {
+            @Override
+            public String getAsText() {
+                return new SimpleDateFormat("yyyy-MM-dd hh:mm")
+                        .format((Date) getValue());
+            }
+            @Override
+            public void setAsText(String text) {
+                try {
+                    setValue(new SimpleDateFormat("yyyy-MM-dd hh:mm").parse(text));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    setValue(null);
+                }
+            }
+        });
+    }
+    
+    private class TimestampEditor extends PropertyEditorSupport {
+        @Override
+        public void setAsText(String text) throws IllegalArgumentException {
+            Timestamp ts = null;
+            if(StrUtil.isNotEmpty(text)) {
+                ts = Timestamp.valueOf(text);
+            }
+            super.setValue(ts);
+        }
+    }
+    
 }

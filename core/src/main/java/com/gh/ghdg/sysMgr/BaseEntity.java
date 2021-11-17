@@ -12,6 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -74,6 +75,7 @@ public abstract class BaseEntity implements Serializable {
     
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "created_date", columnDefinition = "DATETIME COMMENT '创建时间/注册时间'")
     public Date getCreatedDate() {
         return createdDate;

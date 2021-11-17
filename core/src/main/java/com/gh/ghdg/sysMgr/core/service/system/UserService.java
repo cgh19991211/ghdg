@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.Predicate;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,6 +71,11 @@ public class UserService extends BaseService<User, UserDao> {
         }
 
         return super.save(t);
+    }
+    
+    @Transactional
+    public User modifyInfo(User t) throws Exception {
+        return super.modifyInfo(t);
     }
 
     /**

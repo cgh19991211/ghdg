@@ -34,10 +34,8 @@
     <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row
     @current-change="handleCurrentChange">
 
-      <el-table-column label="账号名">
-        <template slot-scope="scope">
-          {{scope.row.username}}
-        </template>
+      <el-table-column label="账号名" prop="username">
+
       </el-table-column>
       <el-table-column label="昵称">
         <template slot-scope="scope">
@@ -69,8 +67,8 @@
       <el-table-column label="创建时间" prop="createdDate" :formatter="dateFormat"/>
       <el-table-column label="状态">
         <template slot-scope="scope">
-          <span v-if="scope.row.status===0">生效</span>
-          <span v-else-if="scope.row.status===1">冻结</span>
+          <span v-if="scope.row.status===1">生效</span>
+          <span v-else-if="scope.row.status===0">失效</span>
         </template>
       </el-table-column>
       <el-table-column prop="lastLoginDate" label="上次登陆时间" :formatter="dateFormat"/>
@@ -101,7 +99,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="账户名" prop="username">
+            <el-form-item label="账户名">
               <el-input v-model="form.username" minlength=1></el-input>
             </el-form-item>
           </el-col>
@@ -114,8 +112,9 @@
           <el-col :span="12">
             <el-form-item label="性别">
               <el-radio-group v-model="form.gender">
-                <el-radio :label="1">男</el-radio>
-                <el-radio :label="2">女</el-radio>
+                <el-radio label="男">男</el-radio>
+                <el-radio label="女">女</el-radio>
+                <el-radio label="保密">保密</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -141,13 +140,18 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否启用" prop="status">
-              <el-switch v-model="form.status"></el-switch>
+              <el-switch v-model="form.status" :active-value="1" :inactive-value="0"></el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item>
           <el-button type="primary" @click="saveUser">{{ $t('button.submit') }}</el-button>
-          <el-button @click.native="formVisible = false">{{ $t('button.cancel') }}</el-button>
+          <el-button @click="cancelSubmit">{{ $t('button.cancel') }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>

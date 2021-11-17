@@ -87,8 +87,10 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         //如果前端请求需要带有cookies等信息的话，需要开启Access-Control-Allow-Credentials
         httpServletResponse.setHeader("Access-Control-Allow-Credentials","true");
+        // 允许跨域访问的域名：若有端口需写全（协议+域名+端口），若没有端口末尾不用加'/'
         httpServletResponse.setHeader("Access-control-Allow-Origin", httpServletRequest.getHeader("Origin"));
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
+        // 提示OPTIONS预检时，后端需要设置的两个常用自定义头
         httpServletResponse.setHeader("Access-Control-Allow-Headers", httpServletRequest.getHeader("Access-Control-Request-Headers"));
 //        response.setHeader("Access-Control-Expose-Headers","Cache-Control,Content-Type,Expires,Pragma,Content-Language,Last-Modified,token");
 //        response.setHeader("token", JwtToken.createToken(user.getId())); //设置响应头

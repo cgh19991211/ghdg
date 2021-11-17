@@ -10,6 +10,7 @@ import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.ReflectHelper;
 import com.gh.ghdg.common.utils.exception.MyException;
 import com.gh.ghdg.sysMgr.bean.Unique;
+import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import org.hibernate.internal.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,9 +24,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -86,6 +90,19 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
             dao.save(t);
         }
         return response;
+    }
+    
+    @Transactional
+    public T modifyInfo(T a) throws Exception {
+        T b = dao.findById(a.getId()).get();
+        List<String> fieldNames = ReflectHelper.getFieldNames(klass);
+        for(String fieldName:fieldNames){
+            Object fieldValue = ReflectHelper.getFieldValue(a, fieldName);
+            if(!StrUtil.isEmptyIfStr(fieldValue)){
+                ReflectHelper.setValue(b,fieldName,fieldValue);
+            }
+        }
+        return dao.save(b);
     }
 
     /**

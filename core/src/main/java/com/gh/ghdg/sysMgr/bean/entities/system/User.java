@@ -41,7 +41,7 @@ public class User extends BaseEntity {
 
     private String remark;
 
-    private Status status = Status.生效; // 0-生效 1-失效 默认生效
+    private Status status = Status.生效; // 1-生效 0-失效 默认生效1
     
     private Date lastLoginDate;
 

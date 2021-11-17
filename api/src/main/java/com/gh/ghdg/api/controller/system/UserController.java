@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 //@Api(tags = "用户接口")
@@ -50,7 +51,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
         if(StrUtil.isNotEmpty(username)){
             page.addFilter(SearchFilter.build("username", SearchFilter.Operator.LIKE, username));
         }
-        page.addFilter(SearchFilter.build("status",SearchFilter.Operator.EQ,0));
+//        page.addFilter(SearchFilter.build("status",SearchFilter.Operator.EQ,1));
         page = userService.queryPage (page);
         List<UserVo> users = new ArrayList<>();
         for(User u:(List<User>)page.getRecords()){
@@ -70,6 +71,13 @@ public class UserController extends BaseController<User, UserDao, UserService> {
     @RequiresPermissions(PermissionCode.USER_EDIT)
     public Result userSave(@ModelAttribute("t") User t)throws Exception{
         return super.save(t);
+    }
+    
+    @PostMapping("/modifyInfo")
+    @RequiresPermissions(PermissionCode.USER_EDIT)
+    public Result userModify(@ModelAttribute("t") User t) throws Exception {
+        service.modifyInfo(t);
+        return Result.suc("修改成功");
     }
 
     

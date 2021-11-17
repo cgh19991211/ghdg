@@ -1,13 +1,28 @@
-import { deleteUser, getList, saveUser, remove, setRole } from '@/api/system/user'
-import { list as deptList } from '@/api/system/dept'
-import { parseTime } from '@/utils/index'
-import { roleTreeListByIdUser } from '@/api/system/role'
+import {
+  deleteUser,
+  getList,
+  saveUser,
+  remove,
+  setRole,
+  modifyUser
+} from '@/api/system/user'
+import {
+  list as deptList
+} from '@/api/system/dept'
+import {
+  parseTime
+} from '@/utils/index'
+import {
+  roleTreeListByIdUser
+} from '@/api/system/role'
 import moment from 'moment'
 // 权限判断指令
 import permission from '@/store'
 
 export default {
-  directives: { permission },
+  directives: {
+    permission
+  },
   data() {
     return {
       roleDialog: {
@@ -37,27 +52,45 @@ export default {
         id: '',
         username: '',
         nickname: '',
-        gender: 1,
+        gender: '保密',
         email: '',
-        status: true,
+        status: 1,
         avatar: '',
         phone: '',
         remark: '',
         createdDate: '',
-        lastLoginDate: null,
+        lastLoginDate: null
       },
       rules: {
-        username: [
-          { required: true, message: '请输入登录账号', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 40 个字符', trigger: 'blur' }
+        username: [{
+            required: true,
+            message: '请输入登录账号',
+            trigger: 'blur'
+          },
+          {
+            min: 2,
+            max: 20,
+            message: '长度在 3 到 40 个字符',
+            trigger: 'blur'
+          }
         ],
-        nickname: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 40 个字符', trigger: 'blur' }
+        nickname: [{
+            required: true,
+            message: '请输入用户名',
+            trigger: 'blur'
+          },
+          {
+            min: 2,
+            max: 20,
+            message: '长度在 2 到 40 个字符',
+            trigger: 'blur'
+          }
         ],
-        email: [
-          { required: true, message: '请输入email', trigger: 'blur' }
-        ]
+        email: [{
+          required: true,
+          message: '请输入email',
+          trigger: 'blur'
+        }]
       },
       listQuery: {
         page: 1,
@@ -68,7 +101,8 @@ export default {
       total: 0,
       list: null,
       listLoading: true,
-      selRow: {}
+      selRow: {},
+      tmpForm: {}
     }
   },
   filters: {
@@ -85,21 +119,18 @@ export default {
     this.init()
   },
   methods: {
-    init() {//当RefreshToken过期后，数据被清楚，这里的init会为undefined，控制台会报错。
-      // deptList().then(response => {
-      //   this.deptTree.data = response.data
-      // })
+    init() { //当RefreshToken过期后，数据被清楚，这里的init会为undefined，控制台会报错。
       this.fetchData()
     },
     fetchData() {
       this.listLoading = true
       getList(this.listQuery).then(response => {
-        console.log("response")
+        console.log("fetch data response")
         this.list = response.data.records
         console.log(response)
         this.listLoading = false
         this.total = response.data.total
-      }).catch(()=>{
+      }).catch(() => {
 
       })
     },
@@ -135,7 +166,7 @@ export default {
       this.fetchData()
     },
     handleCurrentChange(currentRow, oldCurrentRow) {
-      console.log("选中行")
+      console.log("选中行 1。新 2.舊")
       console.log(currentRow)
       console.log(oldCurrentRow)
       this.selRow = currentRow
@@ -145,13 +176,14 @@ export default {
         id: '',
         username: '',
         nickname: '',
-        gender: 1,
+        gender: '保密',
         email: '',
-        password: '',
-        rePassword: '',
-        // dept: '',
-        status: true
-        // deptid: 1
+        status: 1,
+        avatar: '',
+        phone: '',
+        remark: '',
+        createdDate: '',
+        lastLoginDate: null
       }
     },
     add() {
@@ -178,22 +210,36 @@ export default {
         if (valid) {
           if (this.validPasswd()) {
             var form = self.form
-            if (form.status === true) {
+            console.log("save user form：")
+            console.log(form)
+            if (form.status === 1) {
               //启用
-              form.status = 1
+              form.status = '生效'
             } else {
               //冻结
-              form.status = 2
+              form.status = '失效'
             }
-            form.createtime = parseTime(form.createtime)
-            saveUser(form).then(response => {
-              this.$message({
-                message: '提交成功',
-                type: 'success'
+            // form.createdDate = new Date(form.createdDate)
+            if (self.isAdd) {
+              saveUser(form).then(response => {
+                this.$message({
+                  message: '提交成功',
+                  type: 'success'
+                })
+                this.fetchData()
+                this.formVisible = false
               })
-              this.fetchData()
-              this.formVisible = false
-            })
+            } else {
+              modifyUser(form).then(response => {
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+                this.fetchData()
+                this.formVisible = false
+              })
+            }
+
           } else {
             this.$message({
               message: '提交失败',
@@ -221,10 +267,11 @@ export default {
         this.isAdd = false
 
         this.form = this.selRow
-        this.form.status = this.selRow.statusName === '启用'
+        this.form.status = this.selRow.status
         this.form.password = ''
         this.formTitle = '修改用户'
         this.formVisible = true
+        this.tmpForm = this.form//这里把两个form同步了。
       }
     },
     remove() {
@@ -242,14 +289,13 @@ export default {
               type: 'success'
             })
             this.fetchData()
-          }).catch( err=>{
+          }).catch(err => {
             this.$notify.error({
               title: '错误',
-              message:err,
+              message: err,
             })
           })
-        }).catch(() => {
-        })
+        }).catch(() => {})
       }
     },
     // handleNodeClick(data, node) {
@@ -292,6 +338,12 @@ export default {
         return "";
       }
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
+    },
+    cancelSubmit() {
+      console.log("cancel submit")
+      console.log(this.tmpForm)
+      this.form = this.tmpForm
+      this.formVisible = false
     }
 
   }
