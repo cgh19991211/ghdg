@@ -96,22 +96,22 @@
       :title="formTitle"
       :visible.sync="formVisible"
       width="70%">
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="tmpForm" :model="tmpForm" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="账户名">
-              <el-input v-model="form.username" minlength=1></el-input>
+              <el-input v-model="tmpForm.username" minlength=1></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="昵称" prop="nickname">
-              <el-input v-model="form.nickname"  minlength=1></el-input>
+            <el-form-item label="昵称">
+              <el-input v-model="tmpForm.nickname"  minlength=1></el-input>
             </el-form-item>
           </el-col>
 
           <el-col :span="12">
             <el-form-item label="性别">
-              <el-radio-group v-model="form.gender">
+              <el-radio-group v-model="tmpForm.gender">
                 <el-radio label="男">男</el-radio>
                 <el-radio label="女">女</el-radio>
                 <el-radio label="保密">保密</el-radio>
@@ -119,33 +119,33 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email"></el-input>
+            <el-form-item label="邮箱">
+              <el-input v-model="tmpForm.email"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-show="isAdd">
-            <el-form-item label="密码" prop="password">
-              <el-input v-model="form.password"  type="password"></el-input>
+            <el-form-item label="密码">
+              <el-input v-model="tmpForm.password"  type="password"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-show="isAdd">
-            <el-form-item label="确认密码" prop="rePassword">
-              <el-input v-model="form.rePassword"  type="password"></el-input>
+            <el-form-item label="确认密码">
+              <el-input v-model="tmpForm.rePassword"  type="password"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="电话" prop="phone">
-              <el-input v-model="form.phone"></el-input>
+            <el-form-item label="电话">
+              <el-input v-model="tmpForm.phone"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="是否启用" prop="status">
-              <el-switch v-model="form.status" :active-value="1" :inactive-value="0"></el-switch>
+            <el-form-item label="是否启用">
+              <el-switch v-model="tmpForm.status" :active-value="1" :inactive-value="0"></el-switch>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark"></el-input>
+            <el-form-item label="备注">
+              <el-input v-model="tmpForm.remark"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -175,6 +175,7 @@
         </el-row>
         <el-form-item>
           <el-button type="primary" @click="setRole">{{ $t('button.submit') }}</el-button>
+          <el-button @click.native="roleDialog.visible=false" >{{ $t('button.cancel') }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>

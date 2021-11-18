@@ -26,18 +26,32 @@ export function modifyUser(params) {
 
 export function remove(userId) {
   return request({
-    url: 'sys/user/delete'+ userId,
-    method: 'delete',
+    url: 'sys/user/delete'+'/'+ userId,
+    method: 'post',
     params: {
 
     }
   })
 }
 
-export function setRole(params) {
+export function setRole(userId,roleIds) {
   return request({
-    url: 'sys/user/setRole',
+    url: 'sys/user/setRoles/',
     method: 'get',
-    params
+    params: {
+      id: userId,
+      roleIds: roleIds
+    }
+  })
+}
+
+export function userDeleteRoles(userId,roleIds){
+  return requst({
+    url: 'sus/user/deleteRoles',
+    method: 'post',
+    params: {
+      id: userId,
+      roleIds: roleIds
+    }
   })
 }

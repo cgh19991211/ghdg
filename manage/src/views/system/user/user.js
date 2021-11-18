@@ -13,7 +13,8 @@ import {
   parseTime
 } from '@/utils/index'
 import {
-  roleTreeListByIdUser
+  roleTreeListByIdUser,
+  rootRoleTree
 } from '@/api/system/role'
 import moment from 'moment'
 // 权限判断指令
@@ -27,12 +28,22 @@ export default {
     return {
       roleDialog: {
         visible: false,
-        roles: [],
+        roles: [],//rootRoleList: id,pid,name,children,checked
         roleTree: [],
-        checkedRoleKeys: [],
+        checkedRoleKeys: [],//已选中的角色的下标
+        defaultProps: {//对话框的属性
+          id: 'id',
+          label: 'name',
+          children: 'children'
+        }
+      },
+      assignedRoles: {
+        visible: false,
+        roles: [],//树列表
+        roleTree: [],//
         defaultProps: {
           id: 'id',
-          label: 'nickname',
+          lable: 'name',
           children: 'children'
         }
       },
@@ -127,7 +138,7 @@ export default {
       getList(this.listQuery).then(response => {
         console.log("fetch data response")
         this.list = response.data.records
-        console.log(response)
+        console.log(this.list)
         this.listLoading = false
         this.total = response.data.total
       }).catch(() => {
@@ -172,7 +183,7 @@ export default {
       this.selRow = currentRow
     },
     resetForm() {
-      this.form = {
+      this.tmpForm = {
         id: '',
         username: '',
         nickname: '',
@@ -183,6 +194,8 @@ export default {
         phone: '',
         remark: '',
         createdDate: '',
+        password: '',
+        rePassword: '',
         lastLoginDate: null
       }
     },
@@ -196,32 +209,32 @@ export default {
       if (!this.isAdd) {
         return true
       }
-      if (this.form.password !== this.form.rePassword) {
+      if (this.tmpForm.password !== this.tmpForm.rePassword) {
         return false
       }
-      if (this.form.password === '' || this.form.rePassword === '') {
+      if (this.tmpForm.password === '' || this.tmpForm.rePassword === '') {
         return false
       }
       return true
     },
     saveUser() {
       var self = this
-      this.$refs['form'].validate((valid) => {
+      this.$refs['tmpForm'].validate((valid) => {
         if (valid) {
           if (this.validPasswd()) {
-            var form = self.form
+            var saveForm = self.tmpForm
             console.log("save user form：")
-            console.log(form)
-            if (form.status === 1) {
+            console.log(saveForm)
+            if (saveForm.status === 1) {
               //启用
-              form.status = '生效'
+              saveForm.status = '生效'
             } else {
               //冻结
-              form.status = '失效'
+              saveForm.status = '失效'
             }
             // form.createdDate = new Date(form.createdDate)
             if (self.isAdd) {
-              saveUser(form).then(response => {
+              saveUser(saveForm).then(response => {
                 this.$message({
                   message: '提交成功',
                   type: 'success'
@@ -230,7 +243,7 @@ export default {
                 this.formVisible = false
               })
             } else {
-              modifyUser(form).then(response => {
+              modifyUser(saveForm).then(response => {
                 this.$message({
                   message: '修改成功',
                   type: 'success'
@@ -265,13 +278,12 @@ export default {
     edit() {
       if (this.checkSel()) {
         this.isAdd = false
-
-        this.form = this.selRow
-        this.form.status = this.selRow.status
-        this.form.password = ''
+        this.tmpForm = JSON.parse(JSON.stringify(this.selRow))//深拷贝
+        // this.tmpForm.status = this.selRow.status
+        // this.tmpForm.password = ''
         this.formTitle = '修改用户'
         this.formVisible = true
-        this.tmpForm = this.form//这里把两个form同步了。
+        // this.tmpForm = this.form//这里把两个form同步了
       }
     },
     remove() {
@@ -306,16 +318,19 @@ export default {
 
     openRole() {
       if (this.checkSel()) {
-        roleTreeListByIdUser(this.selRow.id).then(response => {
-          this.roleDialog.roles = response.data.treeData
-          this.roleDialog.checkedRoleKeys = response.data.checkedIds
+        console.log('康康当前行id')
+        console.log(this.selRow.id)
+        roleTreeListByIdUser(this.selRow.id).then(response => {//返回根树列表：每一行包括：id,pid,name,children,checked
+          console.log("sel role data")
+          console.log(response)
+          this.roleDialog.roles = response.data
           this.roleDialog.visible = true
         })
       }
     },
     setRole() {
       var checkedRoleKeys = this.$refs.roleTree.getCheckedKeys()
-      var roleIds = ''
+      var roleIds = ''//要给当前选中行的用户分配的roleIds
       for (var index in checkedRoleKeys) {
         roleIds += checkedRoleKeys[index] + ','
       }
@@ -323,6 +338,8 @@ export default {
         userId: this.selRow.id,
         roleIds: roleIds
       }
+      console.log("set role")
+      console.log(data)
       setRole(data).then(response => {
         this.roleDialog.visible = false
         this.fetchData()
@@ -340,9 +357,9 @@ export default {
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
     },
     cancelSubmit() {
-      console.log("cancel submit")
-      console.log(this.tmpForm)
-      this.form = this.tmpForm
+      // console.log("cancel submit")
+      // console.log(this.tmpForm)
+      // this.form = this.tmpForm
       this.formVisible = false
     }
 

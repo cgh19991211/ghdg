@@ -123,8 +123,8 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      */
     @PostMapping("/setRoles")
     @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
-    public Result userSetRoles(@ModelAttribute("t")User t,String ids){
-        service.saveRoles(t,ids);
+    public Result userSetRoles(@ModelAttribute("t")User t,@RequestParam String roleIds){
+        service.saveRoles(t,roleIds);
         return Result.saveSuc();
     }
     
@@ -134,9 +134,9 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @param roleIds
      * @return
      */
-    @PostMapping("/deleteRoles/{id}/{roleIds}")
+    @PostMapping("/deleteRoles")
     @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
-    public Result userDeleteRoles(@ModelAttribute("t")User t, @PathVariable String roleIds){
+    public Result userDeleteRoles(@ModelAttribute("t")User t, @RequestParam String roleIds){
         service.deleteRoles(t, roleIds);
         return Result.delSuc();
     }

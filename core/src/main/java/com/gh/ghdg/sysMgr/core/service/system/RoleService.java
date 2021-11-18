@@ -1,6 +1,7 @@
 package com.gh.ghdg.sysMgr.core.service.system;
 
 import cn.hutool.core.util.StrUtil;
+import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.common.utils.exception.MyException;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
@@ -48,8 +49,8 @@ public class RoleService extends BaseService<Role, RoleDao> {
      * @param t
      * @return
      */
-    public List<Role> tree(Role t) {
-        return getRoots(t);
+    public List<Role> tree() {
+        return getRoots();
     }
     
     /**
@@ -57,10 +58,11 @@ public class RoleService extends BaseService<Role, RoleDao> {
      * @param t
      * @return
      */
-    protected List<Role> getRoots(Role t) {
-        Specification spec = ((root, query, cb) -> {return cb.equal(null,root.get("parent"));});
-        return dao.findAll(spec);
+    protected List<Role> getRoots() {
+        SearchFilter filter = SearchFilter.build("parent", SearchFilter.Operator.ISNULL);
+        return queryAll(filter);
     }
+    
     
     /**
      * 根据用户id为用户分配角色

@@ -27,6 +27,10 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
+      console.log('路由拦截器 to from next')
+      console.log(to)
+      console.log(from)
+      console.log(next)
       if (store.getters.roles.length === 0) {//判断当前用户是否已拉取完用户信息
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
           //原始的菜单列表数据
