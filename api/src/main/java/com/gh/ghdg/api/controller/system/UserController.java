@@ -52,7 +52,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
             page.addFilter(SearchFilter.build("username", SearchFilter.Operator.LIKE, username));
         }
 //        page.addFilter(SearchFilter.build("status",SearchFilter.Operator.EQ,1));
-        page = userService.queryPage (page);
+        page = userService.queryPage(page);
         List<UserVo> users = new ArrayList<>();
         for(User u:(List<User>)page.getRecords()){
             users.add(UserVoFactory.me().userVo(u));
@@ -123,8 +123,8 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      */
     @PostMapping("/setRoles")
     @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
-    public Result userSetRoles(@ModelAttribute("t")User t,@RequestParam String roleIds){
-        service.saveRoles(t,roleIds);
+    public Result userSetRoles(@RequestParam String userId,@RequestParam String roleIds){
+        service.saveRoles(userId,roleIds);
         return Result.saveSuc();
     }
     

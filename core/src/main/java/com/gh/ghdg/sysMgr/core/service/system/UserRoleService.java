@@ -22,6 +22,8 @@ public class UserRoleService extends BaseService<UserRole, UserRoleDao> {
             t.setUser(u);
             t.setRole(r);
             dao.save(t);
+        }else{
+            dao.delete(t);
         }
     }
     

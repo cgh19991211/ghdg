@@ -95,17 +95,18 @@
     <el-dialog
       :title="formTitle"
       :visible.sync="formVisible"
+      @open="resetForm"
       width="70%">
       <el-form ref="tmpForm" :model="tmpForm" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="账户名">
-              <el-input v-model="tmpForm.username" minlength=1></el-input>
+              <el-input v-model="tmpForm.username" minlength=1 auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="昵称">
-              <el-input v-model="tmpForm.nickname"  minlength=1></el-input>
+              <el-input v-model="tmpForm.nickname"  minlength=1 auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
 
@@ -120,22 +121,22 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱">
-              <el-input v-model="tmpForm.email"></el-input>
+              <el-input v-model="tmpForm.email" auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-show="isAdd">
             <el-form-item label="密码">
-              <el-input v-model="tmpForm.password"  type="password"></el-input>
+              <el-input v-model="tmpForm.password"  type="password" auto-complete="new-password"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-show="isAdd">
             <el-form-item label="确认密码">
-              <el-input v-model="tmpForm.rePassword"  type="password"></el-input>
+              <el-input v-model="tmpForm.rePassword"  type="password" auto-complete="new-password"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="电话">
-              <el-input v-model="tmpForm.phone"></el-input>
+              <el-input v-model="tmpForm.phone" auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -145,7 +146,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="备注">
-              <el-input v-model="tmpForm.remark"></el-input>
+              <el-input v-model="tmpForm.remark" auto-complete="off"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -168,6 +169,9 @@
               ref="roleTree"
               show-checkbox
               node-key="id"
+              :default-expand-all="true"
+              :check-on-click-node="true"
+              :check-strictly="true"
               :default-checked-keys="roleDialog.checkedRoleKeys"
               :props="roleDialog.defaultProps">
             </el-tree>

@@ -34,14 +34,11 @@ export function remove(userId) {
   })
 }
 
-export function setRole(userId,roleIds) {
+export function setRole(params) {
   return request({
-    url: 'sys/user/setRoles/',
-    method: 'get',
-    params: {
-      id: userId,
-      roleIds: roleIds
-    }
+    url: 'sys/user/setRoles',
+    method: 'post',
+    params
   })
 }
 

@@ -151,7 +151,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      * @param spec
      * @return
      */
-    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
+//    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public T getOne(SearchFilter filter) {
     
         List<T> list = queryAll(filter);
@@ -163,7 +163,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      * @param filters
      * @return
      */
-    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
+//    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public T getOne(List<SearchFilter> filters){
         List<T> list = queryAll(filters);
         return list.isEmpty()?null:list.get(0);
@@ -221,10 +221,11 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
 
     /**
      * 分页查询
+     * 不使用缓存，因为查询条件(username,nickname)可能每次查都不一样，要是走缓存的话查询条件就没用了，每次取的缓存都一样。
      * @param page
      * @return page
      */
-    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
+//    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public Page<T> queryPage(Page<T> page) {
         Pageable pageable = null;
         if(page.getSort()!=null) {//按照自定义的sort来排序

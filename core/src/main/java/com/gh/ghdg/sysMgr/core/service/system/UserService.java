@@ -1,6 +1,8 @@
 package com.gh.ghdg.sysMgr.core.service.system;
 
 import cn.hutool.core.util.StrUtil;
+import com.gh.ghdg.common.commonVo.DynamicSpecifications;
+import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.utils.ReflectHelper;
 import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.common.utils.ToolUtil;
@@ -18,6 +20,9 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.hibernate.internal.util.StringHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -104,7 +109,7 @@ public class UserService extends BaseService<User, UserDao> {
      * @return
      */
     @Transactional
-    public void saveRoles(User t, String roleIds) {
+    public void saveRoles(String uid, String roleIds) {
         if (StringHelper.isNotEmpty(roleIds)) {
             for (String roleId : StringHelper.split(",",roleIds)) {
                 Optional<Role> opt = roleDao.findById(roleId);
@@ -112,29 +117,18 @@ public class UserService extends BaseService<User, UserDao> {
                     throw new MyException("ID " + roleId + " 角色不存在");
                 }
                 Role r = opt.get();
-                userRoleService.save(t, r);
+                
+                if(StrUtil.isNotEmpty(uid)){
+                    Optional<User> byId = userDao.findById(uid);
+                    if(!byId.isPresent()){
+                        throw new MyException("User id"+uid+"用户不存在");
+                    }
+                    User u = byId.get();
+                    userRoleService.save(u, r);
+                }
             }
         }
     }
-//    /**
-//     * 保存分配角色
-//     * @param t
-//     * @param roleIds
-//     * @return
-//     */
-//    @Transactional
-//    public void saveRoles(User t, String roleNames) {
-//        if (StringHelper.isNotEmpty(roleIds)) {
-//            for (String roleName : StringHelper.split(",",roleNames)) {
-//                Optional<Role> opt = roleDao.findByRoleName(roleName);
-//                if (!opt.isPresent()) {
-//                    throw new MyException("ID " + roleId + " 角色不存在");
-//                }
-//                Role r = opt.get();
-//                userRoleService.save(t, r);
-//            }
-//        }
-//    }
 
     /**
      * 删除分配角色

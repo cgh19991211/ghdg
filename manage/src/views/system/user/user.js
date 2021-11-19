@@ -27,10 +27,13 @@ export default {
   data() {
     return {
       roleDialog: {
+        /**
+         * 整棵树包含的数据是一个数组[],每一项包含id，lable，children，数组顺序按照树的层次遍历来存放。按照下标[1]就能取到数组中第一个数据
+         */
         visible: false,
         roles: [],//rootRoleList: id,pid,name,children,checked
         roleTree: [],
-        checkedRoleKeys: [],//已选中的角色的下标
+        checkedRoleKeys: ["2c9e9c9a7cc9da41017ccade7d670000"],//默认勾选中的节点在数组中的下标。
         defaultProps: {//对话框的属性
           id: 'id',
           label: 'name',
@@ -135,6 +138,8 @@ export default {
     },
     fetchData() {
       this.listLoading = true
+      console.log("=====fetch data之前看看查询条件listquery")
+      console.log(this.listQuery)
       getList(this.listQuery).then(response => {
         console.log("fetch data response")
         this.list = response.data.records
@@ -200,7 +205,6 @@ export default {
       }
     },
     add() {
-      this.resetForm()
       this.formTitle = '添加用户'
       this.formVisible = true
       this.isAdd = true
@@ -324,6 +328,8 @@ export default {
           console.log("sel role data")
           console.log(response)
           this.roleDialog.roles = response.data
+          this.roleDialog.checkedRoleKeys = this.getCheckedId()//根据roles里角色数据得checked获取要勾选的id
+          console.log(this.roleDialog.checkedRoleKeys)
           this.roleDialog.visible = true
         })
       }
@@ -331,8 +337,10 @@ export default {
     setRole() {
       var checkedRoleKeys = this.$refs.roleTree.getCheckedKeys()
       var roleIds = ''//要给当前选中行的用户分配的roleIds
-      for (var index in checkedRoleKeys) {
-        roleIds += checkedRoleKeys[index] + ','
+      console.log("从tree-table获取来的roleTree")
+      console.log(this.$refs.roleTree)
+      for (var id in checkedRoleKeys) {
+        roleIds += checkedRoleKeys[id] + ','
       }
       var data = {
         userId: this.selRow.id,
@@ -361,6 +369,16 @@ export default {
       // console.log(this.tmpForm)
       // this.form = this.tmpForm
       this.formVisible = false
+    },
+    getCheckedId(){
+      let index = []
+      let roles = this.roleDialog.roles
+      for(let r=0; r<roles.length; ++r ){
+        if(roles[r].checked){
+          index.push(roles[r].id)
+        }
+      }
+      return index
     }
 
   }
