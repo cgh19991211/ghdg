@@ -35,11 +35,6 @@
           {{scope.row.tips}}
         </template>
       </el-table-column>
-      <el-table-column label="所在部门">
-        <template slot-scope="scope">
-          {{scope.row.deptName}}
-        </template>
-      </el-table-column>
       <el-table-column label="上级角色">
         <template slot-scope="scope">
           {{scope.row.pName}}
@@ -102,28 +97,6 @@
               <el-input v-model="form.num" type="number"></el-input>
             </el-form-item>
           </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="所在部门">
-              <el-input
-                placeholder="请选择所在部门"
-                v-model="form.deptName"
-                readonly="readonly"
-                @click.native="deptTree.show = !deptTree.show">
-              </el-input>
-              <el-tree v-if="deptTree.show"
-                       empty-text="暂无数据"
-                       :expand-on-click-node="false"
-                       :data="deptList"
-                       :props="deptTree.defaultProps"
-                       @node-click="handleDeptNodeClick"
-                       class="input-tree">
-              </el-tree>
-
-            </el-form-item>
-          </el-col>
-
-
         </el-row>
         <el-form-item>
           <el-button type="primary" @click="save">{{ $t('button.submit') }}</el-button>

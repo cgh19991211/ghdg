@@ -1,5 +1,4 @@
 import { remove, getList, save, savePermissons } from '@/api/system/role'
-import { list as getDeptList } from '@/api/system/dept'
 import { menuTreeListByRoleId } from '@/api/system/menu'
 
 export default {
@@ -7,7 +6,6 @@ export default {
     return {
       formVisible: false,
       formTitle: '添加角色',
-      deptList: [],
       roleList: [],
       isAdd: true,
       checkedPermissionKeys: [],
@@ -18,14 +16,6 @@ export default {
         children: 'children'
       },
       permissonVisible: false,
-      deptTree: {
-        show: false,
-        defaultProps: {
-          id: 'id',
-          label: 'simplename',
-          children: 'children'
-        }
-      },
       roleTree: {
         show: false,
         defaultProps: {
@@ -38,11 +28,9 @@ export default {
       form: {
         tips: '',
         name: '',
-        deptid: '',
         pid: 0,
         id: '',
         version: '',
-        deptName: '',
         pName: '',
         num: 1
       },
@@ -80,9 +68,6 @@ export default {
   },
   methods: {
     init() {
-      getDeptList().then(response => {
-        this.deptList = response.data
-      })
       this.fetchData()
     },
     fetchData() {
@@ -127,11 +112,9 @@ export default {
       this.form = {
         tips: '',
         name: '',
-        deptid: '',
         pid: 0,
         id: '',
         version: '',
-        deptName: '',
         pName: '',
         num: 1
 
@@ -149,7 +132,6 @@ export default {
           save({
             id: this.form.id,
             num: this.form.num,
-            deptid: this.form.deptid,
             pid: this.form.pid,
             name: this.form.name,
             tips: this.form.tips
@@ -237,11 +219,6 @@ export default {
           type: 'success'
         })
       })
-    },
-    handleDeptNodeClick(data, node) {
-      this.form.deptid = data.id
-      this.form.deptName = data.simplename
-      this.deptTree.show = false
     },
     handleRoleNodeClick(data, node) {
       this.form.pid = data.id
