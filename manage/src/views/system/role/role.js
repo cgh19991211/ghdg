@@ -1,4 +1,4 @@
-import { remove, getList, save, savePermissons } from '@/api/system/role'
+import { remove, getList, save, savePermissons,getShowList } from '@/api/system/role'
 import { menuTreeListByRoleId } from '@/api/system/menu'
 
 export default {
@@ -26,16 +26,17 @@ export default {
       },
 
       form: {
-        tips: '',
+        code: '',
         name: '',
         pid: 0,
         id: '',
         version: '',
         pName: '',
-        num: 1
+        num: 1,
+        lastModifiedDate: ''
       },
       rules: {
-        tips: [
+        code: [
           { required: true, message: '请输入角色编码', trigger: 'blur' },
           { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
         ],
@@ -72,7 +73,7 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      getList(this.listQuery).then(response => {
+      getShowList(this.listQuery).then(response => {
         console.log(response.data)
         this.list = response.data
         this.listLoading = false
@@ -110,7 +111,7 @@ export default {
     },
     resetForm() {
       this.form = {
-        tips: '',
+        code: '',
         name: '',
         pid: 0,
         id: '',
@@ -134,7 +135,7 @@ export default {
             num: this.form.num,
             pid: this.form.pid,
             name: this.form.name,
-            tips: this.form.tips
+            code: this.form.code
           }).then(response => {
             this.$message({
               message: '提交成功',
@@ -224,7 +225,15 @@ export default {
       this.form.pid = data.id
       this.form.pName = data.name
       this.roleTree.show = false
+    },
+    dateFormat(row, column) {
+      var date = row[column.property];
+      if (date == undefined) {
+        return "";
+      }
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
     }
+
 
   }
 }

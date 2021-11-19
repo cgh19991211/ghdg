@@ -8,6 +8,13 @@ export function getList(params) {
   })
 }
 
+export function getShowList(params){
+  return request({
+    url: 'sys/role/list',
+    method: 'get',
+    params
+  })
+}
 
 export function save(params) {
   return request({

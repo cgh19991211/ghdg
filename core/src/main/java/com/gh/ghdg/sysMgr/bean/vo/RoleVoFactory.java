@@ -2,6 +2,7 @@ package com.gh.ghdg.sysMgr.bean.vo;
 
 import com.gh.ghdg.common.utils.SpringContextUtil;
 import com.gh.ghdg.sysMgr.bean.entities.system.Role;
+import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +20,19 @@ public class RoleVoFactory {
         RoleVo roleVo = new RoleVo();
         roleVo.setId(role.getId());//id
         roleVo.setName(role.getRoleName());//name
+        roleVo.setNum(role.getDisplaySeq());
+        roleVo.setTips(role.getRemark());
+        roleVo.setCode(role.getRoleCode());
+        roleVo.setLastModifiedDate(role.getLastModifiedDate());
+        User createdBy = role.getCreatedBy();
+        if(createdBy!=null){
+            roleVo.setCreator(role.getCreatedBy().getUsername());
+        }
         Role parent = role.getParent();//pid
-        if(parent!=null)
+        if(parent!=null){
             roleVo.setPid(parent.getId());
+            roleVo.setpName(parent.getRoleName());
+        }
         List<Role> children = role.getChildren();//children
         if(children!=null)
             roleVo.setChildren(getRVoList(children));

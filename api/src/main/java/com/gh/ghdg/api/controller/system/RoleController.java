@@ -57,17 +57,22 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      * @param name
      * @return
      */
-//    @GetMapping("list")
-//    @RequiresPermissions(PermissionCode.ROLE)
-//    public Result roleList(String name){
-//        List roles = null;
-//        if(StrUtil.isEmpty(name)){
-//            roles = service.queryAll();
-//        }else{
-//            roles = service.queryAll(SearchFilter.build("name",SearchFilter.Operator.LIKE,name));
-//        }
-//        return Result.suc(roles);
-//    }
+    @GetMapping("/list")
+    @RequiresPermissions(PermissionCode.ROLE)
+    public Result roleShowList(String name){
+        List<Role> roles = null;
+        if(StrUtil.isEmpty(name)){
+            roles = service.queryAll();
+        }else{
+            roles = service.queryAll(SearchFilter.build("name",SearchFilter.Operator.LIKE,name));
+        }
+        RoleVoFactory me = RoleVoFactory.me();
+        List<RoleVo> roleVoList = new ArrayList<>();
+        for(Role r:(List<Role>)roles){
+            roleVoList.add(me.roleVo(r));
+        }
+        return Result.suc(roleVoList);
+    }
     
     /**
      * 角色根树列表

@@ -109,7 +109,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      * 删除: 删除应该有返回值，表格重新加载数据
      */
     @Transactional
-    @CacheEvict(value = CacheName.APPLICATION,key = "#root.targetClass.simpleName+':'+#id")
+//    @CacheEvict(value = CacheName.APPLICATION,key = "#root.targetClass.simpleName+':'+#id")
     public List<T> delete(T t) throws Exception{
         //TODO:判断是否可以删除
 
@@ -123,7 +123,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      * @throws Exception
      */
     @Transactional
-    @CacheEvict(value = CacheName.APPLICATION,key = "#root.targetClass.simpleName+':'+#id")
+//    @CacheEvict(value = CacheName.APPLICATION,key = "#root.targetClass.simpleName+':'+#id")
     public void batchDelete(String ids) throws Exception{
         //传入的ids按逗号分割
         for (String id : StringHelper.split(",",ids)) {
@@ -140,7 +140,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      * @return
      * @Cacheable 缓存，如果，该注解所在类实现了某个接口，那这个方法也得出现在接口里，否则缓存无效
      */
-    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
+//    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public Optional<T> one(String id) {
         Optional<T> byId = dao.findById(id);
         return byId;
@@ -173,7 +173,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      * select *
      * @return
      */
-    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
+//    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public List<T> queryAll() {
         return dao.findAll();
     }
@@ -184,12 +184,12 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      * @return
      * @throws Exception
      */
-    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
+//    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public List<T> queryAll(List<SearchFilter> filters) {
         return queryAll(filters,null);
     }
     
-    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
+//    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public List<T> queryAll(SearchFilter filter){
         return queryAll(filter,null);
     }
@@ -200,7 +200,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
      * @param spec
      * @return 返回符合过滤条件的所有行
      */
-    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
+//    @Cacheable(value = CacheName.APPLICATION, key = "#root.targetClass.simpleName+':'+#id",unless = "#result == null")
     public List<T> queryAll(List<SearchFilter> filters, Sort sort) {
         //TODO:添加过滤条件，以及sort
     
@@ -210,6 +210,7 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
         }
         return dao.findAll(specification,sort);
     }
+    
     public List<T> queryAll(SearchFilter filter, Sort sort) {
         if(filter!=null){
             return queryAll(CollUtil.newArrayList(filter),sort);

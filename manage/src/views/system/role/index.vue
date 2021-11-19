@@ -32,12 +32,27 @@
       </el-table-column>
       <el-table-column label="编码">
         <template slot-scope="scope">
-          {{scope.row.tips}}
+          {{scope.row.code}}
         </template>
       </el-table-column>
       <el-table-column label="上级角色">
         <template slot-scope="scope">
           {{scope.row.pName}}
+        </template>
+      </el-table-column>
+      <el-table-column label="创建人">
+        <template slot-scope="scope">
+          {{scope.row.creator}}
+        </template>
+      </el-table-column>
+      <el-table-column label="上次修改时间">
+        <template slot-scope="scope">
+          {{scope.row.lastModifiedDate}}
+        </template>
+      </el-table-column>
+      <el-table-column label="备注">
+        <template slot-scope="scope">
+          {{scope.row.tips}}
         </template>
       </el-table-column>
 
@@ -63,8 +78,8 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="编码" prop="tips">
-              <el-input v-model="form.tips" minlength=1></el-input>
+            <el-form-item label="编码" prop="code">
+              <el-input v-model="form.code" minlength=1></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
