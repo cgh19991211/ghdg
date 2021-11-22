@@ -93,16 +93,9 @@ public abstract class BaseService<T extends BaseEntity, D extends BaseDao<T>> {
     }
     
     @Transactional
-    public T modifyInfo(T a) throws Exception {
-        T b = dao.findById(a.getId()).get();
-        List<String> fieldNames = ReflectHelper.getFieldNames(klass);
-        for(String fieldName:fieldNames){
-            Object fieldValue = ReflectHelper.getFieldValue(a, fieldName);
-            if(!StrUtil.isEmptyIfStr(fieldValue)){
-                ReflectHelper.setValue(b,fieldName,fieldValue);
-            }
-        }
-        return dao.save(b);
+//    @CacheEvict(value = CacheName.APPLICATION,key = "#root.targetClass.simpleName+':'+#id")
+    public T update(T a)throws Exception{
+        return dao.save(a);
     }
 
     /**

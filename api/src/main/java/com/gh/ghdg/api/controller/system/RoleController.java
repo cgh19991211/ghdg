@@ -1,20 +1,20 @@
 package com.gh.ghdg.api.controller.system;
 
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.api.controller.BaseController;
+import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
+import com.gh.ghdg.sysMgr.bean.constant.factory.PageFactory;
 import com.gh.ghdg.sysMgr.bean.entities.system.Role;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;
-import com.gh.ghdg.sysMgr.bean.vo.RoleVo;
-import com.gh.ghdg.sysMgr.bean.vo.RoleVoFactory;
+import com.gh.ghdg.sysMgr.bean.dto.RoleDto;
+import com.gh.ghdg.sysMgr.bean.dto.RoleDtoFactory;
 import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.service.system.RoleService;
-import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,16 +29,24 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
     @Autowired
     private UserDao userDao;
     
+    @Autowired
+    private RoleService roleService;
+    
     /**
      * 新增
      * @param t
      * @return
      * @throws Exception
      */
-    @PostMapping("save")
+    @PostMapping("/save")
     @RequiresPermissions(PermissionCode.ROLE_EDIT)
     public Result roleSave(@ModelAttribute("t") Role t) throws Exception {
-        return super.save(t);
+//        return super.save(t);
+        if(StrUtil.isEmpty(t.getId())){
+            return Result.suc(roleService.save(t));
+        }else{
+            return Result.suc(roleService.update(t));
+        }
     }
     
     /**
@@ -60,18 +68,22 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
     @GetMapping("/list")
     @RequiresPermissions(PermissionCode.ROLE)
     public Result roleShowList(String name){
-        List<Role> roles = null;
+//        List<Role> roles = null;
+        Page page = new PageFactory().defaultPage();
         if(StrUtil.isEmpty(name)){
-            roles = service.queryAll();
+//            roles = service.queryAll();
         }else{
-            roles = service.queryAll(SearchFilter.build("name",SearchFilter.Operator.LIKE,name));
+//            roles = service.queryAll(SearchFilter.build("name",SearchFilter.Operator.LIKE,name));
+            page.addFilter(SearchFilter.build("roleName",SearchFilter.Operator.LIKE,name));
         }
-        RoleVoFactory me = RoleVoFactory.me();
-        List<RoleVo> roleVoList = new ArrayList<>();
-        for(Role r:(List<Role>)roles){
-            roleVoList.add(me.roleVo(r));
+        page = roleService.queryPage(page);
+        RoleDtoFactory me = RoleDtoFactory.me();
+        List<RoleDto> roleDtoList = new ArrayList<>();
+        for(Role r: (List<Role>)page.getRecords()){
+            roleDtoList.add(me.roleVo(r));
         }
-        return Result.suc(roleVoList);
+        page.setRecords(roleDtoList);
+        return Result.suc(page);
     }
     
     /**
@@ -90,16 +102,16 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
         }
         
         List<Role> roleList = service.tree();
-        List<RoleVo> roleVoList = new ArrayList<>();
-        RoleVoFactory me = RoleVoFactory.me();
+        List<RoleDto> roleDtoList = new ArrayList<>();
+        RoleDtoFactory me = RoleDtoFactory.me();
         for(Role r:roleList){
-            RoleVo roleVo = me.roleVo(r);
+            RoleDto roleDto = me.roleVo(r);
             if(assigned.contains(r.getId())){
-                roleVo.setChecked(true);
+                roleDto.setChecked(true);
             }
-            roleVoList.add(roleVo);
+            roleDtoList.add(roleDto);
         }
-        return Result.suc(roleVoList);
+        return Result.suc(roleDtoList);
     }
     
     /**
@@ -111,12 +123,12 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
     @RequiresPermissions((PermissionCode.ROLE))
     public Result roleTree() {
         List<Role> roleList = service.tree();
-        List<RoleVo> roleVos = new ArrayList<>();
-        RoleVoFactory roleVoFactory = RoleVoFactory.me();
+        List<RoleDto> roleDtos = new ArrayList<>();
+        RoleDtoFactory roleDtoFactory = RoleDtoFactory.me();
         for(Role r:roleList){
-            roleVos.add(roleVoFactory.roleVo(r));
+            roleDtos.add(roleDtoFactory.roleVo(r));
         }
-        return Result.suc(roleVos);
+        return Result.suc(roleDtos);
     }
     
     /**

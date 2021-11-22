@@ -95,7 +95,7 @@ public class LoginController {
         cache.set(token,user);
 //        cache.set(refreshToken,user);
         //更新登陆时间
-        userService.save(user);
+        userService.update(user);
         return Result.suc(result);
     }
     

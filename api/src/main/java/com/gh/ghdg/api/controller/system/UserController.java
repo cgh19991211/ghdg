@@ -4,27 +4,23 @@ import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.api.controller.BaseController;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
-import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
+import com.gh.ghdg.common.utils.constant.Constants;
 import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.gh.ghdg.sysMgr.bean.constant.factory.PageFactory;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
-import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;
-import com.gh.ghdg.sysMgr.bean.vo.UserVo;
-import com.gh.ghdg.sysMgr.bean.vo.UserVoFactory;
+import com.gh.ghdg.sysMgr.bean.dto.UserDto;
+import com.gh.ghdg.sysMgr.bean.dto.UserDtoFactory;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.service.system.UserService;
-import com.gh.ghdg.sysMgr.security.JwtUtil;
-import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 
 //@Api(tags = "用户接口")
@@ -33,6 +29,8 @@ import java.util.Map;
 public class UserController extends BaseController<User, UserDao, UserService> {
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserDao userDao;
     
     /**
      * 根据用户名与昵称，进行模糊查询，分页
@@ -52,10 +50,12 @@ public class UserController extends BaseController<User, UserDao, UserService> {
             page.addFilter(SearchFilter.build("username", SearchFilter.Operator.LIKE, username));
         }
 //        page.addFilter(SearchFilter.build("status",SearchFilter.Operator.EQ,1));
+        //按照最近登陆时间排序，登陆时间为null则排第一
+        page.setSort(Sort.by(Sort.Direction.ASC,"lastLoginDate"));
         page = userService.queryPage(page);
-        List<UserVo> users = new ArrayList<>();
+        List<UserDto> users = new ArrayList<>();
         for(User u:(List<User>)page.getRecords()){
-            users.add(UserVoFactory.me().userVo(u));
+            users.add(UserDtoFactory.me().userVo(u));
         }
         page.setRecords(users);
         return Result.suc(page);
@@ -69,16 +69,28 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      */
     @PostMapping("/save")
     @RequiresPermissions(PermissionCode.USER_EDIT)
-    public Result userSave(@ModelAttribute("t") User t)throws Exception{
-        return super.save(t);
+    public Result userSave(@ModelAttribute("t") UserDto t)throws Exception{
+        UserDtoFactory me = UserDtoFactory.me();
+        String id = t.getId();
+        if(StrUtil.isEmpty(id)){
+            return Result.suc(userService.save(me.user(t,new User())));
+        }else{
+            Optional<User> byId = userDao.findById(id);
+            if(byId.isPresent()){
+                User user = byId.get();
+                return Result.suc(userService.update(me.user(t,user)));
+            }else{
+                return Result.error(false,"用户不存在，id:"+id,null, Constants.FAILED);
+            }
+        }
     }
     
-    @PostMapping("/modifyInfo")
-    @RequiresPermissions(PermissionCode.USER_EDIT)
-    public Result userModify(@ModelAttribute("t") User t) throws Exception {
-        service.modifyInfo(t);
-        return Result.suc("修改成功");
-    }
+//    @PostMapping("/modifyInfo")
+//    @RequiresPermissions(PermissionCode.USER_EDIT)
+//    public Result userModify(@ModelAttribute("t") User t) throws Exception {
+//        service.modifyInfo(t);
+//        return Result.suc("修改成功");
+//    }
 
     
     /**

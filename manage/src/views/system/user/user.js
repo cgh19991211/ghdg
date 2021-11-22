@@ -116,7 +116,16 @@ export default {
       list: null,
       listLoading: true,
       selRow: {},
-      tmpForm: {}
+      tmpForm: {
+        id: '',
+        username: '',
+        nickname: '',
+        gender: '保密',
+        email: '',
+        status: 1,
+        phone: '',
+        remark: ''
+      }
     }
   },
   filters: {
@@ -205,6 +214,7 @@ export default {
       }
     },
     add() {
+      this.resetForm()
       this.formTitle = '添加用户'
       this.formVisible = true
       this.isAdd = true
@@ -227,18 +237,37 @@ export default {
         if (valid) {
           if (this.validPasswd()) {
             var saveForm = self.tmpForm
+            saveForm.rolename = null
             console.log("save user form：")
             console.log(saveForm)
-            if (saveForm.status === 1) {
-              //启用
-              saveForm.status = '生效'
-            } else {
-              //冻结
-              saveForm.status = '失效'
-            }
+            // if (saveForm.status === 1) {
+            //   //启用
+            //   saveForm.status = '生效'
+            // } else {
+            //   //冻结
+            //   saveForm.status = '失效'
+            // }
             // form.createdDate = new Date(form.createdDate)
-            if (self.isAdd) {
-              saveUser(saveForm).then(response => {
+            // if (self.isAdd) {
+            //   saveUser(saveForm).then(response => {
+            //     this.$message({
+            //       message: '提交成功',
+            //       type: 'success'
+            //     })
+            //     this.fetchData()
+            //     this.formVisible = false
+            //   })
+            // } else {
+            //   modifyUser(saveForm).then(response => {
+            //     this.$message({
+            //       message: '修改成功',
+            //       type: 'success'
+            //     })
+            //     this.fetchData()
+            //     this.formVisible = false
+            //   })
+            // }
+            saveUser(saveForm).then(response => {
                 this.$message({
                   message: '提交成功',
                   type: 'success'
@@ -246,16 +275,6 @@ export default {
                 this.fetchData()
                 this.formVisible = false
               })
-            } else {
-              modifyUser(saveForm).then(response => {
-                this.$message({
-                  message: '修改成功',
-                  type: 'success'
-                })
-                this.fetchData()
-                this.formVisible = false
-              })
-            }
 
           } else {
             this.$message({
@@ -287,7 +306,6 @@ export default {
         // this.tmpForm.password = ''
         this.formTitle = '修改用户'
         this.formVisible = true
-        // this.tmpForm = this.form//这里把两个form同步了
       }
     },
     remove() {

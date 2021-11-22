@@ -18,7 +18,7 @@ export function getShowList(params){
 
 export function save(params) {
   return request({
-    url: 'sys/role',
+    url: 'sys/role/save',
     method: 'post',
     params
   })

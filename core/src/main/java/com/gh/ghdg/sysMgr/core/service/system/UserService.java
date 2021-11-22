@@ -8,6 +8,7 @@ import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.common.utils.ToolUtil;
 import com.gh.ghdg.common.utils.constant.CommonRex;
 import com.gh.ghdg.common.utils.exception.MyException;
+import com.gh.ghdg.sysMgr.bean.dto.UserDtoFactory;
 import com.gh.ghdg.sysMgr.bean.entities.system.Role;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;
@@ -60,27 +61,25 @@ public class UserService extends BaseService<User, UserDao> {
      */
     @Transactional
     public User save(User t) throws Exception{
-        //TODO:检查用户名,手机号,email是否唯一
-        check(t);
         String id = t.getId();
         /**
          * id为空，则是新增用户，否则是修改用户信息。
          */
-        if(StrUtil.isEmpty(id)){
-            String password = t.getPassword();
-            checkValid(password);
-            String salt = ToolUtil.getRandomString(4);
-            t.setSalt(salt);
-            String encryptPassword = this.encryptPassword(password, salt);
-            t.setPassword(encryptPassword);
-        }
-
+        //TODO:检查用户名,手机号,email是否唯一
+//        check(t);
+        String password = t.getPassword();
+        checkValid(password);
+        String salt = ToolUtil.getRandomString(4);
+        t.setSalt(salt);
+        String encryptPassword = this.encryptPassword(password, salt);
+        t.setPassword(encryptPassword);
         return super.save(t);
     }
     
     @Transactional
-    public User modifyInfo(User t) throws Exception {
-        return super.modifyInfo(t);
+//    @CacheEvict(value = CacheName.APPLICATION,key = "#root.targetClass.simpleName+':'+#id")
+    public User update(User a)throws Exception{
+        return dao.save(a);
     }
 
     /**

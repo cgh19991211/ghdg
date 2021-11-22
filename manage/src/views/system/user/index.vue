@@ -31,8 +31,12 @@
     </div>
 
 
-    <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row
-    @current-change="handleCurrentChange">
+    <el-table
+      :data="list"
+      v-loading="listLoading"
+      element-loading-text="Loading"
+      border fit highlight-current-row
+      @current-change="handleCurrentChange">
 
       <el-table-column label="账号名" prop="username">
 
@@ -95,7 +99,6 @@
     <el-dialog
       :title="formTitle"
       :visible.sync="formVisible"
-      @open="resetForm"
       width="70%">
       <el-form ref="tmpForm" :model="tmpForm" :rules="rules" label-width="80px">
         <el-row>

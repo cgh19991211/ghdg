@@ -1,25 +1,26 @@
-package com.gh.ghdg.sysMgr.bean.vo;
+package com.gh.ghdg.sysMgr.bean.dto;
 
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
-public class RoleVo {
+public class RoleDto {
+    
     private String id;
     private String pid;
     private String name;
     private String pName;
     private String code;
     private boolean checked;
-    List<RoleVo> children;
+    List<RoleDto> children;
     private String tips;
     private Integer num;
     private String creator;
-    private Date lastModifiedDate;
+    private Timestamp lastModifiedDate;
     
-    public RoleVo() {
+    public RoleDto() {
     }
     
-    public RoleVo(String code, String id, String pid, String name, String pName, boolean checked, List<RoleVo> children, String tips, Integer num, String creator, Date lastModifiedDate) {
+    public RoleDto(String code, String id, String pid, String name, String pName, boolean checked, List<RoleDto> children, String tips, Integer num, String creator, Timestamp lastModifiedDate) {
         this.code = code;
         this.id = id;
         this.pid = pid;
@@ -65,11 +66,11 @@ public class RoleVo {
         this.checked = checked;
     }
     
-    public List<RoleVo> getChildren() {
+    public List<RoleDto> getChildren() {
         return children;
     }
     
-    public void setChildren(List<RoleVo> children) {
+    public void setChildren(List<RoleDto> children) {
         this.children = children;
     }
     
@@ -105,11 +106,11 @@ public class RoleVo {
         this.creator = creator;
     }
     
-    public Date getLastModifiedDate() {
+    public Timestamp getLastModifiedDate() {
         return lastModifiedDate;
     }
     
-    public void setLastModifiedDate(Date lastModifiedDate) {
+    public void setLastModifiedDate(Timestamp lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
     

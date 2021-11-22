@@ -1,4 +1,4 @@
-package com.gh.ghdg.sysMgr.bean.vo;
+package com.gh.ghdg.sysMgr.bean.dto;
 
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class UserVo {
+public class UserDto {
     
     private String id;
     private String username;
@@ -20,10 +20,10 @@ public class UserVo {
     private List<String> rolename;
     private String remark;
     
-    public UserVo() {
+    public UserDto() {
     }
     
-    public UserVo(String id, String username, String nickname, String gender, String email, String phone, Long createdDate, Integer status, Long lastLoginDate, List<String> rolename, String remark) {
+    public UserDto(String id, String username, String nickname, String gender, String email, String phone, Long createdDate, Integer status, Long lastLoginDate, List<String> rolename, String remark) {
         this.id = id;
         this.username = username;
         this.nickname = nickname;

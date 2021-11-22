@@ -1,5 +1,6 @@
 import { remove, getList, save, savePermissons,getShowList } from '@/api/system/role'
 import { menuTreeListByRoleId } from '@/api/system/menu'
+import moment from 'moment'
 
 export default {
   data() {
@@ -33,7 +34,7 @@ export default {
         version: '',
         pName: '',
         num: 1,
-        lastModifiedDate: ''
+        lastModifiedDate: null
       },
       rules: {
         code: [
@@ -74,8 +75,9 @@ export default {
     fetchData() {
       this.listLoading = true
       getShowList(this.listQuery).then(response => {
+        console.log("role fetch data")
         console.log(response.data)
-        this.list = response.data
+        this.list = response.data.records
         this.listLoading = false
         this.total = response.data.total
       })
@@ -132,10 +134,10 @@ export default {
         if (valid) {
           save({
             id: this.form.id,
-            num: this.form.num,
-            pid: this.form.pid,
-            name: this.form.name,
-            code: this.form.code
+            displaySeq: this.form.num,
+            parent: this.form.pid,
+            roleName: this.form.name,
+            roleCode: this.form.code
           }).then(response => {
             this.$message({
               message: '提交成功',
@@ -232,7 +234,7 @@ export default {
         return "";
       }
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
-    }
+    },
 
 
   }

@@ -45,10 +45,10 @@
           {{scope.row.creator}}
         </template>
       </el-table-column>
-      <el-table-column label="上次修改时间">
-        <template slot-scope="scope">
+      <el-table-column label="上次修改时间" prop="lastModifiedDate" :formatter="dateFormat">
+        <!-- <template slot-scope="scope">
           {{scope.row.lastModifiedDate}}
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column label="备注">
         <template slot-scope="scope">
