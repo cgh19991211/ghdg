@@ -157,7 +157,7 @@ public class MenuService extends TreeService<Menu, MenuDao> {
         }
 
         List<Menu> selected = Lists.newArrayList();
-        Role r = roleDao.getOne(roleId);
+        Role r = roleDao.getById(roleId);
         for(RoleMenu rm : r.getRoleMenus()) {
             Menu m = rm.getMenu();
 
@@ -187,7 +187,7 @@ public class MenuService extends TreeService<Menu, MenuDao> {
         }
         
         List<Menu> selectable = dao.findAll();
-        Role r = roleDao.getOne(roleId);
+        Role r = roleDao.getById(roleId);
         for(RoleMenu rm : r.getRoleMenus()) {
             selectable.remove(rm.getMenu());
         }

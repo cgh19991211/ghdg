@@ -54,7 +54,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      * @param t
      * @return
      */
-    @GetMapping("delete/{id}")
+    @GetMapping("delete")
     @RequiresPermissions(PermissionCode.ROLE_EDIT)
     public Result roleDelete(@ModelAttribute("t") Role t) throws Exception {
         return super.delete(t);
@@ -141,6 +141,8 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
     public Result roleTree4User(@RequestParam(required = true) String userId){
         return Result.suc(service.tree4User(userId));
     }
+    
+    //TODO:save permission接口
     
     /**
      * 用户可选角色树

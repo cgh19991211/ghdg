@@ -5,24 +5,35 @@ import com.gh.ghdg.api.controller.TreeController;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
+import com.gh.ghdg.sysMgr.bean.dto.MenuDto;
+import com.gh.ghdg.sysMgr.bean.dto.MenuDtoFactory;
 import com.gh.ghdg.sysMgr.bean.entities.system.Menu;
+import com.gh.ghdg.sysMgr.bean.entities.system.Permission;
+import com.gh.ghdg.sysMgr.bean.entities.system.Role;
+import com.gh.ghdg.sysMgr.bean.entities.system.RoleMenu;
 import com.gh.ghdg.sysMgr.bean.enums.Status;
 import com.gh.ghdg.sysMgr.core.dao.system.MenuDao;
+import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
 import com.gh.ghdg.sysMgr.core.service.system.MenuService;
 //import io.swagger.v3.oas.annotations.Operation;
 //import io.swagger.v3.oas.annotations.Parameter;
 //import io.swagger.v3.oas.annotations.Parameters;
 //import io.swagger.v3.oas.annotations.tags.Tag;
+import com.gh.ghdg.sysMgr.core.service.system.RoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 //@Api(tags = "菜单接口")
 //@Tag(name = "菜单接口")
 @RestController
 @RequestMapping("sys/menu")
 public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
+    
+    @Autowired
+    private RoleDao roleDao;
     
     /**
      * 新增
@@ -144,11 +155,41 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
      */
 //    @Operation(summary = "角色分配的菜单树列表")
 //    @Parameter(name = "角色id")
-    @GetMapping("/tree4Role")
+    @GetMapping("/menuTree4Role")
     @RequiresPermissions(PermissionCode.ROLE_MENU)
-    public List<Menu> menuTree4Role(String roleId) {
-        return service.tree4Role(roleId);
+    public Result menuTree4Role(String roleId) {
+//        return service.tree4Role(roleId);
+        Role role = roleDao.getById(roleId);
+        List<RoleMenu> roleMenus = role.getRoleMenus();
+        Set<String> assigned = new HashSet<>();
+        for(RoleMenu rm:roleMenus){
+            assigned.add(rm.getMenu().getId());
+        }
+        List<Menu> tree = service.tree();
+        List<MenuDto> dtos = new ArrayList<>();
+        MenuDtoFactory me = MenuDtoFactory.me();
+        List<String> checkedIds = new ArrayList<>();
+        Set<String> permissionCodes = new HashSet<>();
+        for(Menu menu:tree){
+            MenuDto dto = me.menuDto(menu);
+            List<Permission> permissions = menu.getPermissions();
+            if(assigned.contains(menu.getId())){
+                //获取已分配给该角色的菜单，设置checked
+                dto.setChecked(true);
+                checkedIds.add(menu.getId());
+                //获取已分配的权限
+                for(Permission p:permissions){
+                    permissionCodes.add(p.getPermissionCode());
+                }
+            }
+            dtos.add(dto);
+        }
+        Map<String,List> map = new HashMap<>();
+        map.put("treeData",dtos);
+        map.put("checkedIds",checkedIds);
+        return Result.suc(map);
     }
+    
 
     /**
      * 角色可分配的菜单

@@ -199,6 +199,8 @@ export default {
     openPermissions() {
       if (this.checkSel()) {
         menuTreeListByRoleId(this.selRow.id).then(response => {
+          console.log("角色菜单树")
+          console.log(response)
           this.permissons = response.data.treeData
           this.checkedPermissionKeys = response.data.checkedIds
           this.permissonVisible = true

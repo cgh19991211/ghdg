@@ -24,14 +24,14 @@ export function save(params) {
   })
 }
 
-export function remove(roleId) {
+export function remove(id) {
   return request({
-    url: 'sys/role',
-    method: 'delete',
+    url: 'sys/role/delete/',
+    method: 'get',
     params: {
-      roleId: roleId
+      id:id
     }
-  })
+    })
 }
 
 /**
