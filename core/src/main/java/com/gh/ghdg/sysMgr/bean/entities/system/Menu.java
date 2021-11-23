@@ -186,17 +186,16 @@ public class Menu extends TreeEntity<Menu> {
     public String toString() {
         return "Menu{" +
                 "id='" + id + '\'' +
-                ", createdBy='" + createdBy.getUsername() + '\'' +
                 ", createdDate=" + createdDate +
-                ", lastModifiedBy='" + lastModifiedBy.getUsername() + '\'' +
                 ", lastModifiedDate=" + lastModifiedDate +
-                ", parent=" + parent.getMenuName() +
+                ", parent=" + parent +
                 ", menuCode='" + menuCode + '\'' +
                 ", menuName='" + menuName + '\'' +
                 ", tip='" + tip + '\'' +
                 ", type=" + type +
                 ", status=" + status +
                 ", navigation=" + navigation +
+                ", permissions=" + permissions +
                 '}';
     }
 }

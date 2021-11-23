@@ -26,7 +26,7 @@ export function delMenu(id) {
 }
 export function menuTreeListByRoleId(roleId) {
   return request({
-    url: 'sys/menu/tree4Role',
+    url: 'sys/menu/menuTree4Role',
     method: 'get',
     params: {
       roleId: roleId

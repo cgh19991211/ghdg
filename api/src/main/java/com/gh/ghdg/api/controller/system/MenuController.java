@@ -7,18 +7,19 @@ import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.gh.ghdg.sysMgr.bean.dto.MenuDto;
 import com.gh.ghdg.sysMgr.bean.dto.MenuDtoFactory;
-import com.gh.ghdg.sysMgr.bean.entities.system.Menu;
-import com.gh.ghdg.sysMgr.bean.entities.system.Permission;
-import com.gh.ghdg.sysMgr.bean.entities.system.Role;
-import com.gh.ghdg.sysMgr.bean.entities.system.RoleMenu;
+import com.gh.ghdg.sysMgr.bean.entities.system.*;
 import com.gh.ghdg.sysMgr.bean.enums.Status;
 import com.gh.ghdg.sysMgr.core.dao.system.MenuDao;
 import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
+import com.gh.ghdg.sysMgr.core.dao.system.RoleMenuDao;
+import com.gh.ghdg.sysMgr.core.dao.system.RoleMenuPermissionDao;
 import com.gh.ghdg.sysMgr.core.service.system.MenuService;
 //import io.swagger.v3.oas.annotations.Operation;
 //import io.swagger.v3.oas.annotations.Parameter;
 //import io.swagger.v3.oas.annotations.Parameters;
 //import io.swagger.v3.oas.annotations.tags.Tag;
+import com.gh.ghdg.sysMgr.core.service.system.RoleMenuPermissionService;
+import com.gh.ghdg.sysMgr.core.service.system.RoleMenuService;
 import com.gh.ghdg.sysMgr.core.service.system.RoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,13 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
     
     @Autowired
     private RoleDao roleDao;
+    
+    @Autowired
+    private RoleMenuDao roleMenuDao;
+    
+    @Autowired
+    private RoleMenuPermissionDao roleMenuPermissionDao;
+    
     
     /**
      * 新增
@@ -149,45 +157,61 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
     }
     
     /**
-     * 角色分配的菜单
+     * 菜单树，分配给了参数的角色的菜单要加到checked里
+     * 每个菜单要添加权限id列表--》Menu->RoleMenu->Permission
      * @param roleId
      * @return
      */
-//    @Operation(summary = "角色分配的菜单树列表")
-//    @Parameter(name = "角色id")
     @GetMapping("/menuTree4Role")
     @RequiresPermissions(PermissionCode.ROLE_MENU)
     public Result menuTree4Role(String roleId) {
 //        return service.tree4Role(roleId);
+        //map:存放checkedIds,treeData(menu)  menu:{checked,children,id,name,pid,permissions}
+        Map<String,List> map = new HashMap<>();
+        List<String> checkedIds = new ArrayList<>();
+        List<MenuDto> treeData = new ArrayList<>();
+    
+        //get role by roleId
         Role role = roleDao.getById(roleId);
-        List<RoleMenu> roleMenus = role.getRoleMenus();
+        //get assigned menus'id
         Set<String> assigned = new HashSet<>();
+        List<RoleMenu> roleMenus = roleMenuDao.findByRole(role);
         for(RoleMenu rm:roleMenus){
             assigned.add(rm.getMenu().getId());
         }
+        
+        //all root menu
         List<Menu> tree = service.tree();
-        List<MenuDto> dtos = new ArrayList<>();
-        MenuDtoFactory me = MenuDtoFactory.me();
-        List<String> checkedIds = new ArrayList<>();
-        Set<String> permissionCodes = new HashSet<>();
-        for(Menu menu:tree){
-            MenuDto dto = me.menuDto(menu);
-            List<Permission> permissions = menu.getPermissions();
-            if(assigned.contains(menu.getId())){
-                //获取已分配给该角色的菜单，设置checked
-                dto.setChecked(true);
-                checkedIds.add(menu.getId());
-                //获取已分配的权限
-                for(Permission p:permissions){
-                    permissionCodes.add(p.getPermissionCode());
-                }
-            }
-            dtos.add(dto);
+        for(Menu m:tree){
+            recurRoot(treeData,checkedIds,assigned,m);
         }
-        Map<String,List> map = new HashMap<>();
-        map.put("treeData",dtos);
+        
+        map.put("treeData",treeData);
         map.put("checkedIds",checkedIds);
         return Result.suc(map);
+    }
+    
+    /**
+     * 递归菜单获取所有已经分配给了该角色的菜单id
+     * @param treeData
+     * @param checkedIds
+     * @param assigned
+     * @param menu
+     */
+    private void recurRoot(List<MenuDto> treeData,List<String> checkedIds,Set<String> assigned,Menu menu){
+        MenuDto dto = MenuDtoFactory.me().menuDto(menu);
+        if(assigned.contains(menu.getId())){
+            checkedIds.add(menu.getId());
+        }
+        if(menu.getParent()==null)
+            treeData.add(dto);
+        //递归
+        List<Menu> children = menu.getChildren();
+        if(children!=null&&children.size()>0){
+            for(Menu m:children){
+                recurRoot(treeData,checkedIds,assigned,m);
+            }
+        }
     }
     
 

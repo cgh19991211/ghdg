@@ -5,10 +5,7 @@ import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.common.utils.exception.MyException;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
-import com.gh.ghdg.sysMgr.core.dao.system.MenuDao;
-import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
-import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
-import com.gh.ghdg.sysMgr.core.dao.system.UserRoleDao;
+import com.gh.ghdg.sysMgr.core.dao.system.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -38,6 +35,9 @@ public class RoleService extends BaseService<Role, RoleDao> {
     
     @Autowired
     private RoleMenuPermissionService roleMenuPermissionService;
+    
+    @Autowired
+    private PermissionDao permissionDao;
 
     @Transactional
     public List<Role> findByRoleName(String name){
@@ -61,6 +61,18 @@ public class RoleService extends BaseService<Role, RoleDao> {
     protected List<Role> getRoots() {
         SearchFilter filter = SearchFilter.build("parent", SearchFilter.Operator.ISNULL);
         return queryAll(filter);
+    }
+    
+    @Transactional
+    public void setMenusAndPermissions(String roleId,String menuIds,String permissionIds){
+        //TODO:以下需要重构。
+        Role role = dao.getById(roleId);
+        String[] permissions = StrUtil.split(permissionIds, ",");
+        for(String pid:permissions){
+            Permission permission = permissionDao.getById(pid);
+            Menu menu = permission.getMenu();
+            roleMenuService.save(role,menu,permission.getPermissionCode());
+        }
     }
     
     

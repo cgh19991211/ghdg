@@ -210,13 +210,22 @@ export default {
     savePermissions() {
       let checkedNodes =this.$refs.permissonTree.getCheckedNodes(false,true)
       let menuIds = ''
+      let permissionIds = ''
       for (var index in checkedNodes) {
         menuIds += checkedNodes[index].id + ','
+        //一个菜单多个权限怎么获取呢  ↓不对   --  concat(Array)
+        console.log("checkedNodes[index].permissionId")
+        console.log(checkedNodes[index])//null???
+        for(let i in checkedNodes[index].permissionIds)
+          permissionIds += checkedNodes[index].permissionIds[i]+','
       }
       const data = {
         roleId: this.selRow.id,
-        permissions: menuIds
+        menuIds: menuIds,
+        permissionIds: permissionIds
       }
+      console.log("save permissions params:checkNodes")
+      console.log(data)
       savePermissons(data).then(response => {
         this.permissonVisible = false
         this.$message({

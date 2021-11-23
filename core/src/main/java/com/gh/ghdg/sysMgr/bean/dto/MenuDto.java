@@ -8,17 +8,17 @@ public class MenuDto {
     private String pid;
     private boolean checked;
     private List<MenuDto> children;
-    //TODO:添加权限
-    private String permissionCode;
+    private List<String> permissionIds;
     public MenuDto() {
     }
     
-    public MenuDto(String id, String name, String pid, boolean checked, List<MenuDto> children) {
+    public MenuDto(String id, String name, String pid, boolean checked, List<MenuDto> children, List<String> permissionIds) {
         this.id = id;
         this.name = name;
         this.pid = pid;
         this.checked = checked;
         this.children = children;
+        this.permissionIds = permissionIds;
     }
     
     public String getId() {
@@ -59,6 +59,14 @@ public class MenuDto {
     
     public void setChildren(List<MenuDto> children) {
         this.children = children;
+    }
+    
+    public List<String> getPermissionIds() {
+        return permissionIds;
+    }
+    
+    public void setPermissionIds(List<String> permissionIds) {
+        this.permissionIds = permissionIds;
     }
     
     @Override

@@ -57,8 +57,10 @@ export function rootRoleTree(){
 
 
 export function savePermissons(params) {
+  console.log('params')
+  console.log(params)
   return request({
-    url: 'sys/role/savePermisson',
+    url: 'sys/role/setMenusAndPermissions',
     method: 'post',
     params
   })

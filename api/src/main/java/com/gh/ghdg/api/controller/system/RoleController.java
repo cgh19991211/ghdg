@@ -178,4 +178,13 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
     public List<Role> roleTreeSelectable4Menu(String menuId) {
         return service.selectableTree4Menu( menuId);
     }
+    
+    @PostMapping("setMenusAndPermissions")
+    public Result assignMenusAndPermissions(@RequestParam String roleId,
+                                            @RequestParam String menuIds,
+                                            @RequestParam String permissionIds){
+        service.setMenusAndPermissions(roleId,menuIds,permissionIds);
+        return Result.saveSuc();
+    }
+
 }

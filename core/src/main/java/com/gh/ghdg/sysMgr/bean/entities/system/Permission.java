@@ -95,8 +95,8 @@ public class Permission extends TreeEntity<Permission> {
         this.remark = remark;
     }
     
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+//    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     public Menu getMenu() {
         return menu;
     }
