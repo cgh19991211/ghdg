@@ -13,6 +13,9 @@ import com.gh.ghdg.sysMgr.core.dao.system.PermissionDao;
 import com.gh.ghdg.sysMgr.core.service.system.PermissionService;
 import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,7 +25,8 @@ import java.util.List;
 @RestController
 @RequestMapping("sys/permission")
 public class PermissionController extends DisplaySeqController<Permission,PermissionDao, PermissionService> {
-    
+    @Autowired
+    private PermissionDao permissionDao;
     /**
      * 新增
      * @param t
@@ -31,8 +35,8 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      */
     @PostMapping("save")
     @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
-    public Result permissionSave(@ModelAttribute("t") Permission t) throws Exception {
-        return super.save(t);
+    public Result permissionSave(@ModelAttribute("t") PermissionDto t) throws Exception {
+        return super.save(PermissionDtoFactory.me().permission(t));
     }
     
     @PostMapping("update")
@@ -59,10 +63,12 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      * @param t
      * @return
      */
-    @GetMapping("delete/{id}")
+    @GetMapping("delete")
     @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
-    public Result permissionDelete(@ModelAttribute("t") Permission t) throws Exception {
-        return super.delete(t);
+    public Result permissionDelete(@RequestParam String id) throws Exception {
+        Permission  byId = permissionDao.getById(id);
+        
+        return super.delete(byId);
     }
     
     
@@ -76,6 +82,7 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
     public Result permissionList(String name) throws Exception {
 //        return Result.suc(service.list(t));
         Page page = new PageFactory().defaultPage();
+        page.setSort(Sort.by(Sort.Direction.ASC, "displaySeq"));
         if(StrUtil.isNotEmpty(name)){
             page.addFilter(SearchFilter.build("permissionName", SearchFilter.Operator.LIKE,name));
         }else{

@@ -14,11 +14,12 @@ public class PermissionDto {
     private Integer displaySeq;
     private List<PermissionDto> children;
     private String remark;
+    private boolean expanded;
     
     public PermissionDto() {
     }
     
-    public PermissionDto(String id, String name, String code, String url, String pid, String menuName, String pName, String menuId, Integer displaySeq, List<PermissionDto> children, String remark) {
+    public PermissionDto(String id, String name, String code, String url, String pid, String menuName, String pName, String menuId, Integer displaySeq, List<PermissionDto> children, String remark, boolean expanded) {
         this.id = id;
         this.name = name;
         this.code = code;
@@ -30,6 +31,7 @@ public class PermissionDto {
         this.displaySeq = displaySeq;
         this.children = children;
         this.remark = remark;
+        this.expanded = expanded;
     }
     
     public String getId() {
@@ -120,6 +122,14 @@ public class PermissionDto {
         this.menuName = menuName;
     }
     
+    public boolean isExpanded() {
+        return expanded;
+    }
+    
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
+    }
+    
     @Override
     public String toString() {
         return "PermissionDto{" +
@@ -134,6 +144,7 @@ public class PermissionDto {
                 ", displaySeq=" + displaySeq +
                 ", children=" + children +
                 ", remark='" + remark + '\'' +
+                ", expanded=" + expanded +
                 '}';
     }
 }

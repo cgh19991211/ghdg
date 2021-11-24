@@ -7,3 +7,21 @@ export function getList(params) {
     params
   })
 }
+
+export function save(params) {
+  return request({
+    url: 'sys/permission/save',
+    method: 'post',
+    params
+  })
+}
+
+export function remove(id) {
+  return request({
+    url: 'sys/permission/delete',
+    method: 'get',
+    params: {
+      id: id
+    }
+  })
+}

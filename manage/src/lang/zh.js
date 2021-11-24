@@ -11,6 +11,7 @@ export default {
     contactsMgr:'邀约管理',
     channelMgr:'栏目管理',
     menuMgr: '菜单管理',
+    permissionMgr: '权限管理',
     deptMgr: '部门管理',
     userMgr: '用户管理',
     roleMgr: '角色管理',

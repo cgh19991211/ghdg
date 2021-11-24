@@ -1,10 +1,16 @@
-// import { remove, getList, save, savePermissons,getShowList } from '@/api/system/permission'
-import {getList} from '@/api/system/permission'
+// import {  getList, save, savePermissons,getShowList } from '@/api/system/permission'
+import {
+  remove,
+  save,
+  getList
+} from '@/api/system/permission'
 import treeTable from '@/components/TreeTable'
 
 export default {
   name: 'treeTableDemo',
-  components: { treeTable },
+  components: {
+    treeTable
+  },
   data() {
     return {
       showTree: false,
@@ -32,6 +38,14 @@ export default {
           children: 'children'
         }
       },
+      menuTree: {
+        show: false,
+        defaultProps: {
+          id: 'id',
+          label: 'name',
+          children: 'children'
+        }
+      },
       form: {
         id: '',
         name: '',
@@ -45,13 +59,29 @@ export default {
         remark: ''
       },
       rules: {
-        code: [
-          { required: true, message: '请输入权限编码', trigger: 'blur' },
-          { min: 3, max: 50, message: '长度在 3 到 50 个字符', trigger: 'blur' }
+        code: [{
+            required: true,
+            message: '请输入权限编码',
+            trigger: 'blur'
+          },
+          {
+            min: 3,
+            max: 50,
+            message: '长度在 3 到 50 个字符',
+            trigger: 'blur'
+          }
         ],
-        name: [
-          { required: true, message: '请输入角色名称', trigger: 'blur' },
-          { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
+        name: [{
+            required: true,
+            message: '请输入角色名称',
+            trigger: 'blur'
+          },
+          {
+            min: 2,
+            max: 50,
+            message: '长度在 2 到 50 个字符',
+            trigger: 'blur'
+          }
         ]
       },
       listQuery: {
@@ -60,6 +90,7 @@ export default {
       total: 0,
       list: null,
       listLoading: true,
+      data: [],
       selRow: {}
     }
   },
@@ -85,7 +116,8 @@ export default {
       getList(this.listQuery).then(response => {
         console.log("permission fetch data")
         console.log(response.data)
-        this.list = response.data.records
+        this.list = response.data.records //???
+        this.data = response.data.records
         this.listLoading = false
         this.total = response.data.total
       })
@@ -116,7 +148,8 @@ export default {
       this.listQuery.limit = limit
       this.fetchData()
     },
-    handleCurrentChange(currentRow, oldCurrentRow) {
+    handleCurrentChange(currentRow) {
+      console.log("handleCurrentChange")
       this.selRow = currentRow
     },
     resetForm() {
@@ -124,7 +157,7 @@ export default {
         id: '',
         name: '',
         code: '',
-        pid: 0,
+        pid: '',
         pName: '',
         menuId: '',
         menuName: '',
@@ -152,6 +185,8 @@ export default {
             permissionCode: this.form.code
           }
            */
+          console.log("save self.form")
+          console.log(self.form)
           save(self.form).then(response => {
             this.$message({
               message: '提交成功',
@@ -167,6 +202,8 @@ export default {
       })
     },
     checkSel() {
+      console.log("this.selRow")
+      console.log(this.selRow)
       if (this.selRow && this.selRow.id) {
         return true
       }
@@ -184,34 +221,35 @@ export default {
         this.formVisible = true
       }
     },
-    remove() {
-      if (this.checkSel()) {
-        const id = this.selRow.id
-        this.$confirm('确定删除该记录?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          remove(id).then(response => {
-            this.$message({
-              message: '提交成功',
-              type: 'success'
-            })
-            this.fetchData()
-          }).catch( err=> {
-            this.$notify.error({
-              title: '错误',
-              message:err,
-            })
+    remove(id) {
+      this.$confirm('确定删除该记录?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        remove(id).then(response => {
+          this.$message({
+            message: '提交成功',
+            type: 'success'
           })
-        }).catch(() => {
+          this.fetchData()
+        }).catch(err => {
+          this.$notify.error({
+            title: '错误',
+            message: err,
+          })
         })
-      }
+      })
     },
-    handlepermissionNodeClick(data, node) {
+    handlePermissionNodeClick(data, node) {
       this.form.pid = data.id
       this.form.pName = data.name
       this.permissionTree.show = false
+    },
+    handleMenuTreeNodeClick(data, node) {
+      this.form.menuId = data.menuId
+      this.form.menuName = data.menuName
+      this.menuTree.show = false
     }
   }
 }

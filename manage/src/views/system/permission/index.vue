@@ -21,13 +21,8 @@
     </div>
 
 
-    <tree-table
-      :data="list"
-      :expandAll=true
-      v-loading="listLoading"
-      element-loading-text="Loading"
-      border fit highlight-current-row
-      @current-change="handleCurrentChange">
+    <tree-table :data="data" :expandAll="expandAll" :cell-style="{'text-align':'center'}" v-loading="listLoading"
+      element-loading-text="Loading" border fit highlight-current-row >
 
       <el-table-column label="名称">
         <template slot-scope="scope">
@@ -44,7 +39,7 @@
           {{scope.row.pName}}
         </template>
       </el-table-column>
-      <el-table-column label="url">
+      <el-table-column label="资源路径">
         <template slot-scope="scope">
           {{scope.row.url}}
         </template>
@@ -59,26 +54,21 @@
           {{scope.row.remark}}
         </template>
       </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" @click="remove(scope.row.id)">删除</el-button>
+        </template>
+      </el-table-column>
 
     </tree-table>
 
 
-    <el-pagination
-      background
-      layout="total, sizes, prev, pager, next, jumper"
-      :page-sizes="[10, 20, 50, 100,500]"
-      :page-size="listQuery.limit"
-      :total="total"
-      @size-change="changeSize"
-      @current-change="fetchPage"
-      @prev-click="fetchPrev"
-      @next-click="fetchNext">
+    <el-pagination background layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 50, 100,500]"
+      :page-size="listQuery.limit" :total="total" @size-change="changeSize" @current-change="fetchPage"
+      @prev-click="fetchPrev" @next-click="fetchNext">
     </el-pagination>
 
-    <el-dialog
-      :title="formTitle"
-      :visible.sync="formVisible"
-      width="70%">
+    <el-dialog :title="formTitle" :visible.sync="formVisible" width="70%">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
@@ -99,19 +89,22 @@
 
           <el-col :span="12">
             <el-form-item label="上级权限">
-              <el-input
-                placeholder="请选择上级权限"
-                v-model="form.pName"
-                readonly="readonly"
+              <el-input placeholder="请选择上级权限" v-model="form.pName" readonly="readonly"
                 @click.native="permissionTree.show = !permissionTree.show">
               </el-input>
-              <el-tree v-if="permissionTree.show"
-                       empty-text="暂无数据"
-                       :expand-on-click-node="false"
-                       :data="list"
-                       :props="permissionTree.defaultProps"
-                       @node-click="handlePermissionNodeClick"
-                       class="input-tree">
+              <el-tree v-if="permissionTree.show" empty-text="暂无数据" :expand-on-click-node="false" :data="list"
+                :props="permissionTree.defaultProps" @node-click="handlePermissionNodeClick" class="input-tree">
+              </el-tree>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="所属菜单">
+              <el-input placeholder="请选择所属菜单" v-model="form.menuName" readonly="readonly"
+                @click.native="menuTree.show = !menuTree.show">
+              </el-input>
+              <el-tree v-if="menuTree.show" empty-text="暂无数据" :expand-on-click-node="false" :data="list"
+                :props="menuTree.defaultProps" @node-click="handleMenuTreeNodeClick" class="input-tree">
               </el-tree>
             </el-form-item>
           </el-col>

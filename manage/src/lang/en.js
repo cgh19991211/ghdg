@@ -12,6 +12,7 @@ export default {
     dictMgr: 'Dict',
     loginLog: 'Login Log',
     bussinessLog: 'Bussiness Log',
+    permissionMgr: 'Permission',
     configMgr: 'Config',
     cmsMgr: 'Cms',
     bannerMgr: 'Banner',
