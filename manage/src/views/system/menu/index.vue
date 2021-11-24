@@ -7,6 +7,7 @@
     <tree-table
     :data="data"
     :expandAll="expandAll"
+    :cell-style="{'text-align':'center'}"
     highlight-current-row
     border>
 

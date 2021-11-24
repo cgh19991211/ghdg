@@ -33,6 +33,7 @@
 
     <el-table
       :data="list"
+      :default-sort="{prop:'lastLoginDate',order:'descending'}"
       v-loading="listLoading"
       element-loading-text="Loading"
       border fit highlight-current-row

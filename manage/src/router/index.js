@@ -186,6 +186,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/system/role/index'),
         meta: {title: 'roleMgr'}
       },
+      //权限管理
+      {
+        path: 'permission',
+        name: 'permissionMgr',
+        component: () => import('@/views/system/permission/index'),
+        meta: {title: 'permissionMgr'}
+      },
       {
         path: 'task',
         name: 'Task',
@@ -289,4 +296,3 @@ export const asyncRouterMap = [
   },
   {path: '/404', component: () => import('@/views/404'), hidden: true}
 ]
-

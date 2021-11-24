@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.api.controller.TreeController;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.Result;
+import com.gh.ghdg.sysMgr.bean.DisplaySeqEntity;
 import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.gh.ghdg.sysMgr.bean.dto.MenuDto;
 import com.gh.ghdg.sysMgr.bean.dto.MenuDtoFactory;
@@ -92,10 +93,12 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
     @GetMapping("/list")
     @RequiresPermissions(PermissionCode.MENU)
     public Result menuList(String name){
-        List menus = null;
+        
+        List<Menu> menus = null;
         SearchFilter sf = SearchFilter.build("parent",SearchFilter.Operator.ISNULL);
-        if(StrUtil.isEmptyIfStr(name))menus = service.queryAll(sf);
-        else menus = service.queryAll(SearchFilter.build("name",SearchFilter.Operator.LIKE,name));
+        if(StrUtil.isEmptyIfStr(name))menus = new ArrayList<>(service.queryAll(sf));
+        else menus = new ArrayList<>(service.queryAll(SearchFilter.build("name",SearchFilter.Operator.LIKE,name)));
+        menus.sort(Comparator.comparingInt(DisplaySeqEntity::getDisplaySeq));
         return Result.suc(menus);
     }
     

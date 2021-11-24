@@ -1,7 +1,13 @@
 package com.gh.ghdg.api.controller.system;
+import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.api.controller.DisplaySeqController;
+import com.gh.ghdg.common.commonVo.Page;
+import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
+import com.gh.ghdg.sysMgr.bean.constant.factory.PageFactory;
+import com.gh.ghdg.sysMgr.bean.dto.PermissionDto;
+import com.gh.ghdg.sysMgr.bean.dto.PermissionDtoFactory;
 import com.gh.ghdg.sysMgr.bean.entities.system.Permission;
 import com.gh.ghdg.sysMgr.core.dao.system.PermissionDao;
 import com.gh.ghdg.sysMgr.core.service.system.PermissionService;
@@ -9,6 +15,7 @@ import io.swagger.annotations.Api;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //@Api(tags = "权限接口")
@@ -66,8 +73,22 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      */
     @GetMapping("list")
     @RequiresPermissions(PermissionCode.PERMISSION)
-    public List<Permission> permissionList(Permission t) throws Exception {
-        return service.list(t);
+    public Result permissionList(String name) throws Exception {
+//        return Result.suc(service.list(t));
+        Page page = new PageFactory().defaultPage();
+        if(StrUtil.isNotEmpty(name)){
+            page.addFilter(SearchFilter.build("permissionName", SearchFilter.Operator.LIKE,name));
+        }else{
+            page.addFilter(SearchFilter.build("parent",SearchFilter.Operator.ISNULL));
+        }
+        page = service.queryPage(page);
+        PermissionDtoFactory me = PermissionDtoFactory.me();
+        List<PermissionDto> permissionDtoList = new ArrayList<>();
+        for(Permission p:(List<Permission>) page.getRecords()){
+            permissionDtoList.add(me.permissionDto(p));
+        }
+        page.setRecords(permissionDtoList);
+        return Result.suc(page);
     }
 
 

@@ -22,8 +22,12 @@
     </div>
 
 
-    <el-table :data="list" v-loading="listLoading" element-loading-text="Loading" border fit highlight-current-row
-              @current-change="handleCurrentChange">
+    <el-table :data="list"
+      :default-sort="{prop:'displaySeq',order:'ascending'}"
+      v-loading="listLoading"
+      element-loading-text="Loading"
+      border fit highlight-current-row
+      @current-change="handleCurrentChange">
 
       <el-table-column label="名称">
         <template slot-scope="scope">
@@ -133,9 +137,6 @@
               ref="permissonTree"
               show-checkbox
               node-key="id"
-              :default-expand-all="true"
-              :check-on-click-node="true"
-              :check-strictly="true"
               :default-checked-keys="checkedPermissionKeys"
               :props="defaultProps">
             </el-tree>

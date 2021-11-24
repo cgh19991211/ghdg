@@ -127,7 +127,29 @@ export default {
       })
     },
     edit(row) {
-      this.form = row
+      /**
+       * id: '',
+        parent: '',
+        pname: '',
+        menuName: '',
+        menuCode: '',
+        pcode: '',
+        type: 'menu',
+        displaySeq: 1,
+        status: '生效',
+        tip: ''
+       */
+      // this.form = row
+      this.form.id = row.id
+      this.form.parent = row.parent.id
+      this.form.pname = row.name
+      this.form.menuName = row.menuName
+      this.form.menuCode = row.menuCode
+      this.form.pcode = row.pcode
+      this.form.type = row.type
+      this.form.displaySeq = row.displaySeq
+      this.form.status = row.status
+      this.form.tip = row.tip
       console.log("看看row")
       console.log(row)
       this.form.children = null
