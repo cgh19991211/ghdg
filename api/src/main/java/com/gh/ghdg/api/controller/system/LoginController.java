@@ -72,12 +72,12 @@ public class LoginController {
         //1,
         User user = userService.findByUsername(userName);
         if (user == null) {
-            return Result.error("该用户不存在");
+            return Result.error(false,"该用户不存在",null,Constants.USER_NOT_FOUND);
         }
         String passwordHashed = userService.encryptPassword(userPassword, user.getSalt());
         //2,
         if (!user.getPassword().equals(passwordHashed)) {
-            return Result.error("输入的密码错误");
+            return Result.error(false,"输入的密码错误",null,Constants.WRONG_PASSWORD);
         }
         //更新登陆时间
         user.setLastLoginDate(new Date());

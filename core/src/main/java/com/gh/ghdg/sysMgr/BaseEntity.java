@@ -100,7 +100,7 @@ public abstract class BaseEntity implements Serializable {
     
     @LastModifiedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @Column(name = "last_modified_date", columnDefinition = "DATETIME COMMENT '最后更新人'")
     public Timestamp getLastModifiedDate() {
         return lastModifiedDate;

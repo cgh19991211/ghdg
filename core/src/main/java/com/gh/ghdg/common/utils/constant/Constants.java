@@ -34,6 +34,8 @@ public class Constants {
     //错误码
     public static int SUCCESS = 200;//成功
     public static int FAILED = 999;//失败
+    public static int USER_NOT_FOUND = 1024;//用户不存在
+    public static int WRONG_PASSWORD = 1025;//密码错误
     public static int ACCESS_TOKEN_EXPIRE_CODE = 50014;//请求token过期
     public static int REFRESH_TOKEN_EXPIRE_CODE = 50015;//刷新token过期
     public static int INVALID_TOKEN_CODE = 50000;//无效token

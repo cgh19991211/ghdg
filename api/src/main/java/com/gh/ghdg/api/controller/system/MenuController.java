@@ -23,8 +23,14 @@ import com.gh.ghdg.sysMgr.core.service.system.RoleMenuService;
 import com.gh.ghdg.sysMgr.core.service.system.RoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 //@Api(tags = "菜单接口")
@@ -32,7 +38,12 @@ import java.util.*;
 @RestController
 @RequestMapping("sys/menu")
 public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
-    
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Timestamp.class, new CustomDateEditor(dateFormat, true));
+    }
     @Autowired
     private RoleDao roleDao;
     
@@ -228,4 +239,5 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
         return service.treeSelectable(roleId);
     }
     
+
 }

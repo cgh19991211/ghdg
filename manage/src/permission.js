@@ -39,12 +39,6 @@ router.beforeEach((to, from, next) => {
           const routers = res.data.routers
           //角色列表
           const roles = res.data.roles
-          // console.log("原始的菜单列表数据")
-          // console.log(menus)
-          // console.log("后台构造好的路由")
-          // console.log(routers)
-          // console.log("角色列表")
-          // console.log(roles)
           //根据后台返回的路由信息调用GenerateRoutes方法生成路由表
           store.dispatch('GenerateRoutes', { roles:roles,routers:routers,menus:menus }).then(() => { // 根据roles权限生成可访问的路由表
             // 添加可访问路由表

@@ -57,6 +57,7 @@ export default {
     fetchData() {
       this.listLoading = true
       getList().then(response => {
+        console.log("menu fetch data")
         console.log(response)
         this.data = response.data
         this.listLoading = false
@@ -88,10 +89,29 @@ export default {
       var self = this
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          const menuData = self.form
-          // menuData.parent = null
-          menuData.children = null
-          // 把表单提交上去 -- 但是为啥把表单parent与children都置空
+          // const menuData = self.form
+          // menuData.parent = self.form.parent.id
+          // menuData.children = null
+          // menuData.lastModifiedDate = null
+          // menuData.createdDate = null
+
+          const menuData = {}
+          menuData['id'] = self.form.id
+          menuData['menuName'] = self.form.menuName
+          menuData['menuCode'] = self.form.menuCode
+          menuData['type'] = self.form.type
+          menuData['status']=self.form.status
+          menuData['icon']=self.form.icon
+          menuData['displaySeq']=self.form.displaySeq
+          menuData['tip']=self.form.tip
+          menuData['parent'] = self.form.parent
+
+          console.log("menuData")
+          console.log(menuData)
+          console.log("self.form")
+          console.log(self.form)
+          // 把表单提交上去 -- parent与children会循环计算JSON，所以必须先置空
+          console.log('menuData')
           console.log(menuData)
           save(menuData).then(response => {
             this.$message({
@@ -108,6 +128,9 @@ export default {
     },
     edit(row) {
       this.form = row
+      console.log("看看row")
+      console.log(row)
+      this.form.children = null
       // if (row.type === 'menu') {
       //   this.form.type = 1
       // } else {
@@ -122,7 +145,6 @@ export default {
         this.form.pcode = row.parent.menuCode
         this.form.pname = row.parent.menuName
       }
-      console.log(this.form.pcode)
       this.formTitle = '编辑菜单'
       this.formVisible = true
       this.isAdd = false
