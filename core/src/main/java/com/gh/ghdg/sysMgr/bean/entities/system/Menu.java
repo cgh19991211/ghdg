@@ -1,6 +1,7 @@
 package com.gh.ghdg.sysMgr.bean.entities.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gh.ghdg.sysMgr.bean.TreeEntity;
 import com.gh.ghdg.sysMgr.bean.Unique;
 import com.gh.ghdg.sysMgr.bean.enums.Status;
@@ -34,7 +35,7 @@ public class Menu extends TreeEntity<Menu> {
     
     public Status status = Status.生效;//1-生效 0-失效  默认生效
 
-    private List<Permission> permissions = new ArrayList<>();
+    private Permission permission;
 
     private List<RoleMenu> roleMenus = new ArrayList<>();
 
@@ -47,20 +48,20 @@ public class Menu extends TreeEntity<Menu> {
         return navigation ? 0 == children.size() : leaf;
     }
 
-    private List<Permission> authPermissions = new ArrayList<>();
+    private Permission authPermission;
     
-    public Menu(Menu parent, String menuCode, String menuName, String tip, TypeEnum.MenuType type, Status status, List<Permission> permissions, List<RoleMenu> roleMenus, List<UserMenu> userMenus, boolean navigation, List<Permission> authPermissions, String icon) {
+    public Menu(Menu parent, String menuCode, String menuName, String tip, TypeEnum.MenuType type, Status status, Permission permission, List<RoleMenu> roleMenus, List<UserMenu> userMenus, boolean navigation, Permission authPermission, String icon) {
         this.parent = parent;
         this.menuCode = menuCode;
         this.menuName = menuName;
         this.tip = tip;
         this.type = type;
         this.status = status;
-        this.permissions = permissions;
+        this.permission = permission;
         this.roleMenus = roleMenus;
         this.userMenus = userMenus;
         this.navigation = navigation;
-        this.authPermissions = authPermissions;
+        this.authPermission = authPermission;
         this.icon = icon;
     }
     
@@ -126,14 +127,15 @@ public class Menu extends TreeEntity<Menu> {
         this.status = status;
     }
     
-    @OneToMany(mappedBy = "menu", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "menu", fetch = FetchType.EAGER)
     @OrderBy("displaySeq")
-    public List<Permission> getPermissions() {
-        return permissions;
+    @JsonIgnoreProperties({"menu"})
+    public Permission getPermission() {
+        return permission;
     }
     
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
+    public void setPermission(Permission permission) {
+        this.permission = permission;
     }
     
     @JsonIgnore
@@ -166,12 +168,12 @@ public class Menu extends TreeEntity<Menu> {
     }
     
     @Transient
-    public List<Permission> getAuthPermissions() {
-        return authPermissions;
+    public Permission getAuthPermission() {
+        return authPermission;
     }
     
-    public void setAuthPermissions(List<Permission> authPermissions) {
-        this.authPermissions = authPermissions;
+    public void setAuthPermission(Permission authPermission) {
+        this.authPermission = authPermission;
     }
     
     public String getIcon() {
@@ -195,7 +197,7 @@ public class Menu extends TreeEntity<Menu> {
                 ", type=" + type +
                 ", status=" + status +
                 ", navigation=" + navigation +
-                ", permissions=" + permissions +
+                ", permission=" + permission +
                 '}';
     }
 }

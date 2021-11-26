@@ -128,15 +128,15 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
         return Result.suc(service.tree());
     }
     
-    /**
-     * 导航
-     * @return
-     */
-//    @Operation(summary = "导航")
-    @GetMapping("/navigation")
-    public List<Menu> navigation() {
-        return service.navigation();
-    }
+//    /**
+//     * 导航
+//     * @return
+//     */
+////    @Operation(summary = "导航")
+//    @GetMapping("/navigation")
+//    public List<Menu> navigation() {
+//        return service.navigation();
+//    }
 
     /**
      * 保存分配角色(分配)
@@ -145,30 +145,29 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
      * @param modifiedPermissions 权限id 用","分隔成组 组内用"|"分隔每一个权限 传进来的都是要分配的
      * @return
      */
-//    @Operation(summary = "为菜单分配角色")
 //    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "角色id"),@Parameter(name = "权限代码")})
-    @PostMapping("/assignRoles")
-    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)//role.menu.edit
-    public Result menuAssignRoles(@ModelAttribute("t") Menu t,String roleIds, String modifiedPermissions) {
-        service.saveRoles(t, roleIds, modifiedPermissions);
-        return Result.saveSuc();
-    }
-    
-    /**
-     * 删除分配角色(回收)
-     * @param t
-     * @param
-     * @return
-     * @throws Exception
-     */
-//    @Operation(summary = "回收菜单角色")
-//    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "角色id")})
-    @GetMapping("/recycleRoles")
-    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
-    public Result menuRecycleRoles(@ModelAttribute("t") Menu t,  String roleIds) {
-        service.deleteRoles(t, roleIds);
-        return Result.delSuc();
-    }
+//    @PostMapping("/assignRoles")
+//    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)//role.menu.edit
+//    public Result menuAssignRoles(@ModelAttribute("t") Menu t,String roleIds, String modifiedPermissions) {
+//        service.saveRoles(t, roleIds, modifiedPermissions);
+//        return Result.saveSuc();
+//    }
+
+//    /**
+//     * 删除分配角色(回收)
+//     * @param t
+//     * @param
+//     * @return
+//     * @throws Exception
+//     */
+////    @Operation(summary = "回收菜单角色")
+////    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "角色id")})
+//    @GetMapping("/recycleRoles")
+//    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
+//    public Result menuRecycleRoles(@ModelAttribute("t") Menu t,  String roleIds) {
+//        service.deleteRoles(t, roleIds);
+//        return Result.delSuc();
+//    }
     
     /**
      * 菜单树，分配给了参数的角色的菜单要加到checked里
@@ -177,7 +176,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
      * @return
      */
     @GetMapping("/menuTree4Role")
-    @RequiresPermissions(PermissionCode.ROLE_MENU)
+//    @RequiresPermissions(PermissionCode.ROLE_MENU)
     public Result menuTree4Role(String roleId) {
 //        return service.tree4Role(roleId);
         //map:存放checkedIds,treeData(menu)  menu:{checked,children,id,name,pid,permissions}
@@ -195,11 +194,10 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
         }
         
         //all root menu
-        List<Menu> tree = service.tree();
-        for(Menu m:tree){
-            recurRoot(treeData,checkedIds,assigned,m);
+        List<Menu> roots = service.tree();
+        for(Menu root:roots){
+            recurRoot(treeData,checkedIds,assigned,root);
         }
-        
         map.put("treeData",treeData);
         map.put("checkedIds",checkedIds);
         return Result.suc(map);
@@ -229,18 +227,18 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
     }
     
 
-    /**
-     * 角色可分配的菜单
-     * @param roleId
-     * @return
-     */
-//    @Operation(summary = "角色可分配的菜单")
-//    @Parameter(name = "角色id")
-    @GetMapping("/treeSelectable")
-    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
-    public List<Menu> menuTreeSelectable(String roleId) {
-        return service.treeSelectable(roleId);
-    }
-    
+//    /**
+//     * 角色可分配的菜单
+//     * @param roleId
+//     * @return
+//     */
+////    @Operation(summary = "角色可分配的菜单")
+////    @Parameter(name = "角色id")
+//    @GetMapping("/treeSelectable")
+//    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
+//    public List<Menu> menuTreeSelectable(String roleId) {
+//        return service.treeSelectable(roleId);
+//    }
+//
 
 }

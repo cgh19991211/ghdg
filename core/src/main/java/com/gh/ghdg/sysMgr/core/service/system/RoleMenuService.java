@@ -25,37 +25,47 @@ public class RoleMenuService extends BaseService<RoleMenu, RoleMenuDao> {
     private PermissionDao permissionDao;
     
     /**
-     * 前端传入角色id，菜单id，以及对应位置权限的true|false
-     * 这里不对，与前端太过耦合。太依赖前端决定的顺序了。
-     *
-     * 需要做拆分，把权限分配给角色这个功能拆分出来。
-     * 前端从传入对应的权限的位置，改为传入id
+     * 先清除再保存
      * @param role
-     * @param t
-     * @param permissions 例： "user:cud|user:menu:cud"
+     * @param permission
      */
     @Transactional
-    public void save(Role role, Menu t, String permissions) {
-        Optional<Menu> menuOpt = menuDao.findById(t.getId());
-        Menu menu = menuOpt.get();
-        RoleMenu roleMenu = dao.findByRoleAndMenu(role, menu);
-        if(null == roleMenu) {
-            roleMenu = new RoleMenu();
+    public void save(Role role, Menu menu, Permission permission) {
+//        RoleMenu roleMenu = dao.findByRoleAndMenu(role, menu);
+//        if(roleMenu!=null){
+//            roleMenuPermissionDao.deleteRoleMenuPermissionByRoleMenuAndPermission(roleMenu,permission);
+//            dao.delete(roleMenu);
+//        }else {
+            RoleMenu roleMenu = new RoleMenu();
             roleMenu.setRole(role);
             roleMenu.setMenu(menu);
             dao.save(roleMenu);
-        }
-        String[] permissionArr = StrUtil.split(permissions,"|");
-        for(String str:permissionArr){
-            Permission byPermissionCode = permissionDao.findByPermissionCode(str);
-            RoleMenuPermission byRoleMenuAndPermission = roleMenuPermissionDao.findByRoleMenuAndPermission(roleMenu, byPermissionCode);
-            if(byRoleMenuAndPermission==null){
-                byRoleMenuAndPermission = new RoleMenuPermission();
-                byRoleMenuAndPermission.setRoleMenu(roleMenu);
-                byRoleMenuAndPermission.setPermission(byPermissionCode);
-                roleMenuPermissionDao.save(byRoleMenuAndPermission);
-            }
-        }
+//        }
+        RoleMenuPermission byRoleMenuAndPermission = roleMenuPermissionDao.findByRoleMenuAndPermission(roleMenu, permission);
+//        if(byRoleMenuAndPermission==null){
+            byRoleMenuAndPermission = new RoleMenuPermission();
+            byRoleMenuAndPermission.setRoleMenu(roleMenu);
+            byRoleMenuAndPermission.setPermission(permission);
+            roleMenuPermissionDao.save(byRoleMenuAndPermission);
+//        }
+    }
+    
+    /**
+     * 清空角色权限
+     * @param role
+     */
+    @Transactional
+    public void clear(Role role){
+        //查找所有以分配给该角色的菜单
+        List<RoleMenu> roleMenuList = dao.findByRole(role);
+        if(roleMenuList==null||roleMenuList.size()==0)return;
+        
+        //删除该角色所有已分配的权限资源
+        for(RoleMenu roleMenu:roleMenuList)
+            roleMenuPermissionDao.deleteRoleMenuPermissionsByRoleMenu(roleMenu);
+        
+        //删除所有分配给该角色的菜单
+        dao.deleteRoleMenusByRole(role);
     }
     
     /**

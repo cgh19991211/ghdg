@@ -112,10 +112,8 @@ public class ShiroFactory {
                 sm.setIsmenu(m.getType().getValue());
                 sm.setIcon(m.getIcon());
                 sm.setStatus(m.getStatus().getValue());
-                List<Permission> permissions = m.getPermissions();
-                for(Permission p:permissions){
-                    sm.setUrl(p.getUrl());
-                }
+                Permission permission = m.getPermission();
+                sm.setUrl(permission.getUrl());
                 menuSet.add(sm);
                 
                 shiroPermissions(m,permSet);
@@ -136,13 +134,11 @@ public class ShiroFactory {
     }
     
     public void shiroPermissions(Menu menu,Set<ShiroPermission> permSet){
-        List<Permission> permissions = menu.getPermissions();
-        for(Permission p:permissions){
+        Permission permission = menu.getPermission();
             ShiroPermission sp = new ShiroPermission();
-            sp.setPermissionCode(p.getPermissionCode());
-            sp.setUrl(p.getUrl());
+            sp.setPermissionCode(permission.getPermissionCode());
+            sp.setUrl(permission.getUrl());
             permSet.add(sp);
-        }
     }
     
 }

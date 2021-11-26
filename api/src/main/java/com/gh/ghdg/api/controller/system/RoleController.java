@@ -66,7 +66,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      * @return
      */
     @GetMapping("/list")
-    @RequiresPermissions(PermissionCode.ROLE)
+//    @RequiresPermissions(PermissionCode.ROLE)
     public Result roleShowList(String name){
 //        List<Role> roles = null;
         Page page = new PageFactory().defaultPage();
@@ -179,11 +179,17 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
         return service.selectableTree4Menu( menuId);
     }
     
+    
+    /**
+     * 角色分配权限
+     * @param roleId
+     * @param permissionIds
+     * @return
+     */
     @PostMapping("setMenusAndPermissions")
     public Result assignMenusAndPermissions(@RequestParam String roleId,
-                                            @RequestParam String menuIds,
                                             @RequestParam String permissionIds){
-        service.setMenusAndPermissions(roleId,menuIds,permissionIds);
+        service.setMenusAndPermissions(roleId,permissionIds);
         return Result.saveSuc();
     }
 

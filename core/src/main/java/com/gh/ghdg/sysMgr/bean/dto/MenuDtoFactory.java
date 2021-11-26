@@ -44,14 +44,10 @@ public class MenuDtoFactory {
             dto.setChildren(getDtoList(children));
         }
         //permissions
-        List<RoleMenu> roleMenus = roleMenuDao.findByMenu(menu);
-        List<String> permissionIds = new ArrayList<>();
-        for(RoleMenu rm:roleMenus){
-            List<RoleMenuPermission> byRoleMenu = roleMenuPermissionDao.findRoleMenuPermissionByRoleMenu(rm);
-            for (RoleMenuPermission rmp:byRoleMenu)
-                permissionIds.add(rmp.getPermission().getId());
-        }
-        dto.setPermissionIds(permissionIds);
+//        List<RoleMenu> roleMenus = roleMenuDao.findByMenu(menu);
+        Permission permission = menu.getPermission();
+        if(permission!=null)
+            dto.setPermissionId(permission.getId());
         return dto;
     }
     public List<MenuDto> getDtoList(List<Menu> menus){

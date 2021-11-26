@@ -4,6 +4,7 @@ import com.gh.ghdg.sysMgr.BaseDao;
 import com.gh.ghdg.sysMgr.bean.entities.system.Menu;
 import com.gh.ghdg.sysMgr.bean.entities.system.Role;
 import com.gh.ghdg.sysMgr.bean.entities.system.RoleMenu;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -20,4 +21,12 @@ public interface RoleMenuDao extends BaseDao<RoleMenu> {
     
     @Query("select r from RoleMenu r where r.role = ?1")
     List<RoleMenu> findByRole(Role role);
+    
+    @Modifying
+    @Query("delete from RoleMenu r where r.menu = ?1 and r.role = ?2")
+    void deleteMenuRoleByMenuAndRole(Menu menu, Role role);
+    
+    @Modifying
+    @Query("delete from RoleMenu r where r.role = ?1")
+    void deleteRoleMenusByRole(Role role);
 }

@@ -63,15 +63,21 @@ public class RoleService extends BaseService<Role, RoleDao> {
         return queryAll(filter);
     }
     
+    /**
+     * 分配角色权限 (先清空后分配)
+     * @param roleId
+     * @param permissionIds
+     */
     @Transactional
-    public void setMenusAndPermissions(String roleId,String menuIds,String permissionIds){
-        //TODO:以下需要重构。
+    public void setMenusAndPermissions(String roleId,String permissionIds){
         Role role = dao.getById(roleId);
+        roleMenuService.clear(role);
         String[] permissions = StrUtil.split(permissionIds, ",");
         for(String pid:permissions){
+            if(StrUtil.isEmpty(pid))continue;
             Permission permission = permissionDao.getById(pid);
             Menu menu = permission.getMenu();
-            roleMenuService.save(role,menu,permission.getPermissionCode());
+            roleMenuService.save(role,menu,permission);
         }
     }
     
