@@ -105,7 +105,7 @@ export default {
     font-weight: 400;
     line-height: 1;
     width: $space-width;
-    height: 14px;
+    height: inherit;
     &::before {
       content: ""
     }
@@ -123,5 +123,8 @@ export default {
     cursor: pointer;
     color: $color-blue;
     margin-left: -$space-width;
+    height: 55%;
+    width: 55%;
+    display: inline-block;
   }
 </style>

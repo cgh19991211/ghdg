@@ -25,3 +25,10 @@ export function remove(id) {
     }
   })
 }
+
+export function getMenuTree() {
+  return request({
+    url: 'sys/menu/tree',
+    method: 'get'
+  })
+}

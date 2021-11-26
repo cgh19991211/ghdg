@@ -156,7 +156,7 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: 'menu',
+        path: '/menu',
         name: 'Menu',
         component: () => import('@/views/system/menu/index'),
         meta: {
@@ -193,34 +193,34 @@ export const asyncRouterMap = [
         component: () => import('@/views/system/permission/index'),
         meta: {title: 'permissionMgr'}
       },
-      {
-        path: 'task',
-        name: 'Task',
-        component: () => import('@/views/system/task/index'),
-        meta: {title: 'taskMgr'}
-      },
-      {
-        path: 'taskLog',
-        name: 'taskLog',
-        component: () => import('@/views/system/task/taskLog.vue'),
-        hidden: true,
-        meta: {title: 'taskLog'}
+      // {
+      //   path: 'task',
+      //   name: 'Task',
+      //   component: () => import('@/views/system/task/index'),
+      //   meta: {title: 'taskMgr'}
+      // },
+      // {
+      //   path: 'taskLog',
+      //   name: 'taskLog',
+      //   component: () => import('@/views/system/task/taskLog.vue'),
+      //   hidden: true,
+      //   meta: {title: 'taskLog'}
 
-      },
-      {
-        path: 'dict',
-        name: 'Dict',
-        component: () => import('@/views/system/dict/index'),
-        meta: {title: 'dictMgr'}
-      },
-      {
-        path: 'cfg',
-        name: 'Config',
-        component: () => import('@/views/system/cfg/index'),
-        meta: {
-          title: 'configMgr'
-        }
-      }
+      // },
+      // {
+      //   path: 'dict',
+      //   name: 'Dict',
+      //   component: () => import('@/views/system/dict/index'),
+      //   meta: {title: 'dictMgr'}
+      // },
+      // {
+      //   path: 'cfg',
+      //   name: 'Config',
+      //   component: () => import('@/views/system/cfg/index'),
+      //   meta: {
+      //     title: 'configMgr'
+      //   }
+      // }
     ]
   },
 

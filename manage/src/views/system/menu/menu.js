@@ -43,8 +43,7 @@ export default {
           { required: true, message: '请输入排序', trigger: 'blur' }
         ]
       },
-      data: [],
-      selRow: {}
+      data: []
     }
   },
   created() {
@@ -68,16 +67,6 @@ export default {
       this.form.pname = data.menuName
       this.form.parent = data.id
       this.showTree = false
-    },
-    checkSel() {
-      if (this.selRow && this.selRow.id) {
-        return true
-      }
-      this.$message({
-        message: '请选中操作项',
-        type: 'warning'
-      })
-      return false
     },
     add() {
       this.form = {}

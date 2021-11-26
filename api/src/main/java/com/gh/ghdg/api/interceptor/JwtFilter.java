@@ -85,6 +85,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        
+        
         //如果前端请求需要带有cookies等信息的话，需要开启Access-Control-Allow-Credentials
         httpServletResponse.setHeader("Access-Control-Allow-Credentials","true");
         // 允许跨域访问的域名：若有端口需写全（协议+域名+端口），若没有端口末尾不用加'/'
@@ -94,7 +96,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         httpServletResponse.setHeader("Access-Control-Allow-Headers", httpServletRequest.getHeader("Access-Control-Request-Headers"));
 //        response.setHeader("Access-Control-Expose-Headers","Cache-Control,Content-Type,Expires,Pragma,Content-Language,Last-Modified,token");
 //        response.setHeader("token", JwtToken.createToken(user.getId())); //设置响应头
-    
+        
         // 跨域时(既发送非简单请求时)会首先发送一个option请求(预检请求)，这里我们给option请求直接返回正常状态(告诉浏览器允许请求)
         if (httpServletRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
             httpServletResponse.setStatus(HttpStatus.OK.value());

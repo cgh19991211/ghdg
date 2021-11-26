@@ -67,7 +67,6 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
     @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
     public Result permissionDelete(@RequestParam String id) throws Exception {
         Permission  byId = permissionDao.getById(id);
-        
         return super.delete(byId);
     }
     

@@ -118,14 +118,14 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
     }
     
     /**
-     * 完整树
+     * 完整树--权限新增或修改需要获取
      * @return
      */
 //    @Operation(summary = "菜单树")
     @GetMapping("/tree")
     @RequiresPermissions(PermissionCode.MENU)
-    public List<Menu> menuTree() {
-        return service.tree();
+    public Result menuTree() {
+        return Result.suc(service.tree());
     }
     
     /**

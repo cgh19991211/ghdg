@@ -2,7 +2,8 @@
 import {
   remove,
   save,
-  getList
+  getList,
+  getMenuTree
 } from '@/api/system/permission'
 import treeTable from '@/components/TreeTable'
 
@@ -39,14 +40,31 @@ export default {
         }
       },
       menuTree: {
+        id: '',
+        menuName: '',
+        children: null
+      },
+      menuShowTree: {
         show: false,
         defaultProps: {
           id: 'id',
-          label: 'name',
+          label: 'menuName',
           children: 'children'
         }
       },
       form: {
+        id: '',
+        name: '',
+        code: '',
+        pid: 0,
+        pName: '',
+        menuId: '',
+        menuName: '',
+        url: '',
+        displaySeq: 1,
+        remark: ''
+      },
+      list: {
         id: '',
         name: '',
         code: '',
@@ -88,10 +106,8 @@ export default {
         name: undefined
       },
       total: 0,
-      list: null,
       listLoading: true,
-      data: [],
-      selRow: {}
+      data: []
     }
   },
   // filters: {
@@ -116,10 +132,15 @@ export default {
       getList(this.listQuery).then(response => {
         console.log("permission fetch data")
         console.log(response.data)
-        this.list = response.data.records //???
-        this.data = response.data.records
+        this.data = response.data
+        this.list = response.data.records
         this.listLoading = false
         this.total = response.data.total
+      })
+      getMenuTree().then(response => {
+        console.log("permission get menu tree")
+        this.menuTree = response.data
+        console.log(this.menuTree)
       })
     },
     search() {
@@ -148,10 +169,6 @@ export default {
       this.listQuery.limit = limit
       this.fetchData()
     },
-    handleCurrentChange(currentRow) {
-      console.log("handleCurrentChange")
-      this.selRow = currentRow
-    },
     resetForm() {
       this.form = {
         id: '',
@@ -176,18 +193,13 @@ export default {
       let self = this
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          /**
-           * {
-            id: this.form.id,
-            displaySeq: this.form.displaySeq,
-            parent: this.form.pid,
-            permissionName: this.form.name,
-            permissionCode: this.form.code
-          }
-           */
-          console.log("save self.form")
-          console.log(self.form)
-          save(self.form).then(response => {
+          console.log("save data")
+          let saveForm = self.form
+          // saveForm.menu = null
+          // saveForm.parent = null
+          // saveForm.children = null
+          // console.log(saveForm)
+          save(saveForm).then(response => {
             this.$message({
               message: '提交成功',
               type: 'success'
@@ -201,25 +213,37 @@ export default {
         }
       })
     },
-    checkSel() {
-      console.log("this.selRow")
-      console.log(this.selRow)
-      if (this.selRow && this.selRow.id) {
-        return true
-      }
-      this.$message({
-        message: '请选中操作项',
-        type: 'warning'
-      })
-      return false
+    generateSel(row) {
+      console.log("row")
+      console.log(row)
+      /**
+        id: '',
+        name: '',
+        code: '',
+        pid: 0,
+        pName: '',
+        menuId: '',
+        menuName: '',
+        url: '',
+        displaySeq: 1,
+        remark: ''
+       */
+      this.form.id = row.id
+      this.form.name = row.name
+      this.form.code = row.code
+      this.form.pid = row.pid
+      this.form.pName = row.pName
+      this.form.menuId = row.menuId
+      this.form.menuName = row.menuName
+      this.form.url = row.url
+      this.form.displaySeq = row.displaySeq
+      this.form.remark = row.remark
     },
-    edit() {
-      if (this.checkSel()) {
-        this.isAdd = false
-        this.form = this.selRow
-        this.formTitle = '修改权限'
-        this.formVisible = true
-      }
+    edit(row) {
+      this.generateSel(row)
+      this.isAdd = false
+      this.formTitle = '修改权限'
+      this.formVisible = true
     },
     remove(id) {
       this.$confirm('确定删除该记录?', '提示', {
@@ -247,9 +271,11 @@ export default {
       this.permissionTree.show = false
     },
     handleMenuTreeNodeClick(data, node) {
-      this.form.menuId = data.menuId
+      console.log("node click")
+      this.form.menuId = data.id
       this.form.menuName = data.menuName
-      this.menuTree.show = false
+      console.log(this.form)
+      this.menuShowTree.show = false
     }
   }
 }
