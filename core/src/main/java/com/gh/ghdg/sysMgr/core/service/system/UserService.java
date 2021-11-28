@@ -128,6 +128,15 @@ public class UserService extends BaseService<User, UserDao> {
             }
         }
     }
+    
+    /**
+     * 清除用户角色
+     * @param uid
+     */
+    @Transactional
+    public void clearRoles(String uid){
+        userRoleDao.deleteAllByUserId(uid);
+    }
 
     /**
      * 删除分配角色

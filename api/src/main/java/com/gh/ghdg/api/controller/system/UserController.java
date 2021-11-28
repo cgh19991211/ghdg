@@ -136,6 +136,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
     @PostMapping("/setRoles")
     @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
     public Result userSetRoles(@RequestParam String userId,@RequestParam String roleIds){
+        service.clearRoles(userId);
         service.saveRoles(userId,roleIds);
         return Result.saveSuc();
     }

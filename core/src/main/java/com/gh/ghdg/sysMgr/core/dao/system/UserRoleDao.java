@@ -4,6 +4,7 @@ import com.gh.ghdg.sysMgr.BaseDao;
 import com.gh.ghdg.sysMgr.bean.entities.system.Role;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -18,4 +19,7 @@ public interface UserRoleDao extends BaseDao<UserRole> {
     @Query("select u from UserRole u where u.role = ?1")
     List<UserRole> findByRole(Role role);
     
+    @Modifying
+    @Query("delete from UserRole u where u.user.id = ?1")
+    void deleteAllByUserId(String uid);
 }

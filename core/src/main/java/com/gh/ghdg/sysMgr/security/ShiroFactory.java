@@ -102,9 +102,9 @@ public class ShiroFactory {
                 //TODO: menu -> shiroMenu
                 ShiroMenu sm = new ShiroMenu();
                 sm.setId(m.getId());
-                Menu parent = m.getParent();
-                if(parent!=null)
-                    sm.setPcode(parent.getMenuCode());
+//                Menu parent = m.getParent();
+//                if(parent!=null)
+//                    sm.setPcode(parent.getMenuCode());
                 sm.setPcodes(recurPcode(m));
                 sm.setMenuName(m.getMenuName());
                 sm.setTips(m.getTip());
@@ -125,20 +125,24 @@ public class ShiroFactory {
     
     private String[] recurPcode(Menu m){
         Menu menu = m;
+        Menu parent = m.getParent();
         ArrayList<String> res = new ArrayList<>();
-        if(menu.getParent()!=null){
-            res.add(menu.getParent().getMenuCode());
-            menu = menu.getParent();
+        if(parent!=null){
+            res.add(parent.getMenuCode());
+            String[] strings = recurPcode(m.getParent());
+            for(String s:strings){
+                res.add(s);
+            }
         }
         return Arrays.stream(res.toArray()).toArray(String[]::new);
     }
     
     public void shiroPermissions(Menu menu,Set<ShiroPermission> permSet){
         Permission permission = menu.getPermission();
-            ShiroPermission sp = new ShiroPermission();
-            sp.setPermissionCode(permission.getPermissionCode());
-            sp.setUrl(permission.getUrl());
-            permSet.add(sp);
+        ShiroPermission sp = new ShiroPermission();
+        sp.setPermissionCode(permission.getPermissionCode());
+        sp.setUrl(permission.getUrl());
+        permSet.add(sp);
     }
     
 }

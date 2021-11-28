@@ -33,7 +33,7 @@ export default {
         visible: false,
         roles: [],//rootRoleList: id,pid,name,children,checked
         roleTree: [],
-        checkedRoleKeys: ["2c9e9c9a7cc9da41017ccade7d670000"],//默认勾选中的节点在数组中的下标。
+        checkedRoleKeys: [],//默认选中的角色的id
         defaultProps: {//对话框的属性
           id: 'id',
           label: 'name',
@@ -345,8 +345,8 @@ export default {
         roleTreeListByIdUser(this.selRow.id).then(response => {//返回根树列表：每一行包括：id,pid,name,children,checked
           console.log("sel role data")
           console.log(response)
-          this.roleDialog.roles = response.data
-          this.roleDialog.checkedRoleKeys = this.getCheckedId()//根据roles里角色数据得checked获取要勾选的id
+          this.roleDialog.roles = response.data.treeData
+          this.roleDialog.checkedRoleKeys = response.data.checkedIds//根据roles里角色数据得checked获取要勾选的id
           console.log(this.roleDialog.checkedRoleKeys)
           this.roleDialog.visible = true
         })
@@ -389,14 +389,29 @@ export default {
       this.formVisible = false
     },
     getCheckedId(){
-      let index = []
+      console.log("this.roleDialog")
+      console.log(this.roleDialog)
+      let ids = []
       let roles = this.roleDialog.roles
       for(let r=0; r<roles.length; ++r ){
         if(roles[r].checked){
-          index.push(roles[r].id)
+          ids.push(roles[r].id)
+          ids.push.apply(ids,this.recurChildren(roles[r].children,[]))
         }
       }
-      return index
+      return ids
+    },
+    recurChildren(roleChildren,ids){
+      for(let index in roleChildren){
+        let each = roleChildren[index]
+        if(each.checked){
+          ids.push(each.id)
+        }
+        if(each.children){
+          ids.push.apply(ids,this.recurChildren(each.children,[]))
+        }
+      }
+      return ids
     }
 
   }

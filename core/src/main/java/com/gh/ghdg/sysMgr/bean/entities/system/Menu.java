@@ -127,9 +127,8 @@ public class Menu extends TreeEntity<Menu> {
         this.status = status;
     }
     
-    @OneToOne(mappedBy = "menu", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "menu", fetch = FetchType.LAZY)
     @OrderBy("displaySeq")
-    @JsonIgnoreProperties({"menu"})
     public Permission getPermission() {
         return permission;
     }

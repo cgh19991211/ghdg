@@ -14,7 +14,7 @@ public interface PermissionCode {
     String ROLE_MENU = "role.menu";
     String ROLE_MENU_EDIT = "role.menu.edit";//角色分配给菜单
     String USER_ROLE = "user.role";
-    String USER_ROLE_EDIT = "user.role.edit";//角色分配给用户
+    String USER_ROLE_EDIT = "user.role.add";//角色分配给用户
     String NOTICE = "notice";
     String NOTICE_EDIT = "notice.edit";
     

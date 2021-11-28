@@ -7,6 +7,7 @@ import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.gh.ghdg.sysMgr.bean.constant.factory.PageFactory;
+import com.gh.ghdg.sysMgr.bean.dto.MenuDto;
 import com.gh.ghdg.sysMgr.bean.entities.system.Role;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;
@@ -100,18 +101,32 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
         for(UserRole ur:userRoles){
             assigned.add(ur.getRole().getId());
         }
-        
-        List<Role> roleList = service.tree();
-        List<RoleDto> roleDtoList = new ArrayList<>();
-        RoleDtoFactory me = RoleDtoFactory.me();
-        for(Role r:roleList){
-            RoleDto roleDto = me.roleVo(r);
-            if(assigned.contains(r.getId())){
-                roleDto.setChecked(true);
-            }
-            roleDtoList.add(roleDto);
+    
+        List<String> checkedIds = new ArrayList<>();
+        List<RoleDto> treeData = new ArrayList<>();
+        List<Role> root = service.tree();
+        Map<String,List> map = new HashMap<>();
+        for(Role r:root){
+            recurRoot(treeData,checkedIds,assigned,r);
         }
-        return Result.suc(roleDtoList);
+        map.put("treeData",treeData);
+        map.put("checkedIds",checkedIds);
+        return Result.suc(map);
+    }
+    
+    private void recurRoot(List<RoleDto> treeData,List<String> checkedIds,Set<String> assigned,Role role){
+        RoleDto dto = RoleDtoFactory.me().roleVo(role);
+        if(assigned.contains(role.getId())){
+            checkedIds.add(role.getId());
+        }
+        if(role.getParent()==null)
+            treeData.add(dto);
+        List<Role> children = role.getChildren();
+        if(children!=null&&children.size()>0){
+            for(Role r:children){
+                recurRoot(treeData,checkedIds,assigned,r);
+            }
+        }
     }
     
     /**

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gh.ghdg.sysMgr.bean.TreeEntity;
 import com.gh.ghdg.sysMgr.bean.Unique;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -96,9 +98,9 @@ public class Permission extends TreeEntity<Permission> {
         this.remark = remark;
     }
     
-    @JsonIgnoreProperties({"permission"})
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "menu_id",referencedColumnName = "id")
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
     public Menu getMenu() {
         return menu;
     }
