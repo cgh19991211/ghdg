@@ -34,7 +34,7 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
      * @throws Exception
      */
     @PostMapping("save")
-    @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
+    @RequiresPermissions(PermissionCode.PERMISSION_ADD)
     public Result permissionSave(@ModelAttribute("t") PermissionDto t) throws Exception {
         return super.save(PermissionDtoFactory.me().permission(t));
     }
@@ -46,25 +46,12 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
     }
     
     /**
-     * 移动
-     * @param t
-     * @param overId
-     * @return
-     * @throws Exception
-     */
-    @PostMapping("move")
-    @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
-    public Result permissionMove(@ModelAttribute("t") Permission t, String overId, String position) throws Exception {
-        return super.move(t, overId, position);
-    }
-    
-    /**
      * 删除
      * @param t
      * @return
      */
     @GetMapping("delete")
-    @RequiresPermissions(PermissionCode.PERMISSION_EDIT)
+    @RequiresPermissions(PermissionCode.PERMISSION_DELETE)
     public Result permissionDelete(@RequestParam String id) throws Exception {
         Permission  byId = permissionDao.getById(id);
         return super.delete(byId);
@@ -79,7 +66,6 @@ public class PermissionController extends DisplaySeqController<Permission,Permis
     @GetMapping("list")
     @RequiresPermissions(PermissionCode.PERMISSION)
     public Result permissionList(String name) throws Exception {
-//        return Result.suc(service.list(t));
         Page page = new PageFactory().defaultPage();
         page.setSort(Sort.by(Sort.Direction.ASC, "displaySeq"));
         if(StrUtil.isNotEmpty(name)){

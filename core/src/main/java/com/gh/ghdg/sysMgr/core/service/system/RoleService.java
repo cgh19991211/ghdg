@@ -81,45 +81,6 @@ public class RoleService extends BaseService<Role, RoleDao> {
         }
     }
     
-    
-    /**
-     * 根据用户id为用户分配角色
-     * @param t
-     * @param userIds
-     */
-    @Transactional
-    public void assignUsers(Role t, String userIds){
-        if(StrUtil.isNotBlank(userIds)){
-            for(String id:StrUtil.split(userIds,",")){
-                Optional<User> byId = userDao.findById(id);
-                if(!byId.isPresent()){
-                    throw new MyException("ID: "+id+" 用户不存在");
-                }
-                User user = byId.get();
-                userRoleService.save(user,t);
-            }
-        }
-    }
-    
-    /**
-     * 回收分配的角色
-     * @param t
-     * @param userIds
-     */
-    @Transactional
-    public void recycleUsers(Role t,String userIds){
-        if(StrUtil.isNotBlank(userIds)){
-            for (String id:StrUtil.split(userIds,",")){
-                User user = new User();
-                user.setId(id);
-                UserRole ur = userRoleDao.findByUserAndRole(user,t);
-                if(ur!=null){
-                    userRoleDao.delete(ur);
-                }
-            }
-        }
-    }
-    
     /**
      * 用户角色树
      * @param userId
@@ -134,50 +95,4 @@ public class RoleService extends BaseService<Role, RoleDao> {
         }
         return res;
     }
-    
-    /**
-     * 返回未分配给该用户的角色
-     * @param userId
-     * @return
-     */
-    public List<Role> selectableTree4User(String userId){
-        User byId = userDao.getById(userId);
-        List<UserRole> userRoles = byId.getUserRoles();
-        List<Role> res = dao.findAll();
-        for(UserRole ur:userRoles){
-            res.remove(ur.getRole());
-        }
-        return res;
-    }
-    
-    /**
-     * 菜单角色树
-     * @param menuId
-     * @return 根据菜单id返回所属的角色
-     */
-    public List<Role> tree4Menu(String menuId){
-        Menu byId = menuDao.getById(menuId);
-        List<RoleMenu> roleMenus = byId.getRoleMenus();
-        List<Role> res = new ArrayList<>();
-        for(RoleMenu rm:roleMenus){
-            res.add(rm.getRole());
-        }
-        return res;
-    }
-    
-    /**
-     * 菜单可选角色树
-     * @param menuId
-     * @return 根据菜单id返回该未分配给该菜单的角色
-     */
-    public List<Role> selectableTree4Menu(String menuId){
-        Menu byId = menuDao.getById(menuId);
-        List<RoleMenu> roleMenus = byId.getRoleMenus();
-        List<Role> res = dao.findAll();
-        for(RoleMenu rm:roleMenus){
-            res.remove(rm.getRole());
-        }
-        return res;
-    }
-
 }

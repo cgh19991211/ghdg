@@ -73,7 +73,7 @@ export default {
         phone: '',
         remark: '',
         createdDate: '',
-        lastLoginDate: null
+        lastLoginDate: ''
       },
       rules: {
         username: [{
@@ -113,7 +113,7 @@ export default {
         nickname: undefined
       },
       total: 0,
-      list: null,
+      list: [],
       listLoading: true,
       selRow: {},
       tmpForm: {
@@ -147,12 +147,10 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      console.log("=====fetch data之前看看查询条件listquery")
-      console.log(this.listQuery)
       getList(this.listQuery).then(response => {
         console.log("fetch data response")
         this.list = response.data.records
-        console.log(this.list)
+        console.log(response)
         this.listLoading = false
         this.total = response.data.total
       }).catch(() => {
@@ -240,33 +238,6 @@ export default {
             saveForm.rolename = null
             console.log("save user form：")
             console.log(saveForm)
-            // if (saveForm.status === 1) {
-            //   //启用
-            //   saveForm.status = '生效'
-            // } else {
-            //   //冻结
-            //   saveForm.status = '失效'
-            // }
-            // form.createdDate = new Date(form.createdDate)
-            // if (self.isAdd) {
-            //   saveUser(saveForm).then(response => {
-            //     this.$message({
-            //       message: '提交成功',
-            //       type: 'success'
-            //     })
-            //     this.fetchData()
-            //     this.formVisible = false
-            //   })
-            // } else {
-            //   modifyUser(saveForm).then(response => {
-            //     this.$message({
-            //       message: '修改成功',
-            //       type: 'success'
-            //     })
-            //     this.fetchData()
-            //     this.formVisible = false
-            //   })
-            // }
             saveUser(saveForm).then(response => {
                 this.$message({
                   message: '提交成功',

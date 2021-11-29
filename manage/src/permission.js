@@ -9,9 +9,8 @@ const whiteList = ['/login'] // 不重定向白名单
 
 // permission judge function
 function hasPermission(roles, permissionRoles) {
-  console.log("hasPermission")
-  console.log(roles)
-  console.log(permissionRoles)
+  // console.log("hasPermission")
+  // console.log(roles)
   if (roles.indexOf('"administrator"') >= 0) return true // admin permission passed directly
   if (!permissionRoles) return true
   return roles.some(role => permissionRoles.indexOf(role) >= 0)
@@ -27,10 +26,10 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
-      console.log('路由拦截器 to from next')
-      console.log(to)
-      console.log(from)
-      console.log(next)
+      // console.log('路由拦截器 to from next')
+      // console.log(to)
+      // console.log(from)
+      // console.log(next)
       if (store.getters.roles.length === 0) {//判断当前用户是否已拉取完用户信息
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
           //原始的菜单列表数据

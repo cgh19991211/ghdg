@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Cookies from 'js-cookie'
 import ECharts from 'vue-echarts/components/ECharts.vue'
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
-
+import 'default-passive-events'//页面滚动优化
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 

@@ -13,6 +13,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,9 +46,15 @@ public class MyExceptionHandler {
     }
     
     @ExceptionHandler(value = TokenExpiredException.class)
-	public Result exceptionHandler(HttpServletRequest req, TokenExpiredException e) {
+	public Result tokenExpiredHandler(HttpServletRequest req, TokenExpiredException e) {
 		return Result.error(false,"access token已过期",null,Constants.ACCESS_TOKEN_EXPIRE_CODE);
     }
+    
+//    @ExceptionHandler(value = SQLException.class)
+//	public Result uniqueConfilctHandler(HttpServletRequest req, SQLIntegrityConstraintViolationException e) {
+////		if()
+//		return Result.error(false,"可能是所修改的字段唯一冲突了",null,Constants.FAILED);
+//    }
 
     /**
      * 验证异常

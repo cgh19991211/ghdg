@@ -51,20 +51,14 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
     @Autowired
     private RoleMenuDao roleMenuDao;
     
-    @Autowired
-    private RoleMenuPermissionDao roleMenuPermissionDao;
-    
-    
     /**
      * 新增
      * @param t
      * @return
      * @throws Exception
      */
-//    @Operation(summary = "菜单新增")
-//    @Parameter(name = "菜单入参")
     @PostMapping("/save")
-    @RequiresPermissions(PermissionCode.MENU_EDIT)
+    @RequiresPermissions(value = {PermissionCode.MENU_ADD,PermissionCode.MENU_EDIT})
     public Result menuSave(@ModelAttribute("t")Menu t)throws Exception{
         return super.save(t);
     }
@@ -75,10 +69,8 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
      * @return
      * @throws Exception
      */
-//    @Operation(summary = "菜单删除")
-//    @Parameter(name = "菜单入参")
     @PostMapping("/delete")
-    @RequiresPermissions(PermissionCode.MENU_EDIT)
+    @RequiresPermissions(PermissionCode.MENU_DELETE)
     public Result menuDelete(@ModelAttribute("t")Menu t)throws Exception{
         return super.delete(t);
     }
@@ -88,13 +80,10 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
      * @param name
      * @return
      */
-//    @Operation(summary = "菜单列表")
-//    @Parameter(name = "菜单名字")
     @GetMapping("/list")
     @RequiresPermissions(PermissionCode.MENU)
     public Result menuList(String name){
-        
-        List<Menu> menus = null;
+        List<Menu> menus;
         SearchFilter sf = SearchFilter.build("parent",SearchFilter.Operator.ISNULL);
         if(StrUtil.isEmptyIfStr(name))menus = new ArrayList<>(service.queryAll(sf));
         else menus = new ArrayList<>(service.queryAll(SearchFilter.build("name",SearchFilter.Operator.LIKE,name)));
@@ -103,71 +92,14 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
     }
     
     /**
-     * 移动
-     * @param t
-     * @param overId
-     * @return
-     * @throws Exception
-     */
-//    @Operation(summary = "菜单移动")
-//    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "移动到哪个位置"),@Parameter(name = "前后")})
-    @PostMapping("/move")
-    @RequiresPermissions(PermissionCode.MENU_EDIT)
-    public Result menuMove(@ModelAttribute("t") Menu t, String overId, String position) throws Exception {
-        return super.move(t, overId, position);
-    }
-    
-    /**
      * 完整树--权限新增或修改需要获取
      * @return
      */
-//    @Operation(summary = "菜单树")
     @GetMapping("/tree")
     @RequiresPermissions(PermissionCode.MENU)
     public Result menuTree() {
         return Result.suc(service.tree());
     }
-    
-//    /**
-//     * 导航
-//     * @return
-//     */
-////    @Operation(summary = "导航")
-//    @GetMapping("/navigation")
-//    public List<Menu> navigation() {
-//        return service.navigation();
-//    }
-
-    /**
-     * 保存分配角色(分配)
-     * @param t
-     * @param roleIds
-     * @param modifiedPermissions 权限id 用","分隔成组 组内用"|"分隔每一个权限 传进来的都是要分配的
-     * @return
-     */
-//    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "角色id"),@Parameter(name = "权限代码")})
-//    @PostMapping("/assignRoles")
-//    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)//role.menu.edit
-//    public Result menuAssignRoles(@ModelAttribute("t") Menu t,String roleIds, String modifiedPermissions) {
-//        service.saveRoles(t, roleIds, modifiedPermissions);
-//        return Result.saveSuc();
-//    }
-
-//    /**
-//     * 删除分配角色(回收)
-//     * @param t
-//     * @param
-//     * @return
-//     * @throws Exception
-//     */
-////    @Operation(summary = "回收菜单角色")
-////    @Parameters(value = {@Parameter(name = "菜单入参"),@Parameter(name = "角色id")})
-//    @GetMapping("/recycleRoles")
-//    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
-//    public Result menuRecycleRoles(@ModelAttribute("t") Menu t,  String roleIds) {
-//        service.deleteRoles(t, roleIds);
-//        return Result.delSuc();
-//    }
     
     /**
      * 菜单树，分配给了参数的角色的菜单要加到checked里
@@ -176,7 +108,7 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
      * @return
      */
     @GetMapping("/menuTree4Role")
-//    @RequiresPermissions(PermissionCode.ROLE_MENU)
+    @RequiresPermissions(PermissionCode.ROLE_MENU)
     public Result menuTree4Role(String roleId) {
 //        return service.tree4Role(roleId);
         //map:存放checkedIds,treeData(menu)  menu:{checked,children,id,name,pid,permissions}
@@ -225,20 +157,5 @@ public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
             }
         }
     }
-    
-
-//    /**
-//     * 角色可分配的菜单
-//     * @param roleId
-//     * @return
-//     */
-////    @Operation(summary = "角色可分配的菜单")
-////    @Parameter(name = "角色id")
-//    @GetMapping("/treeSelectable")
-//    @RequiresPermissions(PermissionCode.ROLE_MENU_EDIT)
-//    public List<Menu> menuTreeSelectable(String roleId) {
-//        return service.treeSelectable(roleId);
-//    }
-//
 
 }

@@ -19,10 +19,6 @@ import java.util.Optional;
 public class RoleMenuService extends BaseService<RoleMenu, RoleMenuDao> {
     @Autowired
     private RoleMenuPermissionDao roleMenuPermissionDao;
-    @Autowired
-    private MenuDao menuDao;
-    @Autowired
-    private PermissionDao permissionDao;
     
     /**
      * 先清除再保存

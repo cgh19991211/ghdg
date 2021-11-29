@@ -35,7 +35,7 @@ public class NoticeController extends BaseController<Notice, NoticeDao,NoticeSer
     }
     
     @PostMapping(value = "/save")
-    @RequiresPermissions(PermissionCode.NOTICE_EDIT)
+    @RequiresPermissions(value = {PermissionCode.NOTICE_EDIT,PermissionCode.NOTICE_ADD})
     public Result noticeSave(@ModelAttribute("t") Notice t)throws Exception{
         return super.save(t);
     }

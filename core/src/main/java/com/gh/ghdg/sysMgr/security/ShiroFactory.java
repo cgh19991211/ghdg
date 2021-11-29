@@ -102,11 +102,9 @@ public class ShiroFactory {
                 //TODO: menu -> shiroMenu
                 ShiroMenu sm = new ShiroMenu();
                 sm.setId(m.getId());
-//                Menu parent = m.getParent();
-//                if(parent!=null)
-//                    sm.setPcode(parent.getMenuCode());
                 sm.setPcodes(recurPcode(m));
                 sm.setMenuName(m.getMenuName());
+                sm.setMenuCode(m.getMenuCode());
                 sm.setTips(m.getTip());
                 sm.setDisplay_seq(m.getDisplaySeq());
                 sm.setIsmenu(m.getType().getValue());

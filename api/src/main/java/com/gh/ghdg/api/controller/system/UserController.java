@@ -68,7 +68,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @throws Exception
      */
     @PostMapping("/save")
-    @RequiresPermissions(PermissionCode.USER_EDIT)
+    @RequiresPermissions(value = {PermissionCode.USER_EDIT,PermissionCode.USER_ADD})
     public Result userSave(@ModelAttribute("t") UserDto t)throws Exception{
         UserDtoFactory me = UserDtoFactory.me();
         String id = t.getId();
@@ -84,14 +84,6 @@ public class UserController extends BaseController<User, UserDao, UserService> {
             }
         }
     }
-    
-//    @PostMapping("/modifyInfo")
-//    @RequiresPermissions(PermissionCode.USER_EDIT)
-//    public Result userModify(@ModelAttribute("t") User t) throws Exception {
-//        service.modifyInfo(t);
-//        return Result.suc("修改成功");
-//    }
-
     
     /**
      *重置密码
@@ -112,7 +104,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @throws Exception
      */
     @PostMapping("/delete/{id}")
-    @RequiresPermissions(PermissionCode.USER_EDIT)
+    @RequiresPermissions(PermissionCode.USER_DELETE)
     public Result userDelete(@ModelAttribute("t")User t)throws Exception{
         return super.delete(t);
     }
@@ -134,7 +126,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @return
      */
     @PostMapping("/setRoles")
-    @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
+    @RequiresPermissions(PermissionCode.USER_ROLE_ADD)
     public Result userSetRoles(@RequestParam String userId,@RequestParam String roleIds){
         service.clearRoles(userId);
         service.saveRoles(userId,roleIds);
@@ -148,7 +140,7 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      * @return
      */
     @PostMapping("/deleteRoles")
-    @RequiresPermissions(PermissionCode.USER_ROLE_EDIT)
+    @RequiresPermissions(PermissionCode.USER_ROLE_ADD)
     public Result userDeleteRoles(@ModelAttribute("t")User t, @RequestParam String roleIds){
         service.deleteRoles(t, roleIds);
         return Result.delSuc();

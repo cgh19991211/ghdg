@@ -101,6 +101,7 @@ public class Permission extends TreeEntity<Permission> {
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @NotFound(action = NotFoundAction.IGNORE)
+    @Unique(name = "权限所属菜单")
     public Menu getMenu() {
         return menu;
     }

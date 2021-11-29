@@ -44,15 +44,13 @@ public class UserService extends BaseService<User, UserDao> {
 
     @Autowired
     private RoleDao roleDao;
+    
     @Autowired
     private UserRoleDao userRoleDao;
-    /*@Autowired
-    private MobTokenDao mobTokenDao;*/
-
-//    @Autowired
-//    private InfoService infoService;
+    
     @Autowired
     private UserRoleService userRoleService;
+    
     /**
      * 保存
      * @param t

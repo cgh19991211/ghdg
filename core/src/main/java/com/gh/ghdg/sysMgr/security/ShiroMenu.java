@@ -20,13 +20,12 @@ public class ShiroMenu implements Serializable {
     private Integer status;
     private String tips;
     private String url;//资源路径，从权限中获取
-    private String pcode;
     private String[] pcodes;
     
     public ShiroMenu() {
     }
     
-    public ShiroMenu(String id, String menuName, String menuCode, String icon, Integer ismenu, String level, Integer display_seq, Integer status, String tips, String url, String pcode, String[] pcodes) {
+    public ShiroMenu(String id, String menuName, String menuCode, String icon, Integer ismenu, String level, Integer display_seq, Integer status, String tips, String url, String[] pcodes) {
         this.id = id;
         this.menuName = menuName;
         this.menuCode = menuCode;
@@ -37,7 +36,6 @@ public class ShiroMenu implements Serializable {
         this.status = status;
         this.tips = tips;
         this.url = url;
-        this.pcode = pcode;
         this.pcodes = pcodes;
     }
     
@@ -129,14 +127,6 @@ public class ShiroMenu implements Serializable {
         this.url = url;
     }
     
-    public String getPcode() {
-        return pcode;
-    }
-    
-    public void setPcode(String pcode) {
-        this.pcode = pcode;
-    }
-    
     public String[] getPcodes() {
         return pcodes;
     }
@@ -158,7 +148,6 @@ public class ShiroMenu implements Serializable {
                 ", status=" + status +
                 ", tips='" + tips + '\'' +
                 ", url='" + url + '\'' +
-                ", pcode='" + pcode + '\'' +
                 ", pcodes=" + Arrays.toString(pcodes) +
                 '}';
     }

@@ -40,9 +40,8 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      * @throws Exception
      */
     @PostMapping("/save")
-    @RequiresPermissions(PermissionCode.ROLE_EDIT)
+    @RequiresPermissions(value = {PermissionCode.ROLE_EDIT,PermissionCode.ROLE_ADD})
     public Result roleSave(@ModelAttribute("t") Role t) throws Exception {
-//        return super.save(t);
         if(StrUtil.isEmpty(t.getId())){
             return Result.suc(roleService.save(t));
         }else{
@@ -56,7 +55,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      * @return
      */
     @GetMapping("delete")
-    @RequiresPermissions(PermissionCode.ROLE_EDIT)
+    @RequiresPermissions(PermissionCode.ROLE_DELETE)
     public Result roleDelete(@ModelAttribute("t") Role t) throws Exception {
         return super.delete(t);
     }
@@ -67,7 +66,7 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
      * @return
      */
     @GetMapping("/list")
-//    @RequiresPermissions(PermissionCode.ROLE)
+    @RequiresPermissions(PermissionCode.ROLE)
     public Result roleShowList(String name){
 //        List<Role> roles = null;
         Page page = new PageFactory().defaultPage();
@@ -147,61 +146,13 @@ public class RoleController extends BaseController<Role, RoleDao, RoleService> {
     }
     
     /**
-     * 用户角色树
-     * @param userId
-     * @return
-     */
-    @GetMapping("/tree4User")
-    @RequiresPermissions(PermissionCode.USER_ROLE)
-    public Result roleTree4User(@RequestParam(required = true) String userId){
-        return Result.suc(service.tree4User(userId));
-    }
-    
-    //TODO:save permission接口
-    
-    /**
-     * 用户可选角色树
-     * @param userId
-     * @return
-     */
-    @GetMapping("/selectableTree4User")
-    @RequiresPermissions(PermissionCode.USER_ROLE)
-    public Result roleSelectableTree4User(String userId){
-        return Result.suc(service.selectableTree4User(userId));
-    }
-    
-    /**
-     * 菜单分配的角色
-     * @param
-     * @param menuId
-     * @return
-     */
-    @GetMapping("tree4Menu")
-    @RequiresPermissions(PermissionCode.ROLE_MENU)
-    public List<Role> roleTree4Menu( String menuId) {
-        return service.tree4Menu( menuId);
-    }
-    
-    /**
-     * 菜单可分配的角色
-     * @param
-     * @param menuId
-     * @return
-     */
-    @GetMapping("treeSelectable4Menu")
-    @RequiresPermissions(PermissionCode.ROLE_MENU)
-    public List<Role> roleTreeSelectable4Menu(String menuId) {
-        return service.selectableTree4Menu( menuId);
-    }
-    
-    
-    /**
      * 角色分配权限
      * @param roleId
      * @param permissionIds
      * @return
      */
     @PostMapping("setMenusAndPermissions")
+    @RequiresPermissions(PermissionCode.ROLE_MENU_ADD)
     public Result assignMenusAndPermissions(@RequestParam String roleId,
                                             @RequestParam String permissionIds){
         service.setMenusAndPermissions(roleId,permissionIds);
