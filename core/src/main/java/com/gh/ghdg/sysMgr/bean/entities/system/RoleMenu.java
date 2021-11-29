@@ -64,13 +64,12 @@ public class RoleMenu extends BaseEntity {
     public String toString() {
         return "RoleMenu{" +
                 "id='" + id + '\'' +
-                ", createdBy=" + createdBy.getUsername() +
+                ", createdBy=" + createdBy +
                 ", createdDate=" + createdDate +
-                ", lastModifiedBy=" + lastModifiedBy.getUsername() +
+                ", lastModifiedBy=" + lastModifiedBy +
                 ", lastModifiedDate=" + lastModifiedDate +
-                ", lastModifiedDate0=" + lastModifiedDate0 +
-                ", role=" + role.getRoleName() +
-                ", menu=" + menu.getMenuName() +
+                ", role=" + role +
+                ", menu=" + menu +
                 ", roleMenuPermissions=" + roleMenuPermissions +
                 '}';
     }

@@ -40,7 +40,7 @@ export default {
           { min: 2, max: 20, message: '长度在 2 到 40 个字符', trigger: 'blur' }
         ],
         displaySeq: [
-          { required: true, message: '请输入排序', trigger: 'blur' }
+          { required: false, message: '请输入排序', trigger: 'blur' }
         ]
       },
       data: []
@@ -130,7 +130,8 @@ export default {
        */
       // this.form = row
       this.form.id = row.id
-      this.form.parent = row.parent.id
+      if(row.parent)
+        this.form.parent = row.parent.id
       this.form.pname = row.name
       this.form.menuName = row.menuName
       this.form.menuCode = row.menuCode

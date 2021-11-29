@@ -124,13 +124,18 @@ public class Permission extends TreeEntity<Permission> {
     public String toString() {
         return "Permission{" +
                 "id='" + id + '\'' +
-                ", createdBy='" + createdBy.getUsername() + '\'' +
+                ", createdBy=" + createdBy +
                 ", createdDate=" + createdDate +
-                ", lastModifiedBy='" + lastModifiedBy.getUsername() + '\'' +
+                ", lastModifiedBy=" + lastModifiedBy +
                 ", lastModifiedDate=" + lastModifiedDate +
+                ", displaySeq=" + displaySeq +
+                ", parent=" + parent +
                 ", permissionName='" + permissionName + '\'' +
                 ", permissionCode='" + permissionCode + '\'' +
+                ", url='" + url + '\'' +
                 ", remark='" + remark + '\'' +
+                ", menu=" + menu +
+                ", roleMenuPermissions=" + roleMenuPermissions +
                 '}';
     }
     

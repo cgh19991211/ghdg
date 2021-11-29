@@ -18,7 +18,8 @@ import {
 } from '@/api/system/role'
 import moment from 'moment'
 // 权限判断指令
-import permission from '@/store'
+import permission from '@/directive/permission/index.js'
+import {isvalidPass} from '@/utils/validate.js'
 
 export default {
   directives: {
@@ -103,6 +104,14 @@ export default {
         email: [{
           required: true,
           message: '请输入email',
+          trigger: 'blur'
+        }],
+        password: [{
+          min: 8,
+          max: 40,
+          validator: this.validatePass,
+          required: true,
+          message: '请输入密码',
           trigger: 'blur'
         }]
       },
@@ -351,6 +360,8 @@ export default {
       if (date == undefined) {
         return "";
       }
+      console.log("see see moment ")
+      console.log(moment)
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
     },
     cancelSubmit() {
@@ -383,7 +394,21 @@ export default {
         }
       }
       return ids
-    }
+    },
+    validatePass(rule, value, callback){
+          if (value === "") {
+            callback(new Error("请输入密码"));
+          } else if (!isvalidPass(value)) {
+            callback(
+              new Error("密码以字母开头 长度在8~18之间 只能包含字母、数字和下划线")
+            );
+          } else {
+            if (this.tmpForm.rePassword !== "") {
+              this.$refs.tmpForm.validateField("rePassword");
+            }
+            callback();
+          }
+        }
 
   }
 }

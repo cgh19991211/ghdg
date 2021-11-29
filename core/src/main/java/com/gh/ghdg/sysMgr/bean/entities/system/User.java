@@ -207,6 +207,10 @@ public class User extends BaseEntity {
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
+                ", createdBy=" + createdBy +
+                ", createdDate=" + createdDate +
+                ", lastModifiedBy=" + lastModifiedBy +
+                ", lastModifiedDate=" + lastModifiedDate +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", salt='" + salt + '\'' +
@@ -219,6 +223,8 @@ public class User extends BaseEntity {
                 ", remark='" + remark + '\'' +
                 ", status=" + status +
                 ", lastLoginDate=" + lastLoginDate +
+                ", userRoles=" + userRoles +
+                ", userMenus=" + userMenus +
                 '}';
     }
 }

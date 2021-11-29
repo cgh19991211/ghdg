@@ -125,15 +125,17 @@ public class Role extends TreeEntity<Role> {
     public String toString() {
         return "Role{" +
                 "id='" + id + '\'' +
-                ", createdBy='" + createdBy + '\'' +
+                ", createdBy=" + createdBy +
                 ", createdDate=" + createdDate +
-                ", lastModifiedBy='" + lastModifiedBy + '\'' +
+                ", lastModifiedBy=" + lastModifiedBy +
                 ", lastModifiedDate=" + lastModifiedDate +
-                ", lastModifiedDate0=" + lastModifiedDate0 +
-                ", displaySeq=" + displaySeq +
+                ", parent=" + parent +
                 ", roleName='" + roleName + '\'' +
                 ", roleCode='" + roleCode + '\'' +
                 ", remark='" + remark + '\'' +
+                ", userRoles=" + userRoles +
+                ", roleMenus=" + roleMenus +
+                ", permissions=" + permissions +
                 '}';
     }
 }

@@ -48,12 +48,12 @@ public class RoleMenuPermission extends BaseEntity {
     public String toString() {
         return "RoleMenuPermission{" +
                 "id='" + id + '\'' +
-                ", createdBy=" + createdBy.getUsername() +
+                ", createdBy=" + createdBy +
                 ", createdDate=" + createdDate +
-                ", lastModifiedBy=" + lastModifiedBy.getUsername() +
+                ", lastModifiedBy=" + lastModifiedBy +
                 ", lastModifiedDate=" + lastModifiedDate +
-                ", roleMenu=" + roleMenu.getId() +
-                ", permission=" + permission.getPermissionName() +
+                ", roleMenu=" + roleMenu +
+                ", permission=" + permission +
                 '}';
     }
 }

@@ -61,6 +61,7 @@ public abstract class BaseEntity implements Serializable {
     }
     
     @CreatedBy
+    @Version
     @JsonIgnore // Json 忽略
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", updatable = false,columnDefinition = "string COMMENT '创建人'")
@@ -74,6 +75,7 @@ public abstract class BaseEntity implements Serializable {
     }
     
     @CreatedDate
+    @Version
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "created_date", columnDefinition = "DATETIME COMMENT '创建时间/注册时间'")
@@ -86,6 +88,7 @@ public abstract class BaseEntity implements Serializable {
     }
     
     @LastModifiedBy
+    @Version
     @JsonIgnore // Json 忽略
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_modified_by",columnDefinition = "string COMMENT '最后更新时间'")
@@ -99,6 +102,7 @@ public abstract class BaseEntity implements Serializable {
     }
     
     @LastModifiedDate
+    @Version
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     @Column(name = "last_modified_date", columnDefinition = "DATETIME COMMENT '最后更新人'")

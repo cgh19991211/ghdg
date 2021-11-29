@@ -206,6 +206,8 @@ export default {
             })
             this.fetchData()
             this.formVisible = false
+          }).catch(error => {
+            //保存失败：好像应该在全局拦截来着
           })
         } else {
           console.log('error submit!!')
