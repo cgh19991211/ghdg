@@ -4,8 +4,8 @@
       <el-button type="success" icon="el-icon-plus" @click.native="add" v-permission="['/system/menu/add']">{{ $t('button.add') }}</el-button>
     </div>
 
-    <tree-table :data="data" :expandAll="expandAll"
-      :cell-style="{'text-align':'center'}" highlight-current-row border>
+    <tree-table :data="data" :expandAll="expandAll" :header-cell-style="{'text-align':'center'}" :cell-style="{'text-align':'center'}"
+       highlight-current-row border>
 
       <el-table-column label="名称">
         <template slot-scope="scope">

@@ -22,7 +22,7 @@ public class NoticeController extends BaseController<Notice, NoticeDao,NoticeSer
     @Autowired
     private NoticeService noticeService;
     
-    @RequiresPermissions(PermissionCode.NOTICE)
+//    @RequiresPermissions(PermissionCode.NOTICE)
     @RequestMapping(value = "/list")
     public Result noticeList(String condition){
         List<Notice> list = null;

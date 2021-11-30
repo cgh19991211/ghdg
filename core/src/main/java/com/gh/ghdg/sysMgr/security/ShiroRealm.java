@@ -57,11 +57,8 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        AccountInfo accountInfo = JwtUtil.getAccountInfo();
-        User user = null;
-        
         String username = JwtUtil.getUsername(principals.toString());
-        user = userService.findByUsername(username);
+        User user = userService.findByUsername(username);
 
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         //TODO: get roles

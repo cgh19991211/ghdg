@@ -208,10 +208,6 @@ export default {
         return true
       }
       return false
-    },
-    sortBySeq(o1,o2){
-      if(o1<o2)return 1
-      else return -1
     }
 
   }

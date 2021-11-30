@@ -85,9 +85,10 @@ public class MyExceptionHandler {
     	req.setAttribute(MyErrorAttribute.MESSAGE,"用户未授权");
     	return requestForward(req);
 	}
+	
 
 	/**
-	 * 授权异常
+	 * 无权限 error 403
 	 * @param res
 	 * @param e
 	 */
