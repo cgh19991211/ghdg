@@ -241,6 +241,12 @@ export default {
       }
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
     },
+    buttonType(){
+      if (this.selRow && this.selRow.id) {
+        return true
+      }
+      return false
+    }
 
 
   }

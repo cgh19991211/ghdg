@@ -7,11 +7,13 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableCaching
 @ComponentScan(basePackages = "com.gh.ghdg")
 @EntityScan(basePackages = "com.gh.ghdg")
 @EnableJpaRepositories(basePackages = "com.gh.ghdg")
+@EnableTransactionManagement
 @EnableJpaAuditing
 @SpringBootApplication
 public class ApiApplication {

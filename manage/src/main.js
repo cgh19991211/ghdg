@@ -17,6 +17,9 @@ import i18n from './lang' // Internationalization
 import '@/icons' // icon
 // permission control
 import './permission'
+import permission from '@/directive/permission/index.js'
+
+Vue.directive('permission',permission)
 
 Vue.use(ElementUI, {
   size: Cookies.get('size') || 'medium', // set element-ui default size

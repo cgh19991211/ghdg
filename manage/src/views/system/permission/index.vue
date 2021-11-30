@@ -13,7 +13,7 @@
       <br>
       <el-row>
         <el-col :span="24">
-          <el-button type="success" icon="el-icon-plus" @click.native="add">{{ $t('button.add') }}</el-button>
+          <el-button type="success" icon="el-icon-plus" @click.native="add" v-permission="['/system/permission/add']">{{ $t('button.add') }}</el-button>
           <!-- <el-button type="primary" icon="el-icon-edit" @click.native="edit">{{ $t('button.edit') }}</el-button> -->
           <!-- <el-button type="danger" icon="el-icon-delete" @click.native="remove">{{ $t('button.delete') }}</el-button> -->
         </el-col>
@@ -26,7 +26,7 @@
 
       <el-table-column label="名称">
         <template slot-scope="scope">
-          <el-button type="text" @click="edit(scope.row)">{{scope.row.name}}</el-button>
+          <el-button type="text" @click="edit(scope.row)" v-permission="['/system/permission/edit']">{{scope.row.name}}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="编码">
@@ -56,7 +56,7 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="remove(scope.row.id)">删除</el-button>
+          <el-button type="text" @click="remove(scope.row.id)" v-permission="['/system/permission/delete']">删除</el-button>
         </template>
       </el-table-column>
 

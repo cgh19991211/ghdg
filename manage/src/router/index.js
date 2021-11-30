@@ -174,7 +174,7 @@ export const asyncRouterMap = [
       // },
       //用户管理
       {
-        path: 'mgr',
+        path: 'user',
         name: 'Account',
         component: () => import('@/views/system/user/index'),
         meta: {title: 'userMgr'}

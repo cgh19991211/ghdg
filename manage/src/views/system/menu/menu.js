@@ -1,5 +1,6 @@
 import treeTable from '@/components/TreeTable'
 import { getList, save, delMenu } from '@/api/system/menu'
+import moment from 'moment'
 
 export default {
   name: 'treeTableDemo',
@@ -43,7 +44,18 @@ export default {
           { required: false, message: '请输入排序', trigger: 'blur' }
         ]
       },
-      data: []
+      data: {
+        id: '',
+        parent: '',
+        pname: '',
+        menuName: '',
+        menuCode: '',
+        pcode: '',
+        type: 'menu',
+        displaySeq: 1,
+        status: '生效',
+        tip: ''
+      }
     }
   },
   created() {
@@ -181,6 +193,26 @@ export default {
           })
         })
       })
+    },
+    dateFormat(row, column) {
+      var date = row[column.property];
+      if (date == undefined) {
+        return "";
+      }
+      // console.log("see see moment ")
+      // console.log(moment(date).format("YYYY-MM-DD HH:mm:ss"))
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
+    },
+    buttonType(){
+      if (this.selRow && this.selRow.id) {
+        return true
+      }
+      return false
+    },
+    sortBySeq(o1,o2){
+      if(o1<o2)return 1
+      else return -1
     }
+
   }
 }

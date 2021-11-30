@@ -1,14 +1,15 @@
 <template>
   <div class="app-container">
     <div class="block">
-      <el-button type="success" icon="el-icon-plus" @click.native="add">{{ $t('button.add') }}</el-button>
+      <el-button type="success" icon="el-icon-plus" @click.native="add" v-permission="['/system/menu/add']">{{ $t('button.add') }}</el-button>
     </div>
 
-    <tree-table :data="data" :expandAll="expandAll" :cell-style="{'text-align':'center'}" highlight-current-row border>
+    <tree-table :data="data" :expandAll="expandAll"
+      :cell-style="{'text-align':'center'}" highlight-current-row border>
 
       <el-table-column label="名称">
         <template slot-scope="scope">
-          <el-button type="text" @click="edit(scope.row)">{{scope.row.menuName}}</el-button>
+          <el-button type="text" @click="edit(scope.row)" v-permission="['/system/menu/edit']">{{scope.row.menuName}}</el-button>
         </template>
       </el-table-column>
       <el-table-column label="编码">
@@ -36,14 +37,15 @@
           <span>{{scope.row.status}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="顺序">
+      <el-table-column label="顺序" prop="displaySeq">
         <template slot-scope="scope">
           <span>{{scope.row.displaySeq}}</span>
         </template>
       </el-table-column>
+      <el-table-column label="创建时间" prop="createdDate" :formatter="dateFormat"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button type="text" @click="remove(scope.row)">删除</el-button>
+          <el-button type="text" @click="remove(scope.row)" v-permission="['/system/menu/delete']">删除</el-button>
         </template>
       </el-table-column>
     </tree-table>

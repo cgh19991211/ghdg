@@ -17,14 +17,11 @@ import {
   rootRoleTree
 } from '@/api/system/role'
 import moment from 'moment'
-// 权限判断指令
-import permission from '@/directive/permission/index.js'
-import {isvalidPass} from '@/utils/validate.js'
+import {
+  isvalidPass
+} from '@/utils/validate.js'
 
 export default {
-  directives: {
-    permission
-  },
   data() {
     return {
       roleDialog: {
@@ -32,10 +29,10 @@ export default {
          * 整棵树包含的数据是一个数组[],每一项包含id，lable，children，数组顺序按照树的层次遍历来存放。按照下标[1]就能取到数组中第一个数据
          */
         visible: false,
-        roles: [],//rootRoleList: id,pid,name,children,checked
+        roles: [], //rootRoleList: id,pid,name,children,checked
         roleTree: [],
-        checkedRoleKeys: [],//默认选中的角色的id
-        defaultProps: {//对话框的属性
+        checkedRoleKeys: [], //默认选中的角色的id
+        defaultProps: { //对话框的属性
           id: 'id',
           label: 'name',
           children: 'children'
@@ -43,8 +40,8 @@ export default {
       },
       assignedRoles: {
         visible: false,
-        roles: [],//树列表
-        roleTree: [],//
+        roles: [], //树列表
+        roleTree: [], //
         defaultProps: {
           id: 'id',
           lable: 'name',
@@ -248,13 +245,13 @@ export default {
             console.log("save user form：")
             console.log(saveForm)
             saveUser(saveForm).then(response => {
-                this.$message({
-                  message: '提交成功',
-                  type: 'success'
-                })
-                this.fetchData()
-                this.formVisible = false
+              this.$message({
+                message: '提交成功',
+                type: 'success'
               })
+              this.fetchData()
+              this.formVisible = false
+            })
 
           } else {
             this.$message({
@@ -281,7 +278,7 @@ export default {
     edit() {
       if (this.checkSel()) {
         this.isAdd = false
-        this.tmpForm = JSON.parse(JSON.stringify(this.selRow))//深拷贝
+        this.tmpForm = JSON.parse(JSON.stringify(this.selRow)) //深拷贝
         // this.tmpForm.status = this.selRow.status
         // this.tmpForm.password = ''
         this.formTitle = '修改用户'
@@ -322,11 +319,11 @@ export default {
       if (this.checkSel()) {
         console.log('康康当前行id')
         console.log(this.selRow.id)
-        roleTreeListByIdUser(this.selRow.id).then(response => {//返回根树列表：每一行包括：id,pid,name,children,checked
+        roleTreeListByIdUser(this.selRow.id).then(response => { //返回根树列表：每一行包括：id,pid,name,children,checked
           console.log("sel role data")
           console.log(response)
           this.roleDialog.roles = response.data.treeData
-          this.roleDialog.checkedRoleKeys = response.data.checkedIds//根据roles里角色数据得checked获取要勾选的id
+          this.roleDialog.checkedRoleKeys = response.data.checkedIds //根据roles里角色数据得checked获取要勾选的id
           console.log(this.roleDialog.checkedRoleKeys)
           this.roleDialog.visible = true
         })
@@ -334,7 +331,7 @@ export default {
     },
     setRole() {
       var checkedRoleKeys = this.$refs.roleTree.getCheckedKeys()
-      var roleIds = ''//要给当前选中行的用户分配的roleIds
+      var roleIds = '' //要给当前选中行的用户分配的roleIds
       console.log("从tree-table获取来的roleTree")
       console.log(this.$refs.roleTree)
       for (var id in checkedRoleKeys) {
@@ -360,8 +357,8 @@ export default {
       if (date == undefined) {
         return "";
       }
-      console.log("see see moment ")
-      console.log(moment)
+      // console.log("see see moment ")
+      // console.log(moment(date).format("YYYY-MM-DD HH:mm:ss"))
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
     },
     cancelSubmit() {
@@ -370,45 +367,53 @@ export default {
       // this.form = this.tmpForm
       this.formVisible = false
     },
-    getCheckedId(){
+    getCheckedId() {
       console.log("this.roleDialog")
       console.log(this.roleDialog)
       let ids = []
       let roles = this.roleDialog.roles
-      for(let r=0; r<roles.length; ++r ){
-        if(roles[r].checked){
+      for (let r = 0; r < roles.length; ++r) {
+        if (roles[r].checked) {
           ids.push(roles[r].id)
-          ids.push.apply(ids,this.recurChildren(roles[r].children,[]))
+          ids.push.apply(ids, this.recurChildren(roles[r].children, []))
         }
       }
       return ids
     },
-    recurChildren(roleChildren,ids){
-      for(let index in roleChildren){
+    recurChildren(roleChildren, ids) {
+      for (let index in roleChildren) {
         let each = roleChildren[index]
-        if(each.checked){
+        if (each.checked) {
           ids.push(each.id)
         }
-        if(each.children){
-          ids.push.apply(ids,this.recurChildren(each.children,[]))
+        if (each.children) {
+          ids.push.apply(ids, this.recurChildren(each.children, []))
         }
       }
       return ids
     },
-    validatePass(rule, value, callback){
-          if (value === "") {
-            callback(new Error("请输入密码"));
-          } else if (!isvalidPass(value)) {
-            callback(
-              new Error("密码以字母开头 长度在8~18之间 只能包含字母、数字和下划线")
-            );
-          } else {
-            if (this.tmpForm.rePassword !== "") {
-              this.$refs.tmpForm.validateField("rePassword");
-            }
-            callback();
-          }
+    validatePass(rule, value, callback) {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else if (!isvalidPass(value)) {
+        callback(
+          new Error("密码以字母开头 长度在8~18之间 只能包含字母、数字和下划线")
+        );
+      } else {
+        if (this.tmpForm.rePassword !== "") {
+          this.$refs.tmpForm.validateField("rePassword");
         }
+        callback();
+      }
+    },
+    buttonType(){
+      if (this.selRow && this.selRow.id) {
+        return true
+      }
+      return false
+    }
+
+
 
   }
 }

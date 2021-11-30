@@ -15,17 +15,18 @@
       </el-row>
       <br>
       <el-row>
-        <el-col :span="24">
-          <el-button type="success" icon="el-icon-plus" @click.native="add" v-permission="['/user/edit']">
+        <el-col :span="24" >
+          <el-button type="success" icon="el-icon-plus" @click.native="add" v-permission="['/system/user/add']">
             {{$t('button.add') }}
           </el-button>
-          <el-button type="primary" icon="el-icon-edit" @click.native="edit" v-permission="['/user/edit']">
+          <el-button type="primary" icon="el-icon-edit" @click.native="edit" v-permission="['/system/user/edit']">
             {{$t('button.edit') }}
           </el-button>
-          <el-button type="danger" icon="el-icon-delete" @click.native="remove" v-permission="['/user/edit']">
+          <el-button type="danger" icon="el-icon-delete" @click.native="remove" v-permission="['/system/user/delete']">
             {{$t('button.delete') }}
           </el-button>
-          <el-button type="info" icon="el-icon-role" @click.native="openRole">角色分配</el-button>
+          <el-button v-if="buttonType()" type="primary" icon="el-icon-role" @click.native="openRole" v-permission="['/system/user/role/add']">角色分配</el-button>
+          <el-button v-if="!buttonType()" type="info" icon="el-icon-role" @click.native="openRole" disabled v-permission="['/system/user/role/add']">角色分配</el-button>
         </el-col>
       </el-row>
     </div>

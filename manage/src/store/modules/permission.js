@@ -9,11 +9,11 @@ import { asyncRouterMap, constantRouterMap } from '@/router'
  */
 function hasMenu(menus, route) {
   if (route.path) {
-    console.log("route与菜单是否匹配")
-    console.log(route)
+    // console.log("hasMenu.route")
     // console.log(menus)
+    // console.log(route)
     //返回菜单代码是否在route路由的meta中
-     return menus.some(menu => ( menu[4]!=null && menu[4].indexOf(route.path) >= 0))
+     return menus.some(menu => (menu.url!=null && menu.url.indexOf(route.path) >= 0))
   } else {
     return true
   }
@@ -92,17 +92,14 @@ const permission = {
         const roles = data.roles
         const menus = data.menus
         let accessedRouters = null
-        if (roles.indexOf('admin') >= 0) {//administrator
+        if (roles.indexOf('administrator') >= 0) {
           accessedRouters = asyncRouterMap
         } else {
-          // console.log("==debug===================")
-          // console.log(asyncRouterMap)
-          // console.log(menus)
           /**
            * 根据菜单生成accessedRouters
            */
-          accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
-          // accessedRouters = filterAsyncRouterByMenu(asyncRouterMap, menus)
+          // accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
+          accessedRouters = filterAsyncRouterByMenu(asyncRouterMap, menus)
         }
         commit('SET_ROUTERS', accessedRouters)
         resolve()

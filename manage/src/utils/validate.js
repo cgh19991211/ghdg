@@ -54,6 +54,8 @@ export function isvalidPass(str) {
 
 //   验证用户名  用户名要求 数字、字母、下划线的组合，其中数字和字母必须同时存在*
 export function isvalidUsername(str) {
-  const reg = /^(?![^A-Za-z]+$)(?![^0-9]+$)[0-9A-Za-z_]{4,15}$/;
-  return reg.test(str);
+  // const reg = /^(?![^A-Za-z]+$)(?![^0-9]+$)[0-9A-Za-z_]{4,15}$/;
+  // return reg.test(str);
+  if(str.length<3)return false
+  else return true;
 }

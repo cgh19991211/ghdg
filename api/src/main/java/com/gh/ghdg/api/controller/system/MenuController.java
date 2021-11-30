@@ -39,12 +39,7 @@ import java.util.*;
 @RestController
 @RequestMapping("sys/menu")
 public class MenuController extends TreeController<Menu, MenuDao, MenuService> {
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        dateFormat.setLenient(false);
-        binder.registerCustomEditor(Timestamp.class, new CustomDateEditor(dateFormat, true));
-    }
+    
     @Autowired
     private RoleDao roleDao;
     

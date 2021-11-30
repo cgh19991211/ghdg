@@ -13,10 +13,15 @@
       <br>
       <el-row>
         <el-col :span="24">
-          <el-button type="success" icon="el-icon-plus" @click.native="add">{{ $t('button.add') }}</el-button>
-          <el-button type="primary" icon="el-icon-edit" @click.native="edit">{{ $t('button.edit') }}</el-button>
-          <el-button type="danger" icon="el-icon-delete" @click.native="remove">{{ $t('button.delete') }}</el-button>
-          <el-button type="primary" icon="el-icon-setting" @click.native="openPermissions">权限配置</el-button>
+          <el-button type="success" icon="el-icon-plus" @click.native="add"  v-permission="['/system/role/add']">{{ $t('button.add') }}</el-button>
+          <el-button type="primary" icon="el-icon-edit" @click.native="edit" v-permission="['/system/role/edit']">{{ $t('button.edit') }}</el-button>
+          <el-button type="danger" icon="el-icon-delete" @click.native="remove" v-permission="['/system/role/delete']">{{ $t('button.delete') }}</el-button>
+          <el-button v-if="buttonType()"
+            type="primary" icon="el-icon-setting" @click.native="openPermissions" 
+            v-permission="['/system/role/menu/add']">权限配置</el-button>
+          <el-button v-if="!buttonType()"
+              type="info" icon="el-icon-setting" @click.native="openPermissions" 
+              v-permission="['/system/role/menu/add']">权限配置</el-button>
         </el-col>
       </el-row>
     </div>
