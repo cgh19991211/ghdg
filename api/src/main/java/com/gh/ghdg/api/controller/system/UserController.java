@@ -72,15 +72,15 @@ public class UserController extends BaseController<User, UserDao, UserService> {
     public Result userSave(@ModelAttribute("t") UserDto t)throws Exception{
         UserDtoFactory me = UserDtoFactory.me();
         String id = t.getId();
-        if(StrUtil.isEmpty(id)){
+        if(StrUtil.isEmpty(id)){//创建用户
             return Result.suc(userService.save(me.user(t,new User())));
-        }else{
+        }else{//修改用户
             Optional<User> byId = userDao.findById(id);
             if(byId.isPresent()){
                 User user = byId.get();
                 return Result.suc(userService.update(me.user(t,user)));
             }else{
-                return Result.error(false,"用户不存在，id:"+id,null, Constants.FAILED);
+                return Result.error(false,"所修改的用户不存在，id:"+id,null, Constants.FAILED);
             }
         }
     }
@@ -92,8 +92,10 @@ public class UserController extends BaseController<User, UserDao, UserService> {
      */
     @PostMapping("/resetPassword")
     @RequiresPermissions(PermissionCode.USER_EDIT)
-    public Result userResetPassword(@RequestParam(required = true) String newPassword){
-        service.resetPassword(newPassword);
+    public Result userResetPassword(
+            @RequestParam(required = true) String oldPassword,
+            @RequestParam(required = true) String password){
+        service.resetPassword(oldPassword,password);
         return Result.suc("密码重置成功");
     }
     

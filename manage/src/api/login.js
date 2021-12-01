@@ -30,7 +30,7 @@ export function updatePwd(params) {
   return request({
     url: '/sys/user/resetPassword',
     method: 'post',
-    params: {'newPassword':params}
+    params
   })
 }
 

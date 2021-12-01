@@ -88,60 +88,20 @@ export const asyncRouterMap = [
     name: 'Bussiness',
     alwaysShow: true,
     meta: {
-      roles: ['administrator'],
+      roles: ['administrator','group_admin'],
       title: 'businessMgr',
       icon: 'shopping'
     },
-    //商家部分,可以参考这写博客业务部分
-    // children: [
-    //
-    //   {
-    //     path: 'sdetail',
-    //     name: 'sdetail',
-    //     component: () => import('@/views/business/sdetail/index'),
-    //     meta: {title: 'sdetail'}
-    //   },
-    //   {
-    //     path: 'shop/add',
-    //     name: 'shop_add',
-    //     component: () => import('@/views/business/shop/add.vue'),
-    //     meta: {title: '添加商铺'}
-    //   },
-    //   {
-    //     path: 'shop',
-    //     name: 'shop',
-    //     component: () => import('@/views/business/shop/index'),
-    //     meta: {title: 'shopMgr'}
-    //   },
-    //
-    //   {
-    //     path: 'food',
-    //     name: 'food',
-    //     component: () => import('@/views/business/food/index'),
-    //     meta: {title: 'foodMgr'}
-    //   },
-    //   {
-    //     path: 'order',
-    //     name: 'order',
-    //     component: () => import('@/views/business/order/index'),
-    //     meta: {title: 'orderMgr'}
-    //   },
-    //   {
-    //     path: 'orderdetail',
-    //     name: 'orderdetail',
-    //     hidden:true,
-    //     component: () => import('@/views/business/orderdetail/index'),
-    //     meta: {title: '订单详情'}
-    //   },
-    //
-    //   {
-    //     path: 'food/add',
-    //     name: 'food_add',
-    //     hidden: true,
-    //     component: () => import('@/views/business/food/add.vue'),
-    //     meta: {title: '添加食品'}
-    //   }
-    // ]
+    children: [
+
+      {
+        path: 'sdetail',
+        name: 'sdetail',
+        component: () => import('@/views/business/sdetail/index'),
+        meta: {title: 'sdetail'}
+      },
+      
+    ]
   },
   {
     path: '/system',

@@ -1,5 +1,6 @@
-package com.gh.ghdg.common;
+package com.gh.ghdg.businessMgr.dao;
 
+import com.gh.ghdg.businessMgr.bean.entities.BaseMongoEntity;
 import com.gh.ghdg.common.commonVo.Page;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Repository
-public class MongoRepository {
+public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -47,6 +48,10 @@ public class MongoRepository {
         mongoTemplate.dropCollection(collectionName);
         mongoTemplate.createCollection(collectionName);
     }
+    
+    /**
+     * 更新操作
+     */
     public void update(BaseMongoEntity entity) {
         mongoTemplate.save(entity);
     }
@@ -74,7 +79,10 @@ public class MongoRepository {
         }
         return mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), update, collectionName);
     }
-
+    
+    /**
+     * 查找一个文档
+     */
     public <T, P> T findOne(Class<T> klass, P key) {
         return findOne(klass, "id", key);
     }
@@ -123,7 +131,10 @@ public class MongoRepository {
         }
         return mongoTemplate.findOne(Query.query(criteria), klass);
     }
-
+    
+    /**
+     * 分页查询
+     */
     public <T> Page<T> queryPage(Page<T> page, Class<T> klass) {
         return queryPage(page, klass, null);
     }
@@ -141,7 +152,10 @@ public class MongoRepository {
         page.setRecords(list);
         return page;
     }
-
+    
+    /**
+     * 查找全部
+     */
     public <T> List<T> findAll(Class<T> klass) {
         return mongoTemplate.findAll(klass);
     }
@@ -164,42 +178,10 @@ public class MongoRepository {
         Criteria criteria = criteria(keyValues);
         return mongoTemplate.find(Query.query(criteria), Map.class, collectionName);
     }
-
+    
     /**
-     * 查询指定位置附近的商家
-     * @param x
-     * @param y
-     * @param collectionName
-     * @param params
-     * @param miles 公里数
-     * @return
+     * 集合文档数量
      */
-//    public GeoResults<Map> near(double x, double y, String collectionName, Map<String, Object> params, Integer miles) {
-//        Point location = new Point(x, y);
-//        NearQuery nearQuery = NearQuery.near(location).maxDistance(new Distance(miles, Metrics.MILES));
-//        if (params != null && !params.isEmpty()) {
-//            Query query = Query.query(criteria(params));
-//            nearQuery.query(query);
-//        }
-//        try {
-//            return mongoTemplate.geoNear(nearQuery, Map.class, collectionName);
-//        }catch (Exception e){
-//            System.out.println(e.getMessage());
-//        }
-//        return null;
-//    }
-    /**
-     * 查询指定位置附近的商家，默认查询十公里范围内
-     * @param x
-     * @param y
-     * @param collectionName
-     * @param params
-     * @return
-     */
-//    public GeoResults<Map> near(double x, double y, String collectionName, Map<String, Object> params) {
-//        return near(x,y,collectionName,params,50);
-//    }
-
     public long count(Class klass) {
         return count(klass, null);
     }
@@ -226,7 +208,11 @@ public class MongoRepository {
             return mongoTemplate.count(Query.query(criteria), collection);
         }
     }
-
+    
+    
+    /**
+     * 复杂查询
+     */
     private Criteria criteria(Map<String, Object> map) {
         Criteria criteria = null;
         if (map != null) {

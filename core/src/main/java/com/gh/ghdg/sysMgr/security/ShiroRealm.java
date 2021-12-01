@@ -1,8 +1,7 @@
 package com.gh.ghdg.sysMgr.security;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.gh.ghdg.common.MongoRepository;
-import com.gh.ghdg.common.utils.HttpKit;
+import com.gh.ghdg.businessMgr.dao.MongoRepositoryImpl;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.service.system.MenuService;
@@ -16,12 +15,8 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -31,7 +26,7 @@ public class ShiroRealm extends AuthorizingRealm {
     private UserService userService;
 
     @Autowired
-    private MongoRepository mongoRepository;
+    private MongoRepositoryImpl mongoRepositoryImpl;
     
     @Autowired
     private MenuService menuService;

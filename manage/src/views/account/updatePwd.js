@@ -29,20 +29,31 @@ export default {
   },
   methods: {
     init(){
-      this.user = this.$store.state.user.profile
+      this.user = this.$store.state
+
     },
     handleClick(tab, event){
       this.$router.push({ path: '/account/'+tab.name})
     },
     updatePwd() {
+      if(this.form.password!==this.form.rePassword){
+        console.log("看看密码")
+        console.log(this.form.password)
+        console.log(this.form.rePassword)
+        console.log(this.form.rePassword!==this.form.password)
+        this.$message({
+          message: '请确认新密码与重复密码是相同的',
+          type: 'error'
+        })
+        return false
+      }
       this.$refs['form'].validate((valid) => {
         if (valid) {
           updatePwd({
             oldPassword: this.form.oldPassword,
-            password: this.form.password,
-            rePassword: this.form.rePassword
+            password: this.form.password
+            // rePassword: this.form.rePassword
           }).then(response => {
-            console.log(response)
             this.$message({
               message: '密码修改成功',
               type: 'success'

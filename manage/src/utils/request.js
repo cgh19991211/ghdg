@@ -73,14 +73,15 @@ service.interceptors.response.use(
       if(res.code === 50000){//token非法
 
       }
-      return Promise.reject(res.msg)
+
+
+      return Promise.reject(res.message)
     } else {
       return response.data
     }
   },
   error => {
-    console.log("=======debug===========")
-    console.log(error)
+
     //debug
     if (error.response && error.response.data.errors) {
       Message({

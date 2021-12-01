@@ -36,9 +36,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import LangSelect from '@/components/LangSelect'
-import permission from '@/directive/permission/index.js'
 export default {
-  directives: { permission },
   components: {
     Breadcrumb,
     Hamburger,

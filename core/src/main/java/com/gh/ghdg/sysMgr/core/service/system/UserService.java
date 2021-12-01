@@ -236,16 +236,16 @@ public class UserService extends BaseService<User, UserDao> {
      * @param
      */
     @Transactional
-    public void resetPassword(String password) {
-        checkValid(password);
-        User curUser = JwtUtil.getCurUser();
-        String salt = curUser.getSalt();
-        String encryptedPassword = this.encryptPassword(password,salt);
-        String oldPassword = curUser.getPassword();
-        if(StrUtil.equals(oldPassword,encryptedPassword)){
+    public void resetPassword(String oldPassword, String password) {
+        if(StrUtil.equals(oldPassword,password)){
             throw new MyException("新旧密码不能一样");
         }
+        checkValid(password);
+        User curUser = JwtUtil.getCurUser();
+        String salt = ToolUtil.getRandomString(4);//换个新盐值
+        String encryptedPassword = this.encryptPassword(password,salt);//新密码加密
         curUser.setPassword(encryptedPassword);
+        curUser.setSalt(salt);
         dao.save(curUser);
     }
 

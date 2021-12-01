@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="user">
       <strong>{{ user.name }}</strong><br>
-      <small><span v-for='role in user.roles' :key='role'>{{role.roleName}}</span></small>
+      <small><span v-for='role in user.roles' :key='role.roleName'>{{role.roleName}}</span></small>
     </div>
     <el-row class="user-content" style="">
       <el-col :span="6" class="profile">
