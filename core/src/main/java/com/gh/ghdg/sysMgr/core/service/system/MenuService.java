@@ -1,22 +1,16 @@
 package com.gh.ghdg.sysMgr.core.service.system;
 
-import cn.hutool.core.util.StrUtil;
-import com.gh.ghdg.common.cache.redis.RedisUtil;
-import com.gh.ghdg.common.utils.constant.Constants;
 import com.gh.ghdg.sysMgr.bean.TreeEntity;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
-import com.gh.ghdg.sysMgr.bean.enums.TypeEnum;
 import com.gh.ghdg.sysMgr.core.dao.system.*;
 import com.gh.ghdg.sysMgr.core.service.TreeService;
 import com.gh.ghdg.common.utils.exception.MyException;
-import com.gh.ghdg.sysMgr.security.JwtUtil;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MenuService extends TreeService<Menu, MenuDao> {

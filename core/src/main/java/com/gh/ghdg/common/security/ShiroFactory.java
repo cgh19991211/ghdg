@@ -1,4 +1,4 @@
-package com.gh.ghdg.sysMgr.security;
+package com.gh.ghdg.common.security;
 
 import com.gh.ghdg.common.utils.SpringContextUtil;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
@@ -8,7 +8,6 @@ import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import org.apache.shiro.authc.CredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;

@@ -1,13 +1,13 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.annotation.Id;
 
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public class BaseMongoEntity {
-    @MongoId
+    @Id
     protected String _id;
     
     public BaseMongoEntity() {

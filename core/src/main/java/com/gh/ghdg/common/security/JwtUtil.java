@@ -1,4 +1,4 @@
-package com.gh.ghdg.sysMgr.security;
+package com.gh.ghdg.common.security;
 
 import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
@@ -14,7 +14,6 @@ import com.gh.ghdg.common.utils.SpringContextUtil;
 import com.gh.ghdg.common.utils.constant.Constants;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
-import com.gh.ghdg.sysMgr.core.service.system.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -28,10 +27,6 @@ import java.util.Optional;
  * @date ：Created in 2019/7/30 22:56
  */
 public class JwtUtil {
-    
-    @Autowired
-    private UserDao userDao;
-    
 
     /**
      * 校验token是否正确

@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Set;
 
-@Document(value = "category")
+@Document(collection = "category")
 public class Category extends BaseMongoEntity{
     private String name;
     private String description;

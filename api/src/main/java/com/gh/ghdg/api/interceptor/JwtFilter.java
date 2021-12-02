@@ -1,15 +1,12 @@
 package com.gh.ghdg.api.interceptor;
 
-import com.gh.ghdg.sysMgr.security.JwtToken;
+import com.gh.ghdg.common.security.JwtToken;
 import com.gh.ghdg.common.utils.constant.Constants;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;

@@ -1,26 +1,10 @@
 import {getApiUrl} from '@/utils/utils'
 import {getAccessToken} from '@/utils/auth'
-import {cityGuess} from '@/api/getData'
-import permission from '@/directive/permission/index.js'
-import {
-  getResturants,
-  getResturantsCount,
-  foodCategory,
-  updateResturant,
-  stopResturant,
-  auditResturant,
-  searchplace,
-  deleteResturant,
-  check
-} from '@/api/business/shop'
+
 
 export default {
-  directives: {permission},
   data() {
     return {
-      // city: {},
-      // count: 0,
-      fileMgrUrl: getApiUrl() + '/file',
       uploadHeaders: {
         'Authorization': ''
       },
@@ -28,9 +12,6 @@ export default {
       currentPage: 1,
       selectTable: {},
       dialogFormVisible: false,
-      categoryOptions: [],
-      selectedCategory: [],
-      address: {},
       total: 0,
       stateList: [
         {label: '审核中', value: '0'},

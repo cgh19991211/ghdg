@@ -2,8 +2,8 @@ package com.gh.ghdg.api.config;
 
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.core.service.system.UserService;
-import com.gh.ghdg.sysMgr.security.AccountInfo;
-import com.gh.ghdg.sysMgr.security.JwtUtil;
+import com.gh.ghdg.common.security.AccountInfo;
+import com.gh.ghdg.common.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;

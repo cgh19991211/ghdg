@@ -2,7 +2,8 @@ package com.gh.ghdg.businessMgr.bean.entities;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collation = "blogger")
+
+@Document(collection = "blogger")
 public class Blogger extends BaseMongoEntity{
     private String username;
     private String password;

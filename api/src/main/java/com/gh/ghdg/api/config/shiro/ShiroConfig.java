@@ -1,7 +1,7 @@
 package com.gh.ghdg.api.config.shiro;
 
 import com.gh.ghdg.api.interceptor.JwtFilter;
-import com.gh.ghdg.sysMgr.security.ShiroRealm;
+import com.gh.ghdg.common.security.ShiroRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -69,7 +69,6 @@ public class ShiroConfig {
          */
         Map<String, String> filterRuleMap =  new HashMap<>();
         // 所有请求通过我们自己的JWT Filter
-        filterRuleMap.put("/**", "jwt");
         // 访问401和404页面不通过我们的Filter
         filterRuleMap.put("/401", "anon");
         filterRuleMap.put("/login", "anon");
@@ -80,6 +79,7 @@ public class ShiroConfig {
 //        filterRuleMap.put("/webjars/**", "anon");
 //        filterRuleMap.put("/v3/**", "anon");
 //        filterRuleMap.put("/doc.html", "anon");
+        filterRuleMap.put("/**", "jwt");
         
         factoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return factoryBean;

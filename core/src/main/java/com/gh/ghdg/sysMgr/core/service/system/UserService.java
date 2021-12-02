@@ -1,29 +1,21 @@
 package com.gh.ghdg.sysMgr.core.service.system;
 
 import cn.hutool.core.util.StrUtil;
-import com.gh.ghdg.common.commonVo.DynamicSpecifications;
-import com.gh.ghdg.common.commonVo.Page;
-import com.gh.ghdg.common.utils.ReflectHelper;
 import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.common.utils.ToolUtil;
 import com.gh.ghdg.common.utils.constant.CommonRex;
 import com.gh.ghdg.common.utils.exception.MyException;
-import com.gh.ghdg.sysMgr.bean.dto.UserDtoFactory;
 import com.gh.ghdg.sysMgr.bean.entities.system.Role;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;
 import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.dao.system.UserRoleDao;
-import com.gh.ghdg.sysMgr.security.JwtUtil;
+import com.gh.ghdg.common.security.JwtUtil;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.hibernate.internal.util.StringHelper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 

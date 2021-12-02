@@ -8,12 +8,11 @@ import com.gh.ghdg.sysMgr.BaseEntity;
 import com.gh.ghdg.sysMgr.BaseService;
 import com.gh.ghdg.api.utils.ApiConstants;
 import com.gh.ghdg.common.utils.Result;
-import com.gh.ghdg.sysMgr.security.JwtUtil;
+import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.constant.Constants;
 import org.nutz.json.Json;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,9 +26,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -210,7 +207,7 @@ public abstract class BaseController<T extends BaseEntity, S extends BaseDao<T>,
      * @param request
      * @return
      */
-    public String getToken(HttpServletRequest request) {
+    public String getAccessToken(HttpServletRequest request) {
         return request.getHeader(Constants.ACCESS_TOKEN_NAME);
     }
     

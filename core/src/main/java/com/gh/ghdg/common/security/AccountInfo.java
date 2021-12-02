@@ -1,4 +1,4 @@
-package com.gh.ghdg.sysMgr.security;
+package com.gh.ghdg.common.security;
 
 
 public class AccountInfo {

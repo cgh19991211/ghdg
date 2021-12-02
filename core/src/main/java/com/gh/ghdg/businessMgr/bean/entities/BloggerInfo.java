@@ -6,7 +6,7 @@ import com.gh.ghdg.businessMgr.bean.entities.sub.Address;
 import java.util.Date;
 import java.util.Set;
 
-@Document(collation = "blogger_info")
+@Document(collection = "blogger_info")
 public class BloggerInfo extends BaseMongoEntity{
     private String blogger_id;//外键，指向Blogger的_id字段
     private String name;

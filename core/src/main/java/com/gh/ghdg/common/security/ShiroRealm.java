@@ -1,4 +1,4 @@
-package com.gh.ghdg.sysMgr.security;
+package com.gh.ghdg.common.security;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.gh.ghdg.businessMgr.dao.MongoRepositoryImpl;

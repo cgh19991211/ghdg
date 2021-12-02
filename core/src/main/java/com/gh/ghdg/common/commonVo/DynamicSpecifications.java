@@ -1,6 +1,7 @@
 package com.gh.ghdg.common.commonVo;
 
 import cn.hutool.core.util.StrUtil;
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;

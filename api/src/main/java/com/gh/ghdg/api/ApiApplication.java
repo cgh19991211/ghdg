@@ -7,12 +7,14 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableCaching
 @ComponentScan(basePackages = "com.gh.ghdg")
-@EntityScan(basePackages = "com.gh.ghdg")
-@EnableJpaRepositories(basePackages = "com.gh.ghdg")
+@EntityScan(basePackages = "com.gh.ghdg.sysMgr.bean.entities")
+@EnableMongoRepositories(basePackages = "com.gh.ghdg.businessMgr")
+@EnableJpaRepositories(basePackages = "com.gh.ghdg.sysMgr")
 @EnableTransactionManagement
 @EnableJpaAuditing
 @SpringBootApplication
