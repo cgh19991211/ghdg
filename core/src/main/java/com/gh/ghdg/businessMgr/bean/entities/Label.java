@@ -7,16 +7,16 @@ public class Label extends BaseMongoEntity{
     private String name;
     private String description;
     private String icon;
-    private String blog_nums;
+    private Integer blogNums;//与该标签有关的博客数
     
     public Label() {
     }
     
-    public Label(String name, String description, String icon, String blog_nums) {
+    public Label(String name, String description, String icon, Integer blogNums) {
         this.name = name;
         this.description = description;
         this.icon = icon;
-        this.blog_nums = blog_nums;
+        this.blogNums = blogNums;
     }
     
     public String getName() {
@@ -43,12 +43,12 @@ public class Label extends BaseMongoEntity{
         this.icon = icon;
     }
     
-    public String getBlog_nums() {
-        return blog_nums;
+    public Integer getBlogNums() {
+        return blogNums;
     }
     
-    public void setBlog_nums(String blog_nums) {
-        this.blog_nums = blog_nums;
+    public void setBlogNums(Integer blogNums) {
+        this.blogNums = blogNums;
     }
     
     @Override
@@ -57,7 +57,7 @@ public class Label extends BaseMongoEntity{
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", icon='" + icon + '\'' +
-                ", blog_nums='" + blog_nums + '\'' +
+                ", blogNums='" + blogNums + '\'' +
                 '}';
     }
 }

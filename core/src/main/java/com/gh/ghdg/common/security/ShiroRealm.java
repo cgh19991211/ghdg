@@ -1,7 +1,6 @@
 package com.gh.ghdg.common.security;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.gh.ghdg.businessMgr.dao.MongoRepositoryImpl;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.service.system.MenuService;
@@ -25,9 +24,6 @@ public class ShiroRealm extends AuthorizingRealm {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private MongoRepositoryImpl mongoRepositoryImpl;
-    
     @Autowired
     private MenuService menuService;
     

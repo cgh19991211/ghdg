@@ -31,6 +31,10 @@ public class Constants {
 
     public static String CUR_APP_MENUS = "AppMenus";
     public static String CUR_APP_MENU_ROOTS = "AppMenuRoots";
+    
+    //成功码
+    public static int SIGN_IN_SUC = 2021;
+    
     //错误码
     public static int SUCCESS = 200;//成功
     public static int FAILED = 999;//失败

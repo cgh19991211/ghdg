@@ -6,32 +6,25 @@ import java.util.Set;
 
 @Document(collection = "category")
 public class Category extends BaseMongoEntity{
-    private String name;
+    private String categoryName;
     private String description;
-    private Integer followed_nums;
-    private Integer displaySeq;
+    private Integer followedNums = 0;
+    private Integer displaySeq = 1;
     private String logo;
     private Set<Label> labels;
     
     public Category() {
     }
     
-    public Category(String name, String description, Integer followed_nums, Integer displaySeq, String logo, Set<Label> labels) {
-        this.name = name;
+    public Category(String categoryName, String description, Integer followedNums, Integer displaySeq, String logo, Set<Label> labels) {
+        this.categoryName = categoryName;
         this.description = description;
-        this.followed_nums = followed_nums;
+        this.followedNums = followedNums;
         this.displaySeq = displaySeq;
         this.logo = logo;
         this.labels = labels;
     }
     
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
     
     public String getDescription() {
         return description;
@@ -41,13 +34,7 @@ public class Category extends BaseMongoEntity{
         this.description = description;
     }
     
-    public Integer getFollowed_nums() {
-        return followed_nums;
-    }
-    
-    public void setFollowed_nums(Integer followed_nums) {
-        this.followed_nums = followed_nums;
-    }
+
     
     public Integer getDisplaySeq() {
         return displaySeq;
@@ -73,12 +60,28 @@ public class Category extends BaseMongoEntity{
         this.labels = labels;
     }
     
+    public String getCategoryName() {
+        return categoryName;
+    }
+    
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+    
+    public Integer getFollowedNums() {
+        return followedNums;
+    }
+    
+    public void setFollowedNums(Integer followedNums) {
+        this.followedNums = followedNums;
+    }
+    
     @Override
     public String toString() {
         return "Category{" +
-                "name='" + name + '\'' +
+                "categoryName='" + categoryName + '\'' +
                 ", description='" + description + '\'' +
-                ", followed_nums=" + followed_nums +
+                ", followedNums=" + followedNums +
                 ", displaySeq=" + displaySeq +
                 ", logo='" + logo + '\'' +
                 ", labels=" + labels +

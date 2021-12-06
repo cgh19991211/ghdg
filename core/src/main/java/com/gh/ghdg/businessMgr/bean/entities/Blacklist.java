@@ -1,40 +1,47 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
 @Document(collection = "blacklist")
 public class Blacklist extends BaseMongoEntity{
-    private String blogger_id;
-    private String blogger_name;
+    private String bloggerId;
+    private String bloggerName;
+    private String reason;
+    
     private Date until;//封禁时长，博主账户直到当前时间大于该until才能重新登陆使用
     
     public Blacklist() {
     }
     
-    public Blacklist(String blogger_id, String blogger_name, Date until) {
-        this.blogger_id = blogger_id;
-        this.blogger_name = blogger_name;
+    public Blacklist(String bloggerId, String bloggerName, String reason, Date until) {
+        this.bloggerId = bloggerId;
+        this.bloggerName = bloggerName;
+        this.reason = reason;
         this.until = until;
     }
     
-    public String getBlogger_id() {
-        return blogger_id;
+    public String getBloggerId() {
+        return bloggerId;
     }
     
-    public void setBlogger_id(String blogger_id) {
-        this.blogger_id = blogger_id;
+    public void setBloggerId(String bloggerId) {
+        this.bloggerId = bloggerId;
     }
     
-    public String getBlogger_name() {
-        return blogger_name;
+    public String getBloggerName() {
+        return bloggerName;
     }
     
-    public void setBlogger_name(String blogger_name) {
-        this.blogger_name = blogger_name;
+    public void setBloggerName(String bloggerName) {
+        this.bloggerName = bloggerName;
     }
     
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     public Date getUntil() {
         return until;
     }
@@ -43,11 +50,20 @@ public class Blacklist extends BaseMongoEntity{
         this.until = until;
     }
     
+    public String getReason() {
+        return reason;
+    }
+    
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+    
     @Override
     public String toString() {
         return "Blacklist{" +
-                "blogger_id='" + blogger_id + '\'' +
-                ", blogger_name='" + blogger_name + '\'' +
+                "bloggerId='" + bloggerId + '\'' +
+                ", bloggerName='" + bloggerName + '\'' +
+                ", reason='" + reason + '\'' +
                 ", until=" + until +
                 '}';
     }

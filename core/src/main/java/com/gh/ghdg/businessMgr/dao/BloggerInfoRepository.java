@@ -1,6 +1,12 @@
 package com.gh.ghdg.businessMgr.dao;
 
-import org.springframework.data.mongodb.core.MongoOperations;
+import com.gh.ghdg.businessMgr.bean.entities.BloggerInfo;
+import org.springframework.data.jpa.repository.Query;
 
-public interface BloggerInfoRepository extends MongoOperations {
+import java.util.List;
+
+public interface BloggerInfoRepository extends BaseMongoRepository<BloggerInfo> {
+    BloggerInfo findByBloggerNameEquals(String bloggerName);
+    
+    List<BloggerInfo> findAllByBloggerNameLike(String bloggerName);
 }

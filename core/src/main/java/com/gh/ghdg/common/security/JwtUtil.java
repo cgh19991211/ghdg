@@ -8,6 +8,7 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.gh.ghdg.businessMgr.bean.entities.Blogger;
 import com.gh.ghdg.common.cache.redis.RedisUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.SpringContextUtil;
@@ -151,6 +152,18 @@ public class JwtUtil {
         return byId.get();
     }
     
+    public static String getCurBloggerId(){
+        String accessToken = HttpKit.getAccessToken();
+        String id = "";
+        try {
+            DecodedJWT jwt = JWT.decode(accessToken);
+            id = jwt.getClaim("account").asString();
+        } catch (JWTDecodeException e) {
+            return null;
+        }
+        return id;
+    }
+    
     /**
      * 根据token从缓存中获取对应用户信息
      * @param token
@@ -180,6 +193,15 @@ public class JwtUtil {
                     .sign(algorithm);
     }
     
+    public static String signBloggerToken(Blogger blogger, long expirationTime){
+        Date date = new Date(System.currentTimeMillis() + expirationTime);
+        Algorithm algorithm = Algorithm.HMAC256(blogger.getPassword());
+        return JWT.create()
+                .withClaim("account",blogger.getAccount())
+                .withClaim("_id",blogger.get_id())
+                .sign(algorithm);
+    }
+    
     /**
      * 生成刷新token
      * @param user
@@ -189,6 +211,10 @@ public class JwtUtil {
      */
     public static String signRereshToken(User user){
         return sign(user, Constants.REFRESH_EXPIRE_TIME);
+    }
+    
+    public static String signBloggerRefreshToken(Blogger blogger){
+        return signBloggerToken(blogger,Constants.REFRESH_EXPIRE_TIME);
     }
     
     /**
@@ -203,4 +229,7 @@ public class JwtUtil {
         return sign(user,Constants.ACCESS_EXPIRE_TIME);
     }
     
+    public static String signBloggerAccessToken(Blogger blogger){
+        return signBloggerToken(blogger,Constants.ACCESS_EXPIRE_TIME);
+    }
 }

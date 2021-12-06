@@ -179,7 +179,7 @@ public abstract class TreeService<T extends TreeEntity<T>, S extends TreeDao<T>>
         }
 
         // 删除
-        /*super*/dao.delete(t); // by hqw 2020-01-10
+        /*super*/dao.delete(t);
         // 父级 by hqw 2020-01-19
         T p = t.getParent();
         if(null != p) {

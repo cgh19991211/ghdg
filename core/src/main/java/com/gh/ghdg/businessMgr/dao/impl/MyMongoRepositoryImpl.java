@@ -1,4 +1,4 @@
-package com.gh.ghdg.businessMgr.dao;
+package com.gh.ghdg.businessMgr.dao.impl;
 
 import com.gh.ghdg.businessMgr.bean.entities.BaseMongoEntity;
 import com.gh.ghdg.common.commonVo.Page;
@@ -7,8 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.GeoResults;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.NearQuery;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
@@ -18,14 +23,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Created on 2017/12/29 0029.
+ *
+ * @Author enilu
+ */
 @Repository
-public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
+public class MyMongoRepositoryImpl<T extends BaseMongoEntity> {
 
     @Autowired
     private MongoTemplate mongoTemplate;
 
     public void save(BaseMongoEntity entity) {
-        mongoTemplate.save(entity);
+         mongoTemplate.save(entity);
     }
 
     public void save(Object data, String collectionName) {
@@ -33,8 +43,8 @@ public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
 
     }
 
-    public void delete(Long id, String collectionName) {
-        mongoTemplate.remove(Query.query(Criteria.where("id").is(id)), collectionName);
+    public void delete(String id, String collectionName) {
+        mongoTemplate.remove(Query.query(Criteria.where("_id").is(id)), collectionName);
     }
 
     public void delete(String collectionName, Map<String, Object> keyValues) {
@@ -48,25 +58,10 @@ public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
         mongoTemplate.dropCollection(collectionName);
         mongoTemplate.createCollection(collectionName);
     }
-    
-    /**
-     * 更新操作
-     */
     public void update(BaseMongoEntity entity) {
         mongoTemplate.save(entity);
     }
 
-    public UpdateResult update(Long id, String collectionName, Map<String, Object> keyValues) {
-        Update update = null;
-        for (Map.Entry<String, Object> entry : keyValues.entrySet()) {
-            if (update == null) {
-                update = Update.update(entry.getKey(), entry.getValue());
-            } else {
-                update.set(entry.getKey(), entry.getValue());
-            }
-        }
-        return mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(id)), update, collectionName);
-    }
 
     public UpdateResult update(String id, String collectionName, Map<String, Object> keyValues) {
         Update update = null;
@@ -79,26 +74,23 @@ public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
         }
         return mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(id)), update, collectionName);
     }
-    
-    /**
-     * 查找一个文档
-     */
-    public <T, P> T findOne(Class<T> klass, P key) {
-        return findOne(klass, "id", key);
+
+    public <P> T findOne(Class<T> klass, P value) {
+        return findOne(klass, "_id", value);
     }
-    public <T> T findOne(Class<T> klass, Map<String,Object> params) {
+    public T findOne(Class<T> klass, Map<String,Object> params) {
         Criteria criteria = criteria(params);
         if (criteria != null) {
             return mongoTemplate.findOne(Query.query(criteria), klass);
         }
         return null;
     }
-    public <T> T findOne(Class<T> klass, String key, Object value) {
+    public T findOne(Class<T> klass, String key, Object value) {
         return mongoTemplate.findOne(Query.query(Criteria.where(key).is(value)), klass);
     }
 
-    public Object findOne(Long id, String collectionName) {
-        return mongoTemplate.findOne(Query.query(Criteria.where("id").is(id)), Map.class, collectionName);
+    public Object findOne(String id, String collectionName) {
+        return mongoTemplate.findOne(Query.query(Criteria.where("_id").is(id)), Map.class, collectionName);
     }
 
     public Map findOne(String collectionName, Object... extraKeyValues) {
@@ -113,13 +105,13 @@ public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
         return mongoTemplate.findOne(Query.query(criteria), Map.class, collectionName);
     }
 
-    public <T> T findOne(Class<T> klass) {
+    public T findOne(Class<T> klass) {
         Query query = new Query();
         return mongoTemplate.findOne(query, klass);
 
     }
 
-    public <T> T findOne(Class<T> klass, Object... keyValues) {
+    public T findOne(Class<T> klass, Object... keyValues) {
         Criteria criteria = criteria(keyValues);
 
         if (criteria == null) {
@@ -131,16 +123,13 @@ public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
         }
         return mongoTemplate.findOne(Query.query(criteria), klass);
     }
-    
-    /**
-     * 分页查询
-     */
-    public <T> Page<T> queryPage(Page<T> page, Class<T> klass) {
+
+    public Page<T> queryPage(Page<T> page, Class<T> klass) {
         return queryPage(page, klass, null);
     }
 
-    public <T> Page<T> queryPage(Page<T> page, Class<T> klass, Map<String, Object> params) {
-        Pageable pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(), Sort.Direction.DESC, "id");
+    public Page<T> queryPage(Page<T> page, Class<T> klass, Map<String, Object> params) {
+        Pageable pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(), Sort.Direction.DESC, "_id");
         Query query = new Query();
         if (params != null && !params.isEmpty()) {
             Criteria criteria = criteria(params);
@@ -153,19 +142,28 @@ public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
         return page;
     }
     
-    /**
-     * 查找全部
-     */
-    public <T> List<T> findAll(Class<T> klass) {
+    public Page<T> queryPage(Page<T> page, Query query,Class<T> klass){
+        if(query==null){
+            return queryPage(page,klass);
+        }
+        Pageable pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(), Sort.Direction.DESC, "_id");
+        List<T> list = mongoTemplate.find(query.with(pageable), klass);
+        Long count = mongoTemplate.count(query,klass);
+        page.setTotal(count.intValue());
+        page.setRecords(list);
+        return page;
+    }
+
+    public List<T> findAll(Class<T> klass) {
         return mongoTemplate.findAll(klass);
     }
 
-    public <T> List<T> findAll(Class<T> klass, Object... keyValues) {
+    public List<T> findAll(Class<T> klass, Object... keyValues) {
         Criteria criteria = criteria(keyValues);
         return mongoTemplate.find(Query.query(criteria), klass);
     }
 
-    public <T> List<T> findAll(Class<T> klass, Map<String, Object> keyValues) {
+    public List<T> findAll(Class<T> klass, Map<String, Object> keyValues) {
         Criteria criteria = criteria(keyValues);
         return mongoTemplate.find(Query.query(criteria), klass);
     }
@@ -178,10 +176,42 @@ public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
         Criteria criteria = criteria(keyValues);
         return mongoTemplate.find(Query.query(criteria), Map.class, collectionName);
     }
-    
+
     /**
-     * 集合文档数量
+     * 查询指定位置附近的商家
+     * @param x
+     * @param y
+     * @param collectionName
+     * @param params
+     * @param miles 公里数
+     * @return
      */
+    public GeoResults<Map> near(double x, double y, String collectionName, Map<String, Object> params,Integer miles) {
+        Point location = new Point(x, y);
+        NearQuery nearQuery = NearQuery.near(location).maxDistance(new Distance(miles, Metrics.MILES));
+        if (params != null && !params.isEmpty()) {
+            Query query = Query.query(criteria(params));
+            nearQuery.query(query);
+        }
+        try {
+            return mongoTemplate.geoNear(nearQuery, Map.class, collectionName);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+    /**
+     * 查询指定位置附近的商家，默认查询十公里范围内
+     * @param x
+     * @param y
+     * @param collectionName
+     * @param params
+     * @return
+     */
+    public GeoResults<Map> near(double x, double y, String collectionName, Map<String, Object> params) {
+        return near(x,y,collectionName,params,50);
+    }
+
     public long count(Class klass) {
         return count(klass, null);
     }
@@ -208,11 +238,7 @@ public class MongoRepositoryImpl<T extends BaseMongoEntity,ID> {
             return mongoTemplate.count(Query.query(criteria), collection);
         }
     }
-    
-    
-    /**
-     * 复杂查询
-     */
+
     private Criteria criteria(Map<String, Object> map) {
         Criteria criteria = null;
         if (map != null) {

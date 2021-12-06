@@ -1,62 +1,67 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.gh.ghdg.businessMgr.bean.entities.sub.Address;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.Set;
 
 @Document(collection = "blogger_info")
 public class BloggerInfo extends BaseMongoEntity{
-    private String blogger_id;//外键，指向Blogger的_id字段
-    private String name;
-    private String nickname;
-    private String signature;//个性签名
+    private String bloggerId;//外键，指向Blogger的_id字段
+    private String bloggerName = "unknown";
+    private String nickname = "unknown";
+    private String signature = "unknown";//个性签名
     private Address address;
-    private Set<Blog> favorite_blogs;//收藏的博客
-    private Set<Blogger> followed_bloggers;//关注的博主
-    private Date registration_date;
-    private String phone;
-    private String email;
-    private String avatar;
-    private Integer blog_nums;//发表的数
-    private Integer fans_nums;//粉丝(关注的人)数
-    private Integer like_nums;//点赞数
+    private Set<Category> followedCategories;//关注的分类
+    private Set<Blog> favoriteBlogs;//收藏的博客
+    private Set<Blogger> followedBloggers;//关注的博主
+    private Date registrationDate;
+    private String phone = "unknown";
+    private String email = "unknown";
+    private String avatar;//需要一个默认头像
+    private Integer blogNums = 0;//发表的博客数
+    private Integer fanNums = 0;//粉丝(关注的人)数
+    private Integer likeNums = 0;//点赞数
     
     public BloggerInfo() {
     }
     
-    public BloggerInfo(String blogger_id, String name, String nickname, String signature, Address address, Set<Blog> favorite_blogs, Set<Blogger> followed_bloggers, Date registration_date, String phone, String email, String avatar, Integer blog_nums, Integer fans_nums, Integer like_nums) {
-        this.blogger_id = blogger_id;
-        this.name = name;
+    public BloggerInfo(String bloggerId, String bloggerName, String nickname, String signature, Address address, Set<Category> followedCategories, Set<Blog> favoriteBlogs, Set<Blogger> followedBloggers, Date registrationDate, String phone, String email, String avatar, Integer blogNums, Integer fanNums, Integer likeNums) {
+        this.bloggerId = bloggerId;
+        this.bloggerName = bloggerName;
         this.nickname = nickname;
         this.signature = signature;
         this.address = address;
-        this.favorite_blogs = favorite_blogs;
-        this.followed_bloggers = followed_bloggers;
-        this.registration_date = registration_date;
+        this.followedCategories = followedCategories;
+        this.favoriteBlogs = favoriteBlogs;
+        this.followedBloggers = followedBloggers;
+        this.registrationDate = registrationDate;
         this.phone = phone;
         this.email = email;
         this.avatar = avatar;
-        this.blog_nums = blog_nums;
-        this.fans_nums = fans_nums;
-        this.like_nums = like_nums;
+        this.blogNums = blogNums;
+        this.fanNums = fanNums;
+        this.likeNums = likeNums;
     }
     
-    public String getBlogger_id() {
-        return blogger_id;
+    public String getBloggerId() {
+        return bloggerId;
     }
     
-    public void setBlogger_id(String blogger_id) {
-        this.blogger_id = blogger_id;
+    public void setBloggerId(String bloggerId) {
+        this.bloggerId = bloggerId;
     }
     
-    public String getName() {
-        return name;
+    public String getBloggerName() {
+        return bloggerName;
     }
     
-    public void setName(String name) {
-        this.name = name;
+    public void setBloggerName(String bloggerName) {
+        this.bloggerName = bloggerName;
     }
     
     public String getNickname() {
@@ -83,28 +88,39 @@ public class BloggerInfo extends BaseMongoEntity{
         this.address = address;
     }
     
-    public Set<Blog> getFavorite_blogs() {
-        return favorite_blogs;
+    public Set<Category> getFollowedCategories() {
+        return followedCategories;
     }
     
-    public void setFavorite_blogs(Set<Blog> favorite_blogs) {
-        this.favorite_blogs = favorite_blogs;
+    public void setFollowedCategories(Set<Category> followedCategories) {
+        this.followedCategories = followedCategories;
     }
     
-    public Set<Blogger> getFollowed_bloggers() {
-        return followed_bloggers;
+    public Set<Blog> getFavoriteBlogs() {
+        return favoriteBlogs;
     }
     
-    public void setFollowed_bloggers(Set<Blogger> followed_bloggers) {
-        this.followed_bloggers = followed_bloggers;
+    public void setFavoriteBlogs(Set<Blog> favoriteBlogs) {
+        this.favoriteBlogs = favoriteBlogs;
     }
     
-    public Date getRegistration_date() {
-        return registration_date;
+    public Set<Blogger> getFollowedBloggers() {
+        return followedBloggers;
     }
     
-    public void setRegistration_date(Date registration_date) {
-        this.registration_date = registration_date;
+    public void setFollowedBloggers(Set<Blogger> followedBloggers) {
+        this.followedBloggers = followedBloggers;
+    }
+    
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+    
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
     }
     
     public String getPhone() {
@@ -131,47 +147,53 @@ public class BloggerInfo extends BaseMongoEntity{
         this.avatar = avatar;
     }
     
-    public Integer getBlog_nums() {
-        return blog_nums;
+    public Integer getBlogNums() {
+        return blogNums;
     }
     
-    public void setBlog_nums(Integer blog_nums) {
-        this.blog_nums = blog_nums;
+    public void setBlogNums(Integer blogNums) {
+        this.blogNums = blogNums;
     }
     
-    public Integer getFans_nums() {
-        return fans_nums;
+    public Integer getFanNums() {
+        return fanNums;
     }
     
-    public void setFans_nums(Integer fans_nums) {
-        this.fans_nums = fans_nums;
+    public void setFanNums(Integer fanNums) {
+        this.fanNums = fanNums;
     }
     
-    public Integer getLike_nums() {
-        return like_nums;
+    public Integer getLikeNums() {
+        return likeNums;
     }
     
-    public void setLike_nums(Integer like_nums) {
-        this.like_nums = like_nums;
+    public void setLikeNums(Integer likeNums) {
+        this.likeNums = likeNums;
     }
     
     @Override
     public String toString() {
         return "BloggerInfo{" +
-                "blogger_id='" + blogger_id + '\'' +
-                ", name='" + name + '\'' +
+                "bloggerId='" + bloggerId + '\'' +
+                ", bloggerName='" + bloggerName + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", signature='" + signature + '\'' +
                 ", address=" + address +
-                ", favorite_blogs=" + favorite_blogs +
-                ", followed_bloggers=" + followed_bloggers +
-                ", registration_date=" + registration_date +
+                ", followedCategories=" + followedCategories +
+                ", favoriteBlogs=" + favoriteBlogs +
+                ", followedBloggers=" + followedBloggers +
+                ", registrationDate=" + registrationDate +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", avatar='" + avatar + '\'' +
-                ", blog_nums=" + blog_nums +
-                ", fans_nums=" + fans_nums +
-                ", like_nums=" + like_nums +
+                ", blogNums=" + blogNums +
+                ", fanNums=" + fanNums +
+                ", likeNums=" + likeNums +
                 '}';
+    }
+    
+    @Override
+    public boolean isNew(){
+        return registrationDate==null;
     }
 }

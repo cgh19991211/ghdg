@@ -1,78 +1,59 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.Set;
 
-@Document(collection = "article")
+@Document(collection = "blog")
 public class Blog extends BaseMongoEntity{
     
     //博客所属博主
-    private String blogger_id;
-    private String blogger_name;
-    private String blogger_avatar;
-    
+    private String bloggerId;
+    private String bloggerName;
+    private String bloggerAvatar;
     //博客内容
     private String title;
     private String content;
-    private Integer like_nums;
-    private Integer view_nums;
-    
+    private Integer likeNums = 0;
+    private Integer viewNums = 0;
+    private String icon;
+    //评论
     private Set<Comment> comments;
-    private Integer comment_nums;
-    
-    private String status;
+    private Integer bloggerNums = 0;
+    //分类
     private Category category;
-    
-    private Date created_date;
-    private Date last_modified_date;
-    
     //博客标签
     private Set<Label> labels;
+    //状态
+    private String status = "生效";
+    private Date createdDate;
+    private Date lastModifiedDate;
+    
     
     public Blog() {
     }
     
-    public Blog(String blogger_id, String blogger_name, String blogger_avatar, String title, String content, Integer like_nums, Integer view_nums, Set<Comment> comments, Integer comment_nums, String status, Category category, Date created_date, Date last_modified_date, Set<Label> labels) {
-        this.blogger_id = blogger_id;
-        this.blogger_name = blogger_name;
-        this.blogger_avatar = blogger_avatar;
+    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, Integer likeNums, Integer viewNums, String icon, Set<Comment> comments, Integer bloggerNums, Category category, Set<Label> labels, String status, Date createdDate, Date lastModifiedDate) {
+        this.bloggerId = bloggerId;
+        this.bloggerName = bloggerName;
+        this.bloggerAvatar = bloggerAvatar;
         this.title = title;
         this.content = content;
-        this.like_nums = like_nums;
-        this.view_nums = view_nums;
+        this.likeNums = likeNums;
+        this.viewNums = viewNums;
+        this.icon = icon;
         this.comments = comments;
-        this.comment_nums = comment_nums;
-        this.status = status;
+        this.bloggerNums = bloggerNums;
         this.category = category;
-        this.created_date = created_date;
-        this.last_modified_date = last_modified_date;
         this.labels = labels;
-    }
-    
-    public String getBlogger_id() {
-        return blogger_id;
-    }
-    
-    public void setBlogger_id(String blogger_id) {
-        this.blogger_id = blogger_id;
-    }
-    
-    public String getBlogger_name() {
-        return blogger_name;
-    }
-    
-    public void setBlogger_name(String blogger_name) {
-        this.blogger_name = blogger_name;
-    }
-    
-    public String getBlogger_avatar() {
-        return blogger_avatar;
-    }
-    
-    public void setBlogger_avatar(String blogger_avatar) {
-        this.blogger_avatar = blogger_avatar;
+        this.status = status;
+        this.createdDate = createdDate;
+        this.lastModifiedDate = lastModifiedDate;
     }
     
     public String getTitle() {
@@ -91,21 +72,6 @@ public class Blog extends BaseMongoEntity{
         this.content = content;
     }
     
-    public Integer getLike_nums() {
-        return like_nums;
-    }
-    
-    public void setLike_nums(Integer like_nums) {
-        this.like_nums = like_nums;
-    }
-    
-    public Integer getView_nums() {
-        return view_nums;
-    }
-    
-    public void setView_nums(Integer view_nums) {
-        this.view_nums = view_nums;
-    }
     
     public Set<Comment> getComments() {
         return comments;
@@ -114,15 +80,7 @@ public class Blog extends BaseMongoEntity{
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
-    
-    public Integer getComment_nums() {
-        return comment_nums;
-    }
-    
-    public void setComment_nums(Integer comment_nums) {
-        this.comment_nums = comment_nums;
-    }
-    
+
     public String getStatus() {
         return status;
     }
@@ -139,21 +97,6 @@ public class Blog extends BaseMongoEntity{
         this.category = category;
     }
     
-    public Date getCreated_date() {
-        return created_date;
-    }
-    
-    public void setCreated_date(Date created_date) {
-        this.created_date = created_date;
-    }
-    
-    public Date getLast_modified_date() {
-        return last_modified_date;
-    }
-    
-    public void setLast_modified_date(Date last_modified_date) {
-        this.last_modified_date = last_modified_date;
-    }
     
     public Set<Label> getLabels() {
         return labels;
@@ -163,24 +106,107 @@ public class Blog extends BaseMongoEntity{
         this.labels = labels;
     }
     
+    public String getIcon() {
+        return icon;
+    }
+    
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+    
+    public String getBloggerId() {
+        return bloggerId;
+    }
+    
+    public void setBloggerId(String bloggerId) {
+        this.bloggerId = bloggerId;
+    }
+    
+    public String getBloggerName() {
+        return bloggerName;
+    }
+    
+    public void setBloggerName(String bloggerName) {
+        this.bloggerName = bloggerName;
+    }
+    
+    public String getBloggerAvatar() {
+        return bloggerAvatar;
+    }
+    
+    public void setBloggerAvatar(String bloggerAvatar) {
+        this.bloggerAvatar = bloggerAvatar;
+    }
+    
+    public Integer getBloggerNums() {
+        return bloggerNums;
+    }
+    
+    public void setBloggerNums(Integer bloggerNums) {
+        this.bloggerNums = bloggerNums;
+    }
+    
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+    
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+    
+    @LastModifiedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+    
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+    
+    public Integer getLikeNums() {
+        return likeNums;
+    }
+    
+    public void setLikeNums(Integer likeNums) {
+        this.likeNums = likeNums;
+    }
+    
+    public Integer getViewNums() {
+        return viewNums;
+    }
+    
+    public void setViewNums(Integer viewNums) {
+        this.viewNums = viewNums;
+    }
+    
     @Override
     public String toString() {
         return "Blog{" +
-                "_id='" + _id + '\'' +
-                ", blogger_id='" + blogger_id + '\'' +
-                ", blogger_name='" + blogger_name + '\'' +
-                ", blogger_avatar='" + blogger_avatar + '\'' +
+                "bloggerId='" + bloggerId + '\'' +
+                ", bloggerName='" + bloggerName + '\'' +
+                ", bloggerAvatar='" + bloggerAvatar + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", like_nums=" + like_nums +
-                ", view_nums=" + view_nums +
+                ", likeNums=" + likeNums +
+                ", viewNums=" + viewNums +
+                ", icon='" + icon + '\'' +
                 ", comments=" + comments +
-                ", comment_nums=" + comment_nums +
-                ", status='" + status + '\'' +
+                ", bloggerNums=" + bloggerNums +
                 ", category=" + category +
-                ", created_date=" + created_date +
-                ", last_modified_date=" + last_modified_date +
                 ", labels=" + labels +
+                ", status='" + status + '\'' +
+                ", createdDate=" + createdDate +
+                ", lastModifiedDate=" + lastModifiedDate +
                 '}';
+    }
+    
+    @Override
+    public boolean isNew(){
+        return createdDate==null;
     }
 }

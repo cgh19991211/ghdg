@@ -1,67 +1,71 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.Set;
 
 @Document(collection = "comment")
 public class Comment extends BaseMongoEntity{
-    private String blog_id;//评论所属文章
-    private String blogger_id;//评论人
-    private String blogger_name;
-    private String blogger_avatar;
+    private String blogId;//评论所属文章
+    private String bloggerId;//评论人
+    private String bloggerName;
+    private String bloggerAvatar;
     private String content;
-    private Date comment_date;
-    private String status;
+    private Date createdDate;// = Instant.now()
+    private String status = "生效";
     private Set<Comment> responses;
-    private Integer level;//1级评论，二级评论，三级评论及往后以@的形式显示在二级评论下
+    private Integer level = 1;//1级评论，二级评论，三级评论及往后以@的形式显示在二级评论下
     
     public Comment() {
     }
     
-    public Comment(String blog_id, String blogger_id, String blogger_name, String blogger_avatar, String content, Date comment_date, String status, Set<Comment> responses, Integer level) {
-        this.blog_id = blog_id;
-        this.blogger_id = blogger_id;
-        this.blogger_name = blogger_name;
-        this.blogger_avatar = blogger_avatar;
+    public Comment(String blogId, String bloggerId, String bloggerName, String bloggerAvatar, String content, Date createdDate, String status, Set<Comment> responses, Integer level) {
+        this.blogId = blogId;
+        this.bloggerId = bloggerId;
+        this.bloggerName = bloggerName;
+        this.bloggerAvatar = bloggerAvatar;
         this.content = content;
-        this.comment_date = comment_date;
+        this.createdDate = createdDate;
         this.status = status;
         this.responses = responses;
         this.level = level;
     }
     
-    public String getBlog_id() {
-        return blog_id;
+    public String getBlogId() {
+        return blogId;
     }
     
-    public void setBlog_id(String blog_id) {
-        this.blog_id = blog_id;
+    public void setBlogId(String blogId) {
+        this.blogId = blogId;
     }
     
-    public String getBlogger_id() {
-        return blogger_id;
+    public String getBloggerId() {
+        return bloggerId;
     }
     
-    public void setBlogger_id(String blogger_id) {
-        this.blogger_id = blogger_id;
+    public void setBloggerId(String bloggerId) {
+        this.bloggerId = bloggerId;
     }
     
-    public String getBlogger_name() {
-        return blogger_name;
+    public String getBloggerName() {
+        return bloggerName;
     }
     
-    public void setBlogger_name(String blogger_name) {
-        this.blogger_name = blogger_name;
+    public void setBloggerName(String bloggerName) {
+        this.bloggerName = bloggerName;
     }
     
-    public String getBlogger_avatar() {
-        return blogger_avatar;
+    public String getBloggerAvatar() {
+        return bloggerAvatar;
     }
     
-    public void setBlogger_avatar(String blogger_avatar) {
-        this.blogger_avatar = blogger_avatar;
+    public void setBloggerAvatar(String bloggerAvatar) {
+        this.bloggerAvatar = bloggerAvatar;
     }
     
     public String getContent() {
@@ -72,12 +76,15 @@ public class Comment extends BaseMongoEntity{
         this.content = content;
     }
     
-    public Date getComment_date() {
-        return comment_date;
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    public Date getCreatedDate() {
+        return createdDate;
     }
     
-    public void setComment_date(Date comment_date) {
-        this.comment_date = comment_date;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
     
     public String getStatus() {
@@ -107,15 +114,20 @@ public class Comment extends BaseMongoEntity{
     @Override
     public String toString() {
         return "Comment{" +
-                "blog_id='" + blog_id + '\'' +
-                ", blogger_id='" + blogger_id + '\'' +
-                ", blogger_name='" + blogger_name + '\'' +
-                ", blogger_avatar='" + blogger_avatar + '\'' +
+                "blogId='" + blogId + '\'' +
+                ", bloggerId='" + bloggerId + '\'' +
+                ", bloggerName='" + bloggerName + '\'' +
+                ", bloggerAvatar='" + bloggerAvatar + '\'' +
                 ", content='" + content + '\'' +
-                ", comment_date=" + comment_date +
+                ", createdDate=" + createdDate +
                 ", status='" + status + '\'' +
                 ", responses=" + responses +
                 ", level=" + level +
                 '}';
+    }
+    
+    @Override
+    public boolean isNew() {
+        return createdDate == null;
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "blogger")
 public class Blogger extends BaseMongoEntity{
-    private String username;
+    private String account;
     private String password;
     private String salt;
     private String status = "生效";
@@ -13,19 +13,19 @@ public class Blogger extends BaseMongoEntity{
     public Blogger() {
     }
     
-    public Blogger(String username, String password, String salt, String status) {
-        this.username = username;
+    public Blogger(String account, String password, String salt, String status) {
+        this.account = account;
         this.password = password;
         this.salt = salt;
         this.status = status;
     }
     
-    public String getUsername() {
-        return username;
+    public String getAccount() {
+        return account;
     }
     
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAccount(String account) {
+        this.account = account;
     }
     
     public String getPassword() {
@@ -56,7 +56,7 @@ public class Blogger extends BaseMongoEntity{
     public String toString() {
         return "Blogger{" +
                 "_id='" + _id + '\'' +
-                ", username='" + username + '\'' +
+                ", account='" + account + '\'' +
                 ", password='" + password + '\'' +
                 ", salt='" + salt + '\'' +
                 ", status='" + status + '\'' +

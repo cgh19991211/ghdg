@@ -1,8 +1,8 @@
 package com.gh.ghdg.businessMgr.dao;
 
 import com.gh.ghdg.businessMgr.bean.entities.BaseMongoEntity;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface BaseMongoRepository<T extends BaseMongoEntity> extends MongoOperations, BloggerRepositoryEnhance {
+
+public interface BaseMongoRepository<T extends BaseMongoEntity> extends MongoRepository<T,String> {
 }
