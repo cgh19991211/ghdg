@@ -2,6 +2,7 @@ package com.gh.ghdg.businessMgr.bean.entities;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 import java.util.Set;
 
 @Document(collection = "category")
@@ -11,12 +12,12 @@ public class Category extends BaseMongoEntity{
     private Integer followedNums = 0;
     private Integer displaySeq = 1;
     private String logo;
-    private Set<Label> labels;
+    private List<Label> labels;
     
     public Category() {
     }
     
-    public Category(String categoryName, String description, Integer followedNums, Integer displaySeq, String logo, Set<Label> labels) {
+    public Category(String categoryName, String description, Integer followedNums, Integer displaySeq, String logo, List<Label> labels) {
         this.categoryName = categoryName;
         this.description = description;
         this.followedNums = followedNums;
@@ -52,11 +53,11 @@ public class Category extends BaseMongoEntity{
         this.logo = logo;
     }
     
-    public Set<Label> getLabels() {
+    public List<Label> getLabels() {
         return labels;
     }
     
-    public void setLabels(Set<Label> labels) {
+    public void setLabels(List<Label> labels) {
         this.labels = labels;
     }
     

@@ -1,6 +1,6 @@
 package com.gh.ghdg.sysMgr.bean.entities;
 
-import com.gh.ghdg.sysMgr.bean.IBaseEnum;
+import com.gh.ghdg.common.enums.IBaseEnum;
 import com.gh.ghdg.sysMgr.bean.enums.EnumException;
 
 import javax.persistence.AttributeConverter;

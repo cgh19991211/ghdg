@@ -8,12 +8,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
+        <module name="fileCenter" />
         <module name="api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="api" target="1.8" />
       <module name="core" target="1.8" />
+      <module name="fileCenter" target="1.8" />
       <module name="ghdg" target="1.8" />
     </bytecodeTargetLevel>
   </component>
@@ -21,6 +23,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api" options="-parameters" />
       <module name="core" options="-parameters" />
+      <module name="fileCenter" options="-parameters" />
     </option>
   </component>
 </project>

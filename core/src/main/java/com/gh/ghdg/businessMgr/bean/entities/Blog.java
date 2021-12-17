@@ -1,12 +1,14 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gh.ghdg.common.enums.Status;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Document(collection = "blog")
@@ -14,7 +16,7 @@ public class Blog extends BaseMongoEntity{
     
     //博客所属博主
     private String bloggerId;
-    private String bloggerName;
+    private String bloggerName;//实际上用的是Blogger的nickname
     private String bloggerAvatar;
     //博客内容
     private String title;
@@ -23,14 +25,15 @@ public class Blog extends BaseMongoEntity{
     private Integer viewNums = 0;
     private String icon;
     //评论
-    private Set<Comment> comments;
-    private Integer bloggerNums = 0;
+    private List<Comment> comments;
+    private Integer commentNums = 0;
     //分类
     private Category category;
     //博客标签
     private Set<Label> labels;
     //状态
-    private String status = "生效";
+    private Status status = Status.审核中;
+    private Boolean isPrivate = false;
     private Date createdDate;
     private Date lastModifiedDate;
     
@@ -38,7 +41,7 @@ public class Blog extends BaseMongoEntity{
     public Blog() {
     }
     
-    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, Integer likeNums, Integer viewNums, String icon, Set<Comment> comments, Integer bloggerNums, Category category, Set<Label> labels, String status, Date createdDate, Date lastModifiedDate) {
+    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, Integer likeNums, Integer viewNums, String icon, List<Comment> comments, Integer commentNums, Category category, Set<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
         this.bloggerAvatar = bloggerAvatar;
@@ -48,10 +51,11 @@ public class Blog extends BaseMongoEntity{
         this.viewNums = viewNums;
         this.icon = icon;
         this.comments = comments;
-        this.bloggerNums = bloggerNums;
+        this.commentNums = commentNums;
         this.category = category;
         this.labels = labels;
         this.status = status;
+        this.isPrivate = isPrivate;
         this.createdDate = createdDate;
         this.lastModifiedDate = lastModifiedDate;
     }
@@ -73,20 +77,28 @@ public class Blog extends BaseMongoEntity{
     }
     
     
-    public Set<Comment> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
     
-    public void setComments(Set<Comment> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
-
-    public String getStatus() {
+    
+    public Status getStatus() {
         return status;
     }
     
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+    
+    public Boolean getPrivate() {
+        return isPrivate;
+    }
+    
+    public void setPrivate(Boolean aPrivate) {
+        isPrivate = aPrivate;
     }
     
     public Category getCategory() {
@@ -138,12 +150,12 @@ public class Blog extends BaseMongoEntity{
         this.bloggerAvatar = bloggerAvatar;
     }
     
-    public Integer getBloggerNums() {
-        return bloggerNums;
+    public Integer getCommentNums() {
+        return commentNums;
     }
     
-    public void setBloggerNums(Integer bloggerNums) {
-        this.bloggerNums = bloggerNums;
+    public void setCommentNums(Integer commentNums) {
+        this.commentNums = commentNums;
     }
     
     @CreatedDate
@@ -196,10 +208,11 @@ public class Blog extends BaseMongoEntity{
                 ", viewNums=" + viewNums +
                 ", icon='" + icon + '\'' +
                 ", comments=" + comments +
-                ", bloggerNums=" + bloggerNums +
+                ", commentNums=" + commentNums +
                 ", category=" + category +
                 ", labels=" + labels +
-                ", status='" + status + '\'' +
+                ", status=" + status +
+                ", isPrivate=" + isPrivate +
                 ", createdDate=" + createdDate +
                 ", lastModifiedDate=" + lastModifiedDate +
                 '}';

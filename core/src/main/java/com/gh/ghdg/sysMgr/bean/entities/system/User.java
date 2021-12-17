@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gh.ghdg.sysMgr.BaseEntity;
 import com.gh.ghdg.sysMgr.bean.Unique;
-import com.gh.ghdg.sysMgr.bean.enums.Status;
+import com.gh.ghdg.common.enums.Status;
 import org.hibernate.annotations.Table;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;

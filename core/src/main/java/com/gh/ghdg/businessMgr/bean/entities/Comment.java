@@ -1,10 +1,12 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gh.ghdg.common.enums.Status;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Convert;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Set;
@@ -12,19 +14,19 @@ import java.util.Set;
 @Document(collection = "comment")
 public class Comment extends BaseMongoEntity{
     private String blogId;//评论所属文章
-    private String bloggerId;//评论人
-    private String bloggerName;
+    private String bloggerId;//评论人id
+    private String bloggerName;//评论人名字
     private String bloggerAvatar;
     private String content;
     private Date createdDate;// = Instant.now()
-    private String status = "生效";
+    private Status status = Status.审核中;//false代表禁用，不可见
     private Set<Comment> responses;
     private Integer level = 1;//1级评论，二级评论，三级评论及往后以@的形式显示在二级评论下
     
     public Comment() {
     }
     
-    public Comment(String blogId, String bloggerId, String bloggerName, String bloggerAvatar, String content, Date createdDate, String status, Set<Comment> responses, Integer level) {
+    public Comment(String blogId, String bloggerId, String bloggerName, String bloggerAvatar, String content, Date createdDate, Status status, Set<Comment> responses, Integer level) {
         this.blogId = blogId;
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
@@ -87,11 +89,12 @@ public class Comment extends BaseMongoEntity{
         this.createdDate = createdDate;
     }
     
-    public String getStatus() {
+    @Convert(converter = Status.Converter.class)
+    public Status getStatus() {
         return status;
     }
     
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
     

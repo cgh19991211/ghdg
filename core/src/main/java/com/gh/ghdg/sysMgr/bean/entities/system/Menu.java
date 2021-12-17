@@ -1,10 +1,9 @@
 package com.gh.ghdg.sysMgr.bean.entities.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gh.ghdg.sysMgr.bean.TreeEntity;
 import com.gh.ghdg.sysMgr.bean.Unique;
-import com.gh.ghdg.sysMgr.bean.enums.Status;
+import com.gh.ghdg.common.enums.Status;
 import com.gh.ghdg.sysMgr.bean.enums.TypeEnum;
 import org.hibernate.validator.constraints.Length;
 

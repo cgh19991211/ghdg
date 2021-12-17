@@ -1,32 +1,35 @@
 package com.gh.ghdg.businessMgr.service;
 
 import com.gh.ghdg.businessMgr.bean.entities.BaseMongoEntity;
-import com.gh.ghdg.businessMgr.dao.BaseMongoRepository;
-import com.gh.ghdg.businessMgr.dao.impl.MyMongoRepositoryImpl;
+import com.gh.ghdg.businessMgr.Repository.BaseMongoRepository;
+import com.gh.ghdg.businessMgr.Repository.impl.MyMongoRepositoryImpl;
+import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
-import javax.management.Query;
 import javax.transaction.Transactional;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 public abstract class BaseMongoService<T extends BaseMongoEntity, S extends BaseMongoRepository<T>> {
     
-    private Class<T> klass;
+    protected Class<T> klass;
     
     public BaseMongoService(){
         klass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
     
     @Autowired
-    S dao;
+    protected S dao;
     @Autowired
-    MyMongoRepositoryImpl template;
+    protected MyMongoRepositoryImpl template;
     @Autowired
-    MongoTemplate mongoTemplate;
+    protected MongoTemplate mongoTemplate;
+    @Autowired
+    protected MyMongoRepositoryImpl myMongoRepository;
     
     @Transactional
     public T save(T t){
@@ -39,15 +42,23 @@ public abstract class BaseMongoService<T extends BaseMongoEntity, S extends Base
     }
     
     @Transactional
-    public void delete(T t){
+    protected void delete(T t){
         dao.delete(t);
     }
     
-    @Transactional
     public List<T> findAll(){
         return mongoTemplate.findAll(klass);
     }
     
+    public Page<T> queryPage(Page page){
+        if(page.getFilters()==null)
+            return myMongoRepository.queryPage(page,klass);
+        else{
+            Criteria criteria = parstFilters(page.getFilters());
+            Query query = Query.query(criteria);
+            return myMongoRepository.queryPage(page,query,klass);
+        }
+    }
     
     protected Criteria parstFilters(List<SearchFilter> filters){
         Criteria criteria = new Criteria();

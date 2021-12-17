@@ -2,7 +2,7 @@ package com.gh.ghdg.common.security;
 
 import com.gh.ghdg.common.utils.SpringContextUtil;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
-import com.gh.ghdg.sysMgr.bean.enums.Status;
+import com.gh.ghdg.common.enums.Status;
 import com.gh.ghdg.sysMgr.core.dao.system.MenuDao;
 import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;

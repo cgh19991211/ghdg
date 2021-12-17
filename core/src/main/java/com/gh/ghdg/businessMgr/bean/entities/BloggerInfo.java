@@ -7,7 +7,7 @@ import com.gh.ghdg.businessMgr.bean.entities.sub.Address;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Document(collection = "blogger_info")
 public class BloggerInfo extends BaseMongoEntity{
@@ -15,10 +15,10 @@ public class BloggerInfo extends BaseMongoEntity{
     private String bloggerName = "unknown";
     private String nickname = "unknown";
     private String signature = "unknown";//个性签名
-    private Address address;
-    private Set<Category> followedCategories;//关注的分类
-    private Set<Blog> favoriteBlogs;//收藏的博客
-    private Set<Blogger> followedBloggers;//关注的博主
+    private Address address = null;
+    private List<Category> followedCategories = null;//关注的分类
+    private List<Blog> favoriteBlogs = null;//收藏的博客
+    private List<BloggerInfo> followedBloggers = null;//关注的博主   ---这里应该用BloggerInfo才对
     private Date registrationDate;
     private String phone = "unknown";
     private String email = "unknown";
@@ -30,7 +30,7 @@ public class BloggerInfo extends BaseMongoEntity{
     public BloggerInfo() {
     }
     
-    public BloggerInfo(String bloggerId, String bloggerName, String nickname, String signature, Address address, Set<Category> followedCategories, Set<Blog> favoriteBlogs, Set<Blogger> followedBloggers, Date registrationDate, String phone, String email, String avatar, Integer blogNums, Integer fanNums, Integer likeNums) {
+    public BloggerInfo(String bloggerId, String bloggerName, String nickname, String signature, Address address, List<Category> followedCategories, List<Blog> favoriteBlogs, List<BloggerInfo> followedBloggers, Date registrationDate, String phone, String email, String avatar, Integer blogNums, Integer fanNums, Integer likeNums) {
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
         this.nickname = nickname;
@@ -88,27 +88,27 @@ public class BloggerInfo extends BaseMongoEntity{
         this.address = address;
     }
     
-    public Set<Category> getFollowedCategories() {
+    public List<Category> getFollowedCategories() {
         return followedCategories;
     }
     
-    public void setFollowedCategories(Set<Category> followedCategories) {
+    public void setFollowedCategories(List<Category> followedCategories) {
         this.followedCategories = followedCategories;
     }
     
-    public Set<Blog> getFavoriteBlogs() {
+    public List<Blog> getFavoriteBlogs() {
         return favoriteBlogs;
     }
     
-    public void setFavoriteBlogs(Set<Blog> favoriteBlogs) {
+    public void setFavoriteBlogs(List<Blog> favoriteBlogs) {
         this.favoriteBlogs = favoriteBlogs;
     }
     
-    public Set<Blogger> getFollowedBloggers() {
+    public List<BloggerInfo> getFollowedBloggers() {
         return followedBloggers;
     }
     
-    public void setFollowedBloggers(Set<Blogger> followedBloggers) {
+    public void setFollowedBloggers(List<BloggerInfo> followedBloggers) {
         this.followedBloggers = followedBloggers;
     }
     

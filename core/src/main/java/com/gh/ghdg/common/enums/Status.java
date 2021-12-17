@@ -1,10 +1,10 @@
-package com.gh.ghdg.sysMgr.bean.enums;
+package com.gh.ghdg.common.enums;
 
-import com.gh.ghdg.sysMgr.bean.IBaseEnum;
 import com.gh.ghdg.sysMgr.bean.entities.EnumConverter;
 
 public enum Status implements IBaseEnum<Integer> {
     
+    审核中(2),
     生效(1),
     失效(0);
 

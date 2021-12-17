@@ -1,6 +1,7 @@
-package com.gh.ghdg.businessMgr.dao.impl;
+package com.gh.ghdg.businessMgr.Repository.impl;
 
 import com.gh.ghdg.businessMgr.bean.entities.BaseMongoEntity;
+import com.gh.ghdg.businessMgr.Repository.BaseMongoRepository;
 import com.gh.ghdg.common.commonVo.Page;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created on 2017/12/29 0029.
@@ -29,7 +27,7 @@ import java.util.Objects;
  * @Author enilu
  */
 @Repository
-public class MyMongoRepositoryImpl<T extends BaseMongoEntity> {
+public class MyMongoRepositoryImpl<T extends BaseMongoEntity,D extends BaseMongoRepository> {
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -41,6 +39,54 @@ public class MyMongoRepositoryImpl<T extends BaseMongoEntity> {
     public void save(Object data, String collectionName) {
         mongoTemplate.save(data, collectionName);
 
+    }
+    
+    /**
+     * 添加嵌套文档
+     * @param map
+     * @param klass
+     * @param fieldName
+     * @param d
+     * @param ids
+     * @return
+     */
+    public  UpdateResult add(Map<String,Object> map, Class<T> klass, String fieldName, D d, String... ids){
+        Query query = Query.query(criteria(map));
+        Update update = new Update();
+        List<T> list = new ArrayList<>();
+        for(String id:ids){
+            Optional<T> byId = d.findById(id);
+            if(byId.isPresent()){
+                list.add(byId.get());
+            }
+        }
+        update.addToSet(fieldName).each(list);
+        return mongoTemplate.updateFirst(query,update, klass);
+    }
+    
+    /**
+     * 删除嵌套文档元素
+     * @param map
+     * @param klass
+     * @param fieldName
+     * @param d
+     * @param ids
+     * @param <T>
+     * @param <D>
+     * @return
+     */
+    public <T extends BaseMongoEntity, D extends BaseMongoRepository> UpdateResult remove(Map<String,Object> map, Class<T> klass, String fieldName, D d, String... ids){
+        Query query = Query.query(criteria(map));
+        Update update = new Update();
+        List<T> list = new ArrayList<>();
+        for(String id:ids){
+            Optional<T> byId = d.findById(id);
+            if(byId.isPresent()){
+                list.add(byId.get());
+            }
+        }
+        update.pullAll(fieldName,list.toArray());
+        return mongoTemplate.updateFirst(query,update,klass);
     }
 
     public void delete(String id, String collectionName) {
@@ -129,14 +175,17 @@ public class MyMongoRepositoryImpl<T extends BaseMongoEntity> {
     }
 
     public Page<T> queryPage(Page<T> page, Class<T> klass, Map<String, Object> params) {
-        Pageable pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(), Sort.Direction.DESC, "_id");
-        Query query = new Query();
+        Pageable pageable;
+        if(page.getSort()==null)
+            pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(), Sort.Direction.DESC, "_id");
+        else
+            pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(),page.getSort());        Query query = new Query();
         if (params != null && !params.isEmpty()) {
             Criteria criteria = criteria(params);
             query = Query.query(criteria);
         }
         List<T> list = mongoTemplate.find(query.with(pageable), klass);
-        Long count = count(klass, params);
+        Long count = count(klass, params);//每次都count太耗资源、时间了
         page.setTotal(count.intValue());
         page.setRecords(list);
         return page;
@@ -146,10 +195,17 @@ public class MyMongoRepositoryImpl<T extends BaseMongoEntity> {
         if(query==null){
             return queryPage(page,klass);
         }
-        Pageable pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(), Sort.Direction.DESC, "_id");
+        Pageable pageable;
+        if(page.getSort()==null)
+            pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(), Sort.Direction.DESC, "_id");
+        else
+            pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(),page.getSort());
         List<T> list = mongoTemplate.find(query.with(pageable), klass);
+        
+        //改成思否的滚动翻页就可以取消page的total计算
         Long count = mongoTemplate.count(query,klass);
         page.setTotal(count.intValue());
+        
         page.setRecords(list);
         return page;
     }

@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableCaching
 @ComponentScan(basePackages = "com.gh.ghdg")
 @EntityScan(basePackages = "com.gh.ghdg.sysMgr.bean.entities")
-@EnableMongoRepositories(basePackages = "com.gh.ghdg.businessMgr.dao")
+@EnableMongoRepositories(basePackages = "com.gh.ghdg.businessMgr.Repository")
 @EnableJpaRepositories(basePackages = "com.gh.ghdg.sysMgr.core.dao")
 @EnableTransactionManagement
 @EnableJpaAuditing

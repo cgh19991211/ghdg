@@ -1,7 +1,6 @@
-package com.gh.ghdg.businessMgr.dao;
+package com.gh.ghdg.businessMgr.Repository;
 
 import com.gh.ghdg.businessMgr.bean.entities.BloggerInfo;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 

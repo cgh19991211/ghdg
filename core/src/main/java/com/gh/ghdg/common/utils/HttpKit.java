@@ -74,7 +74,10 @@ public class HttpKit {
     public static String getRefreshToken(){
         return  getRequest().getHeader(Constants.REFRESH_TOKEN_NAME);
     }
-
+    public static String getBloggerAccessToken(){
+        return  getRequest().getHeader(Constants.Blogger_ACCESS_TOKEN);
+    }
+    public static String getBloggerRefreshToken(){return  getRequest().getHeader(Constants.Blogger_REFRESH_TOKEN);}
     /**
      * 向指定URL发送GET方法的请求
      *

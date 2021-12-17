@@ -1,7 +1,7 @@
 package com.gh.ghdg.api.controller.business;
 
 import com.gh.ghdg.businessMgr.bean.entities.Label;
-import com.gh.ghdg.businessMgr.dao.LabelRepository;
+import com.gh.ghdg.businessMgr.Repository.LabelRepository;
 import com.gh.ghdg.businessMgr.service.LabelService;
 import com.gh.ghdg.common.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;

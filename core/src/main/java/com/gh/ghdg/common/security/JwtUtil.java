@@ -153,7 +153,10 @@ public class JwtUtil {
     }
     
     public static String getCurBloggerId(){
-        String accessToken = HttpKit.getAccessToken();
+        String accessToken = HttpKit.getBloggerAccessToken();
+        if(StrUtil.isEmpty(accessToken)){
+            return null;
+        }
         String id = "";
         try {
             DecodedJWT jwt = JWT.decode(accessToken);
@@ -176,8 +179,6 @@ public class JwtUtil {
     }
 
     /**
-     * 生成token,5min后过期
-     *
      * @param user 用户
      * @return 加密的token
      */

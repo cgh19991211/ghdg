@@ -1,11 +1,10 @@
 package com.gh.ghdg.api.controller.business;
 
 import com.gh.ghdg.businessMgr.bean.entities.Blacklist;
-import com.gh.ghdg.businessMgr.dao.BlacklistRepository;
+import com.gh.ghdg.businessMgr.Repository.BlacklistRepository;
 import com.gh.ghdg.businessMgr.service.BlacklistService;
 import com.gh.ghdg.common.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -7,6 +7,8 @@ public class Constants {
     public static String SYSTEM_USER_ID="-1";
     public static String ACCESS_TOKEN_NAME ="AccessToken";
     public static String REFRESH_TOKEN_NAME ="RefreshToken";
+    public static String Blogger_ACCESS_TOKEN = "BloggerAccessToken";
+    public static String Blogger_REFRESH_TOKEN = "BloggerRefreshToken";
     public static String REFRESH_TOKEN_START_TIME = "RefreshTokenStartTime";
     public static String TOKEN = "token";
     public static String TOKEN_TYPE = "type";

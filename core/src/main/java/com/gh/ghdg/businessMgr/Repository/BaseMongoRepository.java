@@ -1,4 +1,4 @@
-package com.gh.ghdg.businessMgr.dao;
+package com.gh.ghdg.businessMgr.Repository;
 
 import com.gh.ghdg.businessMgr.bean.entities.BaseMongoEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;

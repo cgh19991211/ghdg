@@ -1,4 +1,4 @@
-package com.gh.ghdg.sysMgr.bean;
+package com.gh.ghdg.common.enums;
 
 public interface IBaseEnum<T> {
     T getValue();

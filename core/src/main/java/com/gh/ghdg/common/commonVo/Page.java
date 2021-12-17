@@ -16,7 +16,7 @@ public class Page<T>  {
     private Sort sort;
     
     /**
-     * 该操作只是为了忽略RowBounds属性
+     * 偏移量--就是mongo中的skip属性
      */
     private transient int offset;
     

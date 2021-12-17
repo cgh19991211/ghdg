@@ -1,4 +1,4 @@
-package com.gh.ghdg.businessMgr.dao;
+package com.gh.ghdg.businessMgr.Repository;
 
 import com.gh.ghdg.businessMgr.bean.entities.Comment;
 
@@ -8,4 +8,5 @@ public interface CommentRepository extends BaseMongoRepository<Comment> {
     Comment findByBloggerId(String id);
     Comment findByBloggerName(String name);
     List<Comment> findAllByContentLike(String content);
+    List<Comment> findAllByBlogId(String id);
 }

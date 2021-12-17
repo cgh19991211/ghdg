@@ -1,7 +1,7 @@
 package com.gh.ghdg.businessMgr.service;
 
 import com.gh.ghdg.businessMgr.bean.entities.Label;
-import com.gh.ghdg.businessMgr.dao.LabelRepository;
+import com.gh.ghdg.businessMgr.Repository.LabelRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

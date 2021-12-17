@@ -9,29 +9,18 @@ import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.gh.ghdg.sysMgr.bean.dto.MenuDto;
 import com.gh.ghdg.sysMgr.bean.dto.MenuDtoFactory;
 import com.gh.ghdg.sysMgr.bean.entities.system.*;
-import com.gh.ghdg.sysMgr.bean.enums.Status;
 import com.gh.ghdg.sysMgr.core.dao.system.MenuDao;
 import com.gh.ghdg.sysMgr.core.dao.system.RoleDao;
 import com.gh.ghdg.sysMgr.core.dao.system.RoleMenuDao;
-import com.gh.ghdg.sysMgr.core.dao.system.RoleMenuPermissionDao;
 import com.gh.ghdg.sysMgr.core.service.system.MenuService;
 //import io.swagger.v3.oas.annotations.Operation;
 //import io.swagger.v3.oas.annotations.Parameter;
 //import io.swagger.v3.oas.annotations.Parameters;
 //import io.swagger.v3.oas.annotations.tags.Tag;
-import com.gh.ghdg.sysMgr.core.service.system.RoleMenuPermissionService;
-import com.gh.ghdg.sysMgr.core.service.system.RoleMenuService;
-import com.gh.ghdg.sysMgr.core.service.system.RoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.web.bind.ServletRequestDataBinder;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 //@Api(tags = "菜单接口")

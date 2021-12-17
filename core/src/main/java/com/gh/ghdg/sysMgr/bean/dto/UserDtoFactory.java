@@ -5,7 +5,7 @@ import com.gh.ghdg.common.utils.SpringContextUtil;
 import com.gh.ghdg.common.utils.exception.MyException;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.bean.entities.system.UserRole;
-import com.gh.ghdg.sysMgr.bean.enums.Status;
+import com.gh.ghdg.common.enums.Status;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import com.gh.ghdg.sysMgr.core.service.system.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;

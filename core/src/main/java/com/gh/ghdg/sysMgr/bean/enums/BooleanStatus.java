@@ -1,6 +1,6 @@
 package com.gh.ghdg.sysMgr.bean.enums;
 
-import com.gh.ghdg.sysMgr.bean.IBaseEnum;
+import com.gh.ghdg.common.enums.IBaseEnum;
 import com.gh.ghdg.sysMgr.bean.entities.EnumConverter;
 
 public enum BooleanStatus implements IBaseEnum<Boolean> {

@@ -1,5 +1,7 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gh.ghdg.common.enums.Status;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -8,12 +10,12 @@ public class Blogger extends BaseMongoEntity{
     private String account;
     private String password;
     private String salt;
-    private String status = "生效";
+    private Status status = Status.生效;//status为0表示被拉黑
     
     public Blogger() {
     }
     
-    public Blogger(String account, String password, String salt, String status) {
+    public Blogger(String account, String password, String salt, Status status) {
         this.account = account;
         this.password = password;
         this.salt = salt;
@@ -28,6 +30,7 @@ public class Blogger extends BaseMongoEntity{
         this.account = account;
     }
     
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -36,6 +39,7 @@ public class Blogger extends BaseMongoEntity{
         this.password = password;
     }
     
+    @JsonIgnore
     public String getSalt() {
         return salt;
     }
@@ -44,18 +48,17 @@ public class Blogger extends BaseMongoEntity{
         this.salt = salt;
     }
     
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
     
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
     
     @Override
     public String toString() {
         return "Blogger{" +
-                "_id='" + _id + '\'' +
                 ", account='" + account + '\'' +
                 ", password='" + password + '\'' +
                 ", salt='" + salt + '\'' +

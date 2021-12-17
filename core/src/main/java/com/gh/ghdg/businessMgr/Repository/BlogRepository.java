@@ -1,4 +1,4 @@
-package com.gh.ghdg.businessMgr.dao;
+package com.gh.ghdg.businessMgr.Repository;
 
 import com.gh.ghdg.businessMgr.bean.entities.Blog;
 import com.gh.ghdg.businessMgr.bean.entities.Category;

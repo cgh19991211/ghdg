@@ -1,7 +1,7 @@
 package com.gh.ghdg.api.controller.business;
 
 import com.gh.ghdg.businessMgr.bean.entities.Category;
-import com.gh.ghdg.businessMgr.dao.CategoryRepository;
+import com.gh.ghdg.businessMgr.Repository.CategoryRepository;
 import com.gh.ghdg.businessMgr.service.CategoryService;
 import com.gh.ghdg.common.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,17 @@ public class CategoryController extends BaseMongoController<Category, CategoryRe
     
     @PostMapping("/delete")
     public Result deleteCategory(@ModelAttribute("t")Category t){
-        categoryService.delete(t);
+        categoryService.deleteCategory(t);
         return Result.suc("删除成功");
+    }
+    
+    @PostMapping("/assignLabels")
+    public Result assignLabels(@RequestParam String categoryId, @RequestParam String labelIds){
+        return Result.suc(categoryService.assignLabels(categoryId,labelIds));
+    }
+    
+    @PostMapping("/removeLabels")
+    public Result removeLabels(@RequestParam String categoryId, @RequestParam String... labelIds){
+        return Result.suc("remove labels",categoryService.removeLabels(categoryId,labelIds));
     }
 }

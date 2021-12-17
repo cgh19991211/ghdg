@@ -1,4 +1,4 @@
-package com.gh.ghdg.api.utils;
+package com.gh.ghdg.api.interceptor;
 
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.common.utils.constant.Constants;
