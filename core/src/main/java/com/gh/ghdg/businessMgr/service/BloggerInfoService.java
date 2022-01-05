@@ -5,6 +5,8 @@ import com.gh.ghdg.businessMgr.Repository.*;
 import com.gh.ghdg.businessMgr.Repository.impl.MyMongoRepositoryImpl;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,12 +27,16 @@ public class BloggerInfoService extends BaseMongoService<BloggerInfo, BloggerInf
     @Autowired
     private BloggerInfoRepository bloggerInfoRepository;
 
-    public BloggerInfo findById(String id){
-        Optional<BloggerInfo> byId = dao.findById(id);
-        if(byId.isPresent())return byId.get();
-        return null;
+    public BloggerInfo findByBloggerId(String id){
+        BloggerInfo bloggerInfo = mongoTemplate.findOne(Query.query(Criteria.where("bloggerId").is(id)), BloggerInfo.class);
+        return bloggerInfo;
     }
-
+    
+    /**
+     * 根据博主真名（bloggerName）获取博主信息
+     * @param name
+     * @return
+     */
     public BloggerInfo findByName(String name){
         return dao.findByBloggerNameEquals(name);
     }

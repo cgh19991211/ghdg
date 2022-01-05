@@ -61,7 +61,7 @@ public abstract class BaseMongoService<T extends BaseMongoEntity, S extends Base
     }
     
     protected Criteria parstFilters(List<SearchFilter> filters){
-        Criteria criteria = new Criteria();
+        Criteria criteria = null;
         for(SearchFilter filter:filters){
             String fieldName = filter.fieldName;
             SearchFilter.Operator operator = filter.operator;
@@ -73,54 +73,70 @@ public abstract class BaseMongoService<T extends BaseMongoEntity, S extends Base
                     }else{
                         criteria.and(fieldName).is(value);
                     }
+                    break;
+                case NEQ:
+                    if(criteria==null){
+                        criteria = Criteria.where(fieldName).ne(value);
+                    }else{
+                        criteria.and(fieldName).ne(value);
+                    }
+                    break;
                 case GT:
                     if(criteria==null){
                         criteria = Criteria.where(fieldName).gt(value);
                     }else{
                         criteria.and(fieldName).gt(value);
                     }
+                    break;
                 case GTE:
                     if(criteria==null){
                         criteria = Criteria.where(fieldName).gte(value);
                     }else{
                         criteria.and(fieldName).gte(value);
                     }
+                    break;
                 case LT:
                     if(criteria==null){
                         criteria = Criteria.where(fieldName).lt(value);
                     }else{
                         criteria.and(fieldName).lt(value);
                     }
+                    break;
                 case LTE:
                     if(criteria==null){
                         criteria = Criteria.where(fieldName).lte(value);
                     }else{
                         criteria.and(fieldName).lte(value);
                     }
+                    break;
                 case IN:
                     if(criteria==null){
                         criteria = Criteria.where(fieldName).in(value);
                     }else{
                         criteria.and(fieldName).in(value);
                     }
+                    break;
                 case ISNULL:
                     if(criteria==null){
                         criteria = Criteria.where(fieldName).exists(false);
                     }else{
                         criteria.and(fieldName).exists(false);
                     }
+                    break;
                 case NOTNULL:
                     if(criteria==null){
                         criteria = Criteria.where(fieldName).exists(true);
                     }else{
                         criteria.and(fieldName).exists(true);
                     }
+                    break;
                 case LIKE:
                     if(criteria==null){
                         criteria = Criteria.where(fieldName).regex("%"+value+"%");
                     }else{
                         criteria.and(fieldName).regex("%"+value+"%");
                     }
+                    break;
             }
         }
         return criteria;

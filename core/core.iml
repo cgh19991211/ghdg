@@ -176,5 +176,7 @@
     <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.4.9" level="project" />
     <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.11.1" level="project" />
+    <orderEntry type="library" name="Maven: com.google.auto.value:auto-value-annotations:1.9" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.auto.value:auto-value:1.9" level="project" />
   </component>
 </module>

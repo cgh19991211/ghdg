@@ -4,13 +4,17 @@ import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.businessMgr.bean.entities.Blog;
 import com.gh.ghdg.businessMgr.bean.entities.Category;
 import com.gh.ghdg.businessMgr.Repository.BlogRepository;
+import com.gh.ghdg.businessMgr.bean.entities.TestAutoValue;
 import com.gh.ghdg.businessMgr.service.BlogService;
 import com.gh.ghdg.common.commonVo.Page;
+import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.Result;
+import org.checkerframework.framework.qual.RequiresQualifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -29,15 +33,13 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         Sort sort = null;
         if(StrUtil.equals(tab,"hot")){
             //获取最热
-            String[] hot = {"commentNums","likeNums","viewNums"};
-            sort = Sort.by(Sort.Direction.DESC,hot);
+            return Result.suc(queryHotspot(page));
         }else if(StrUtil.equals(tab,"latest")){
             //获取最新
-            String[] latest = {"createdDate","lastModifiedDate"};
-            sort = Sort.by(Sort.Direction.DESC,latest);
+            return Result.suc(queryLatest(page));
         }
-        page.setSort(sort);
-        return Result.suc(super.queryPage(page));
+        //tab不为"hot"||"latest"
+        return Result.suc(queryPage(page));
     }
 
     /**
@@ -46,10 +48,7 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
      */
     @GetMapping("/queryHotspot")
     public Result queryHotspot(@ModelAttribute Page page){
-        String[] properties = new String[3];
-        properties[0] = "commentNums";
-        properties[1] = "likeNums";
-        properties[2] = "viewNums";
+        String[] properties = new String[]{"likeNums","viewNums"};
         Sort sort = Sort.by(Sort.Direction.DESC, properties);
         page.setSort(sort);
         return Result.suc(super.queryPage(page));
@@ -62,17 +61,22 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
      */
     @GetMapping("/queryLatest")
     public Result queryLatest(@ModelAttribute Page page){
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdDate");
+        String[] latest = {"createdDate","lastModifiedDate"};
+        Sort sort = Sort.by(Sort.Direction.DESC, latest);
         page.setSort(sort);
         return Result.suc(super.queryPage(page));
     }
     
     
-    @GetMapping("/findById")
-    public Result findByBloggerId(@RequestParam String id){
+    @GetMapping("/findByBlogId")
+    public Result findByBlogId(@RequestParam String id){
         Optional<Blog> optional = blogService.findById(id);
-        if(optional.isPresent())
-            return Result.suc("by blogger id",optional.get());
+        if(optional.isPresent()){
+            Blog blog = optional.get();
+            blogService.addViewNum(blog);
+            return Result.suc("by blog id",blog);
+        }
+    
         return Result.error("blog is not exist");
     }
     
@@ -116,5 +120,19 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     public Result removeLabels(@RequestParam String blogId, @RequestParam String... ids){
         return Result.suc(blogService.removeLabels(blogId,ids));
     }
+    
+    /**
+     * 博客详情页面显示该博主的其他博客列表
+     * @return
+     */
+    @GetMapping("/recommend")
+    public Result recommend(@RequestParam String id, @RequestParam String blogId){
+        Page page = new Page();
+        page.setLimit(10);
+        page.addFilter(SearchFilter.build("_id",SearchFilter.Operator.NEQ,blogId));
+        page.addFilter(SearchFilter.build("bloggerId",SearchFilter.Operator.EQ,id));
+        return Result.suc(super.queryPage(page));
+    }
+    
     
 }

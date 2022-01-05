@@ -22,15 +22,16 @@ public class Blog extends BaseMongoEntity{
     private String title;
     private String content;
     private Integer likeNums = 0;
+    private Integer badNums = 0;
     private Integer viewNums = 0;
     private String icon;
     //评论
-    private List<Comment> comments;
-    private Integer commentNums = 0;
+//    private List<Comment> comments;
+//    private Integer commentNums = 0;
     //分类
     private Category category;
     //博客标签
-    private Set<Label> labels;
+    private List<Label> labels;
     //状态
     private Status status = Status.审核中;
     private Boolean isPrivate = false;
@@ -41,7 +42,7 @@ public class Blog extends BaseMongoEntity{
     public Blog() {
     }
     
-    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, Integer likeNums, Integer viewNums, String icon, List<Comment> comments, Integer commentNums, Category category, Set<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
+    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, Integer likeNums,Integer badNums, Integer viewNums, String icon, Category category, List<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
         this.bloggerAvatar = bloggerAvatar;
@@ -50,14 +51,23 @@ public class Blog extends BaseMongoEntity{
         this.likeNums = likeNums;
         this.viewNums = viewNums;
         this.icon = icon;
-        this.comments = comments;
-        this.commentNums = commentNums;
+//        this.comments = comments;
+//        this.commentNums = commentNums;
+        this.badNums = badNums;
         this.category = category;
         this.labels = labels;
         this.status = status;
         this.isPrivate = isPrivate;
         this.createdDate = createdDate;
         this.lastModifiedDate = lastModifiedDate;
+    }
+    
+    public Integer getBadNums() {
+        return badNums;
+    }
+    
+    public void setBadNums(Integer badNums) {
+        this.badNums = badNums;
     }
     
     public String getTitle() {
@@ -77,13 +87,13 @@ public class Blog extends BaseMongoEntity{
     }
     
     
-    public List<Comment> getComments() {
-        return comments;
-    }
-    
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+//    public List<Comment> getComments() {
+//        return comments;
+//    }
+//
+//    public void setComments(List<Comment> comments) {
+//        this.comments = comments;
+//    }
     
     public Status getStatus() {
         return status;
@@ -110,11 +120,11 @@ public class Blog extends BaseMongoEntity{
     }
     
     
-    public Set<Label> getLabels() {
+    public List<Label> getLabels() {
         return labels;
     }
     
-    public void setLabels(Set<Label> labels) {
+    public void setLabels(List<Label> labels) {
         this.labels = labels;
     }
     
@@ -149,14 +159,14 @@ public class Blog extends BaseMongoEntity{
     public void setBloggerAvatar(String bloggerAvatar) {
         this.bloggerAvatar = bloggerAvatar;
     }
-    
-    public Integer getCommentNums() {
-        return commentNums;
-    }
-    
-    public void setCommentNums(Integer commentNums) {
-        this.commentNums = commentNums;
-    }
+//
+//    public Integer getCommentNums() {
+//        return commentNums;
+//    }
+//
+//    public void setCommentNums(Integer commentNums) {
+//        this.commentNums = commentNums;
+//    }
     
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
@@ -207,8 +217,9 @@ public class Blog extends BaseMongoEntity{
                 ", likeNums=" + likeNums +
                 ", viewNums=" + viewNums +
                 ", icon='" + icon + '\'' +
-                ", comments=" + comments +
-                ", commentNums=" + commentNums +
+//                ", comments=" + comments +
+//                ", commentNums=" + commentNums +
+                ", badNums=" + badNums +
                 ", category=" + category +
                 ", labels=" + labels +
                 ", status=" + status +

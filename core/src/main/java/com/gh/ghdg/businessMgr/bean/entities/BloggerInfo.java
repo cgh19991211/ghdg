@@ -12,7 +12,7 @@ import java.util.List;
 @Document(collection = "blogger_info")
 public class BloggerInfo extends BaseMongoEntity{
     private String bloggerId;//外键，指向Blogger的_id字段
-    private String bloggerName = "unknown";
+    private String bloggerName = "unknown";//博主真名
     private String nickname = "unknown";
     private String signature = "unknown";//个性签名
     private Address address = null;

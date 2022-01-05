@@ -32,16 +32,16 @@ public class CommentService extends BaseMongoService<Comment, CommentRepository>
     
     @Transactional
     public Comment addComment(Comment comment){
-        String bloggerId = comment.getBloggerId();
-        String blogId = comment.getBlogId();
-        blogService.addComment(blogId,comment);
+//        String bloggerId = comment.getBloggerId();
+//        String blogId = comment.getBlogId();
+//        blogService.addComment(blogId,comment);
         
         return dao.save(comment);
     }
     
     @Transactional
     public void deleteComment(Comment comment){
-        blogService.removeComment(comment);
+//        blogService.removeComment(comment);
         dao.delete(comment);
     }
     

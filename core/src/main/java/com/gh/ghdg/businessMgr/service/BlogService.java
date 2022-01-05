@@ -10,6 +10,7 @@ import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -77,22 +78,29 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
         return myMongoRepository.remove(map, Blog.class,"labels",labelRepository,ids);
     }
     
-    @Transactional
-    public void addComment(String blogId, Comment comment){
-        Optional<Blog> byId = dao.findById(blogId);
-        if(!byId.isPresent())return;
-        Blog blog = byId.get();
-        if(blog.getComments()==null){
-            blog.setComments(new ArrayList<>());
-        }
-        blog.getComments().add(comment);
-        mongoTemplate.save(blog);
-    }
+//    @Transactional
+//    public void addComment(String blogId, Comment comment){
+//        Optional<Blog> byId = dao.findById(blogId);
+//        if(!byId.isPresent())return;
+//        Blog blog = byId.get();
+//        if(blog.getComments()==null){
+//            blog.setComments(new ArrayList<>());
+//        }
+//        blog.getComments().add(comment);
+//        mongoTemplate.save(blog);
+//    }
+
+//    @Transactional
+//    public void removeComment(Comment comment){
+//        Map<String,Object> map = new HashMap<>();
+//        map.put("blogId",comment.blogId());
+//        myMongoRepository.remove(map,Blog.class,"comments",commentRepository,comment.get_id());
+//    }
     
     @Transactional
-    public void removeComment(Comment comment){
-        Map<String,Object> map = new HashMap<>();
-        map.put("blogId",comment.getBlogId());
-        myMongoRepository.remove(map,Blog.class,"comments",commentRepository,comment.get_id());
+    public void addViewNum(Blog blog){
+        Update update = new Update();
+        update.set("viewNums",blog.getViewNums()+1);
+        mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(blog.get_id())),update,Blog.class);
     }
 }

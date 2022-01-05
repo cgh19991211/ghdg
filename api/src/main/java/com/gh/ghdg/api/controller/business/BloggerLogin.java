@@ -105,6 +105,6 @@ public class BloggerLogin {
         if(StrUtil.isEmpty(curBloggerId)){
             return Result.suc("当前用户未登录");
         }
-        return Result.suc(bloggerInfoService.findById(curBloggerId));
+        return Result.suc(bloggerInfoService.findByBloggerId(curBloggerId));
     }
 }

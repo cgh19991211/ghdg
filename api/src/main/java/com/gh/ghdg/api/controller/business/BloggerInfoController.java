@@ -10,6 +10,8 @@ import com.gh.ghdg.common.utils.exception.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("business/bloggerInfo")
 public class BloggerInfoController extends BaseMongoController<BloggerInfo, BloggerInfoRepository, BloggerInfoService> {
@@ -25,7 +27,7 @@ public class BloggerInfoController extends BaseMongoController<BloggerInfo, Blog
             throw new MyException("博主id不得为空");
         }
         if(StrUtil.isEmpty(t.getBloggerName())){
-            throw new MyException("博主账户不得为空");
+            throw new MyException("博主名字不得为空");
         }
         return Result.suc("add",bloggerInfoService.save(t));
     }
@@ -33,17 +35,26 @@ public class BloggerInfoController extends BaseMongoController<BloggerInfo, Blog
     @PostMapping("/update")
     public Result updateBloggerInfo(@ModelAttribute("t") BloggerInfo t){
         if(StrUtil.isEmpty(t.get_id())){
-            throw new MyException("该用户不存在(_id为空)");
+            throw new MyException("博主信息_id不得为空");
         }
         if(t.getBloggerId()==null){
             throw new MyException("博主id不得为空");
         }
         if(StrUtil.isEmpty(t.getBloggerName())){
-            throw new MyException("博主账户不得为空");
+            throw new MyException("博主名字不得为空");
         }
         return Result.suc("add",bloggerInfoService.save(t));
     }
     
+    @GetMapping("/findByBloggerId")
+    public Result findInfoById(@RequestParam String id){
+        return Result.suc("info by blogger id",bloggerInfoService.findByBloggerId(id));
+    }
+    
+    /**
+     * @param name ：博主真名（bloggerName）
+     * @return
+     */
     @GetMapping("/findByName")
     public Result findOneByName(@RequestParam String name){
         return Result.suc("by name",bloggerInfoService.findByName(name));
@@ -127,6 +138,26 @@ public class BloggerInfoController extends BaseMongoController<BloggerInfo, Blog
         if(StrUtil.isEmpty(bloggerId))bloggerId = JwtUtil.getCurBloggerId();
         bloggerInfoService.removeBloggers(bloggerId,ids);
         return Result.suc("remove follow bloggers");
+    }
+    
+    /**
+     * 是否已关注
+     * @param id 已关注？的博主的id
+     * @return
+     */
+    @GetMapping("/isFallowed")
+    public Boolean isFallowed(@RequestParam String id){
+        String curBloggerId = JwtUtil.getCurBloggerId();
+        BloggerInfo byBloggerId = bloggerInfoService.findByBloggerId(curBloggerId);
+        List<BloggerInfo> followedBloggers = byBloggerId.getFollowedBloggers();
+        Boolean isFallowed = false;
+        for(BloggerInfo bloggerInfo:followedBloggers){
+            if(StrUtil.equals(bloggerInfo.getBloggerId(),id)){
+                isFallowed = true;
+                break;
+            }
+        }
+        return isFallowed;
     }
     
 }

@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.Convert;
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Document(collection = "comment")
@@ -20,13 +21,14 @@ public class Comment extends BaseMongoEntity{
     private String content;
     private Date createdDate;// = Instant.now()
     private Status status = Status.审核中;//false代表禁用，不可见
-    private Set<Comment> responses;
+    private HashSet<Comment> responses;
+    private Integer likeNum = 0;
     private Integer level = 1;//1级评论，二级评论，三级评论及往后以@的形式显示在二级评论下
     
     public Comment() {
     }
     
-    public Comment(String blogId, String bloggerId, String bloggerName, String bloggerAvatar, String content, Date createdDate, Status status, Set<Comment> responses, Integer level) {
+    public Comment(String blogId, String bloggerId, String bloggerName, String bloggerAvatar, String content, Date createdDate, Status status, HashSet<Comment> responses, Integer likeNum, Integer level) {
         this.blogId = blogId;
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
@@ -35,6 +37,7 @@ public class Comment extends BaseMongoEntity{
         this.createdDate = createdDate;
         this.status = status;
         this.responses = responses;
+        this.likeNum = likeNum;
         this.level = level;
     }
     
@@ -98,11 +101,11 @@ public class Comment extends BaseMongoEntity{
         this.status = status;
     }
     
-    public Set<Comment> getResponses() {
+    public HashSet<Comment> getResponses() {
         return responses;
     }
     
-    public void setResponses(Set<Comment> responses) {
+    public void setResponses(HashSet<Comment> responses) {
         this.responses = responses;
     }
     
@@ -114,6 +117,14 @@ public class Comment extends BaseMongoEntity{
         this.level = level;
     }
     
+    public Integer getLikeNum() {
+        return likeNum;
+    }
+    
+    public void setLikeNum(Integer likeNum) {
+        this.likeNum = likeNum;
+    }
+    
     @Override
     public String toString() {
         return "Comment{" +
@@ -123,8 +134,9 @@ public class Comment extends BaseMongoEntity{
                 ", bloggerAvatar='" + bloggerAvatar + '\'' +
                 ", content='" + content + '\'' +
                 ", createdDate=" + createdDate +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", responses=" + responses +
+                ", likeNum=" + likeNum +
                 ", level=" + level +
                 '}';
     }
