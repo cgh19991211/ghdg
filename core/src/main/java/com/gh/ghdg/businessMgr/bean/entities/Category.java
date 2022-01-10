@@ -79,13 +79,13 @@ public class Category extends BaseMongoEntity{
     
     @Override
     public String toString() {
-        return "Category{" +
-                "categoryName='" + categoryName + '\'' +
-                ", description='" + description + '\'' +
-                ", followedNums=" + followedNums +
-                ", displaySeq=" + displaySeq +
-                ", logo='" + logo + '\'' +
-                ", labels=" + labels +
-                '}';
+        return
+                "_id:\"" + _id + '\"' +
+                "categoryName:\"" + categoryName + '\"' +
+                ", description:\"" + description + '\"' +
+                ", followedNums:\"" + followedNums + '\"' +
+                ", displaySeq:\"" + displaySeq + '\"' +
+                ", logo:\"" + logo + '\"' +
+                ", labels:\"" + labels + + '\"';
     }
 }

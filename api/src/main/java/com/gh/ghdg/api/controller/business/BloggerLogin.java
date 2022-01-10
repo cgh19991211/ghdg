@@ -42,7 +42,7 @@ public class BloggerLogin {
             //TODO: 判断密码是否正确
             String dbpwd = blogger.getPassword();
             String salt = blogger.getSalt();
-            String s = bloggerService.encryptPassword(dbpwd, salt);
+            String s = bloggerService.encryptPassword(password, salt);
             if(!StrUtil.equals(s,dbpwd)){
                 return Result.error(false,"密码错误",null,Constants.WRONG_PASSWORD);
             }

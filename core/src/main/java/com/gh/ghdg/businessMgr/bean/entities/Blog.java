@@ -24,10 +24,8 @@ public class Blog extends BaseMongoEntity{
     private Integer likeNums = 0;
     private Integer badNums = 0;
     private Integer viewNums = 0;
+    private Integer favoriteNum=0;
     private String icon;
-    //评论
-//    private List<Comment> comments;
-//    private Integer commentNums = 0;
     //分类
     private Category category;
     //博客标签
@@ -42,18 +40,17 @@ public class Blog extends BaseMongoEntity{
     public Blog() {
     }
     
-    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, Integer likeNums,Integer badNums, Integer viewNums, String icon, Category category, List<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
+    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, Integer likeNums, Integer badNums, Integer viewNums, Integer favoriteNum, String icon, Category category, List<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
         this.bloggerAvatar = bloggerAvatar;
         this.title = title;
         this.content = content;
         this.likeNums = likeNums;
-        this.viewNums = viewNums;
-        this.icon = icon;
-//        this.comments = comments;
-//        this.commentNums = commentNums;
         this.badNums = badNums;
+        this.viewNums = viewNums;
+        this.favoriteNum = favoriteNum;
+        this.icon = icon;
         this.category = category;
         this.labels = labels;
         this.status = status;
@@ -62,78 +59,24 @@ public class Blog extends BaseMongoEntity{
         this.lastModifiedDate = lastModifiedDate;
     }
     
-    public Integer getBadNums() {
-        return badNums;
+ 
+    
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    public Date getCreatedDate() {
+        return createdDate;
     }
     
-    public void setBadNums(Integer badNums) {
-        this.badNums = badNums;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
     
-    public String getTitle() {
-        return title;
-    }
-    
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    
-    public String getContent() {
-        return content;
-    }
-    
-    public void setContent(String content) {
-        this.content = content;
-    }
-    
-    
-//    public List<Comment> getComments() {
-//        return comments;
-//    }
-//
-//    public void setComments(List<Comment> comments) {
-//        this.comments = comments;
-//    }
-    
-    public Status getStatus() {
-        return status;
-    }
-    
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-    
-    public Boolean getPrivate() {
-        return isPrivate;
-    }
-    
-    public void setPrivate(Boolean aPrivate) {
-        isPrivate = aPrivate;
-    }
-    
-    public Category getCategory() {
-        return category;
-    }
-    
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-    
-    
-    public List<Label> getLabels() {
-        return labels;
-    }
-    
-    public void setLabels(List<Label> labels) {
-        this.labels = labels;
-    }
-    
-    public String getIcon() {
-        return icon;
-    }
-    
-    public void setIcon(String icon) {
-        this.icon = icon;
+    @LastModifiedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
     }
     
     public String getBloggerId() {
@@ -159,35 +102,21 @@ public class Blog extends BaseMongoEntity{
     public void setBloggerAvatar(String bloggerAvatar) {
         this.bloggerAvatar = bloggerAvatar;
     }
-//
-//    public Integer getCommentNums() {
-//        return commentNums;
-//    }
-//
-//    public void setCommentNums(Integer commentNums) {
-//        this.commentNums = commentNums;
-//    }
     
-    @CreatedDate
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    public Date getCreatedDate() {
-        return createdDate;
+    public String getTitle() {
+        return title;
     }
     
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setTitle(String title) {
+        this.title = title;
     }
     
-    @LastModifiedDate
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
+    public String getContent() {
+        return content;
     }
     
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setContent(String content) {
+        this.content = content;
     }
     
     public Integer getLikeNums() {
@@ -198,12 +127,72 @@ public class Blog extends BaseMongoEntity{
         this.likeNums = likeNums;
     }
     
+    public Integer getBadNums() {
+        return badNums;
+    }
+    
+    public void setBadNums(Integer badNums) {
+        this.badNums = badNums;
+    }
+    
     public Integer getViewNums() {
         return viewNums;
     }
     
     public void setViewNums(Integer viewNums) {
         this.viewNums = viewNums;
+    }
+    
+    public Integer getFavoriteNum() {
+        return favoriteNum;
+    }
+    
+    public void setFavoriteNum(Integer favoriteNum) {
+        this.favoriteNum = favoriteNum;
+    }
+    
+    public String getIcon() {
+        return icon;
+    }
+    
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+    
+    public Category getCategory() {
+        return category;
+    }
+    
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+    
+    public List<Label> getLabels() {
+        return labels;
+    }
+    
+    public void setLabels(List<Label> labels) {
+        this.labels = labels;
+    }
+    
+    public Status getStatus() {
+        return status;
+    }
+    
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+    
+    public Boolean getPrivate() {
+        return isPrivate;
+    }
+    
+    public void setPrivate(Boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+    
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
     
     @Override
@@ -215,11 +204,10 @@ public class Blog extends BaseMongoEntity{
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", likeNums=" + likeNums +
-                ", viewNums=" + viewNums +
-                ", icon='" + icon + '\'' +
-//                ", comments=" + comments +
-//                ", commentNums=" + commentNums +
                 ", badNums=" + badNums +
+                ", viewNums=" + viewNums +
+                ", favoriteNum=" + favoriteNum +
+                ", icon='" + icon + '\'' +
                 ", category=" + category +
                 ", labels=" + labels +
                 ", status=" + status +

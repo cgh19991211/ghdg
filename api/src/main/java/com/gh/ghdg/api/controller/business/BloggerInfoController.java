@@ -3,14 +3,14 @@ package com.gh.ghdg.api.controller.business;
 import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.businessMgr.bean.entities.BloggerInfo;
 import com.gh.ghdg.businessMgr.Repository.BloggerInfoRepository;
+import com.gh.ghdg.businessMgr.bean.entities.sub.FavoriteBlog;
+import com.gh.ghdg.businessMgr.bean.entities.sub.Idol;
 import com.gh.ghdg.businessMgr.service.BloggerInfoService;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.common.utils.exception.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("business/bloggerInfo")
@@ -95,69 +95,49 @@ public class BloggerInfoController extends BaseMongoController<BloggerInfo, Blog
         bloggerInfoService.removeCategories(bloggerId,ids);
         return Result.suc("remove favorite categories");
     }
-    
-    /**
-     * 博主收藏博客
-     * @param bloggerId
-     * @param ids
-     * @return
-     */
-    @PostMapping("/addBlogs")
-    public Result addFavoriteBlogs(@RequestParam(required = false) String bloggerId, @RequestParam String... ids){
-        if(StrUtil.isEmpty(bloggerId))bloggerId = JwtUtil.getCurBloggerId();
-        return Result.suc("add blog",bloggerInfoService.addBlogs(bloggerId,ids));
+ 
+    @PostMapping("/followBlogger")
+    public void followBlogger(@ModelAttribute Idol idol){
+        if(StrUtil.isEmpty(idol.getId()))return;
+        bloggerInfoService.followBlogger(idol);
     }
     
-    /**
-     * 博主移除收藏的博客
-     * @param bloggerId
-     * @param ids
-     * @return
-     */
-    @PostMapping("/removeBlogs")
-    public Result removeFavoriteBlogs(@RequestParam(required = false) String bloggerId, @RequestParam String... ids){
-        if(StrUtil.isEmpty(bloggerId))bloggerId = JwtUtil.getCurBloggerId();
-        bloggerInfoService.removeBlogs(bloggerId,ids);
-        return Result.suc("remove favorite blogs");
+    @PostMapping("/unfollowBlogger")
+    public void unfollowBlogger(@ModelAttribute Idol idol){
+        if(StrUtil.isEmpty(idol.getId()))return;
+        bloggerInfoService.unfollowBlogger(idol);
     }
     
-    /**
-     * 关注博主
-     * @param bloggerId
-     * @param ids
-     * @return
-     */
-    @PostMapping("/addBloggers")
-    public Result addFollowBloggers(@RequestParam(required = false) String bloggerId, @RequestParam String... ids){
-        if(StrUtil.isEmpty(bloggerId))bloggerId = JwtUtil.getCurBloggerId();
-        return Result.suc("add follow bloggers",bloggerInfoService.addBloggers(bloggerId,ids));
+    @PostMapping("/favoriteBlog")
+    public void favoriteBlog(@ModelAttribute FavoriteBlog favoriteBlog){
+        if(StrUtil.isEmpty(favoriteBlog.getId()))return;
+        bloggerInfoService.favoriteBlog(favoriteBlog);
     }
     
-    @PostMapping("/removeBloggers")
-    public Result removeFollowBloggers(@RequestParam(required = false) String bloggerId, @RequestParam String... ids){
-        if(StrUtil.isEmpty(bloggerId))bloggerId = JwtUtil.getCurBloggerId();
-        bloggerInfoService.removeBloggers(bloggerId,ids);
-        return Result.suc("remove follow bloggers");
+    @PostMapping("/unfavoriteBlog")
+    public void unfavoriteBlog(@ModelAttribute FavoriteBlog favoriteBlog){
+        if(StrUtil.isEmpty(favoriteBlog.getId()))return;
+        bloggerInfoService.unfavoriteBlog(favoriteBlog);
+    }
+    
+    @PostMapping("/followCategory")
+    public void followCategory(@RequestParam String categoryId){
+        bloggerInfoService.followCategory(categoryId);
+    }
+    
+    @PostMapping("/unfollowCategory")
+    public void unfollowCategory(@RequestParam String categoryId){
+        bloggerInfoService.unfollowCategory(categoryId);
     }
     
     /**
      * 是否已关注
-     * @param id 已关注？的博主的id
+     * @param idolId 已关注？的博主的id
      * @return
      */
     @GetMapping("/isFallowed")
-    public Boolean isFallowed(@RequestParam String id){
-        String curBloggerId = JwtUtil.getCurBloggerId();
-        BloggerInfo byBloggerId = bloggerInfoService.findByBloggerId(curBloggerId);
-        List<BloggerInfo> followedBloggers = byBloggerId.getFollowedBloggers();
-        Boolean isFallowed = false;
-        for(BloggerInfo bloggerInfo:followedBloggers){
-            if(StrUtil.equals(bloggerInfo.getBloggerId(),id)){
-                isFallowed = true;
-                break;
-            }
-        }
-        return isFallowed;
+    public Boolean isFallowed(@RequestParam String idolId){
+        return bloggerInfoService.isFollowed(idolId);
     }
     
 }

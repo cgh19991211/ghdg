@@ -1,13 +1,19 @@
 package com.gh.ghdg.businessMgr.service;
 
+import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.businessMgr.bean.entities.*;
 import com.gh.ghdg.businessMgr.Repository.*;
 import com.gh.ghdg.businessMgr.Repository.impl.MyMongoRepositoryImpl;
+import com.gh.ghdg.businessMgr.bean.entities.sub.FavoriteBlog;
+import com.gh.ghdg.businessMgr.bean.entities.sub.Idol;
+import com.gh.ghdg.common.security.JwtUtil;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+
+import org.bson.Document;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -72,82 +78,121 @@ public class BloggerInfoService extends BaseMongoService<BloggerInfo, BloggerInf
     }
     
     @Transactional
-    public UpdateResult addBlogs(String bloggerId, String... ids){
-        Map<String,Object> map = new HashMap<>();
-        map.put("bloggerId",bloggerId);
-        return myMongoRepository.add(map,BloggerInfo.class,"favoriteBlogs",blogRepository,ids);
-//        return add(bloggerId,BloggerInfo.class,"favoriteBlogs",blogRepository,ids);
+    public void followBlogger(Idol idol){
+        String curBloggerId = JwtUtil.getCurBloggerId();
+        BloggerInfo curBloggerInfo = findByBloggerId(curBloggerId);
+        
+        String command = "{update: \"blogger_info\"," +
+                "updates: [{" +
+                    "q: {\"bloggerId\":" + curBloggerId + "}" +
+                    "u: {$push:{\"idols\":" + idol + "}}" +
+                "}]}";
+        mongoTemplate.executeCommand(command);
+        
+        Idol cur = new Idol(curBloggerId,curBloggerInfo.getBloggerName(),curBloggerInfo.getAvatar(),curBloggerInfo.getSignature());
+        command = "{update: \"blogger_info\"," +
+                "updates: [{" +
+                "q: {\"bloggerId\":" + idol.getId() + "}" +
+                "u: {$push:{\"fans\":" + cur + "}}" +
+                "}]}";
+        mongoTemplate.executeCommand(command);
     }
     
     @Transactional
-    public UpdateResult removeBlogs(String bloggerId, String... ids){
-        Map<String,Object> map = new HashMap<>();
-        map.put("bloggerId",bloggerId);
-        return myMongoRepository.remove(map,BloggerInfo.class,"favoriteBlogs",blogRepository,ids);
-//        return remove(bloggerId,BloggerInfo.class,"favoriteBlogs",blogRepository,ids);
-    }
+    public void unfollowBlogger(Idol idol){
+        String curBloggerId = JwtUtil.getCurBloggerId();
+        BloggerInfo curBloggerInfo = findByBloggerId(curBloggerId);
+        
+        String command = "{update: \"blogger_info\"," +
+                "updates: [{" +
+                "q: {\"bloggerId\":" + curBloggerId + "}" +
+                "u: {$pull:{\"idols\":" + idol + "}}" +
+                "}]}";
+        mongoTemplate.executeCommand(command);
     
-    /**
-     *
-     * @param bloggerId 进行该操作的博主的id -- 这里使用博主的id是要方便后面进行判断是否有权限
-     * @param ids 该博主要关注的的博主的Info的_id
-     * @return
-     */
-    @Transactional
-    public UpdateResult addBloggers(String bloggerId, String... ids){
-        Map<String,Object> map = new HashMap<>();
-        map.put("bloggerId",bloggerId);
-        return myMongoRepository.add(map,BloggerInfo.class,"followedBloggers",bloggerInfoRepository,ids);
-//        return add(bloggerId,BloggerInfo.class,"followedBloggers",bloggerInfoRepository,ids);
+        Idol cur = new Idol(curBloggerId,curBloggerInfo.getBloggerName(),curBloggerInfo.getAvatar(),curBloggerInfo.getSignature());
+        command = "{update: \"blogger_info\"," +
+                "updates: [{" +
+                "q: {\"bloggerId\":" + idol.getId() + "}" +
+                "u: {$pull:{\"fans\":" + cur + "}}" +
+                "}]}";
+        mongoTemplate.executeCommand(command);
     }
-    
-    @Transactional
-    public UpdateResult removeBloggers(String bloggerId, String... ids){
-        Map<String,Object> map = new HashMap<>();
-        map.put("bloggerId",bloggerId);
-        return myMongoRepository.remove(map,BloggerInfo.class,"followedBloggers",bloggerInfoRepository,ids);
-//        return remove(bloggerId,BloggerInfo.class,"followedBloggers",bloggerInfoRepository,ids);
-    }
-    
-//    /**
-//     *
-//     * @param bloggerId 博主id
-//     * @param klass 要修改的文档的klass
-//     * @param fieldName 要修改的字段的名字
-//     * @param d
-//     * @param ids 要添加的字段的id
-//     * @param <T> 要修改的字段的类型，比如Blog、Category、Blogger
-//     * @param <D> 要修改的字段的类型的dao
-//     * @return
-//     */
-//    @Transactional
-//    public <T extends BaseMongoEntity, D extends BaseMongoRepository> UpdateResult add(String bloggerId, Class<T> klass, String fieldName, D d, String... ids){
-//        Query query = Query.query(Criteria.where("bloggerId").is(bloggerId));
-//        Update update = new Update();
-//        List<T> list = new ArrayList<>();
-//        for(String id:ids){
-//            Optional<T> byId = d.findById(id);
-//            if(byId.isPresent()){
-//                list.add(byId.get());
-//            }
-//        }
-//        update.addToSet(fieldName).each(list);
-//        return mongoTemplate.updateFirst(query,update,BloggerInfo.class);
-//    }
-//
-//    @Transactional
-//    public <T extends BaseMongoEntity, D extends BaseMongoRepository> UpdateResult remove(String bloggerId, Class<T> klass, String fieldName, D d, String... ids){
-//        Query query = Query.query(Criteria.where("bloggerId").is(bloggerId));
-//        Update update = new Update();
-//        List<T> list = new ArrayList<>();
-//        for(String id:ids){
-//            Optional<T> byId = d.findById(id);
-//            if(byId.isPresent()){
-//                list.add(byId.get());
-//            }
-//        }
-//        update.pullAll(fieldName,list.toArray());
-//        return mongoTemplate.updateFirst(query,update,BloggerInfo.class);
-//    }
 
+    @Transactional
+    public void favoriteBlog(FavoriteBlog favoriteBlog){
+        String blogId = favoriteBlog.getId();
+        Optional<Blog> blogOptional = blogRepository.findById(blogId);
+        if(!blogOptional.isPresent())return;
+        Blog blog = blogOptional.get();
+        String curBloggerId = JwtUtil.getCurBloggerId();
+        String command = "{update: \"blogger_info\"," +
+                "updates: [{" +
+                "q: {\"bloggerId\":" + curBloggerId + "}" +
+                "u: {$push:{\"favoriteBlogs\":" + favoriteBlog + "}}" +
+                "}]}";
+        mongoTemplate.executeCommand(command);
+        command = "{update: \"blog\"," +
+                "updates: [{" +
+                "q: {\"_id\":" + blog.getId() + "}" +
+                "u: {$set:{\"favoriteNum\":" + (blog.getFavoriteNum()+1) + "}}" +
+                "}]}";
+    }
+    
+    @Transactional
+    public void unfavoriteBlog(FavoriteBlog favoriteBlog){
+        String blogId = favoriteBlog.getId();
+        Optional<Blog> blogOptional = blogRepository.findById(blogId);
+        if(!blogOptional.isPresent())return;
+        Blog blog = blogOptional.get();
+        String curBloggerId = JwtUtil.getCurBloggerId();
+        String command = "{update: \"blogger_info\"," +
+                "updates: [{" +
+                "q: {\"bloggerId\":" + curBloggerId + "}" +
+                "u: {$pull:{\"favoriteBlogs\":" + favoriteBlog + "}}" +
+                "}]}";
+        mongoTemplate.executeCommand(command);
+        command = "{update: \"blog\"," +
+                "updates: [{" +
+                "q: {\"_id\":" + blog.getId() + "}" +
+                "u: {$set:{\"favoriteNum\":" + (blog.getFavoriteNum()-1) + "}}" +
+                "}]}";
+        mongoTemplate.executeCommand(command);
+    }
+    
+    @Transactional
+    public void followCategory(String categoryId){
+        String curBloggerId = JwtUtil.getCurBloggerId();
+        Optional<Category> optional = categoryRepository.findById(categoryId);
+        if(!optional.isPresent())return;
+        Category category = optional.get();
+        String command = "{update: \"blogger_info\"," +
+                "updates: [{" +
+                "q: {\"bloggerId\":" + curBloggerId + "}" +
+                "u: {$push:{\"followedCategories\":"+ category + "}}" +
+                "}]}";
+        mongoTemplate.executeCommand(command);
+    }
+    
+    @Transactional
+    public void unfollowCategory(String categoryId){
+        String curBloggerId = JwtUtil.getCurBloggerId();
+        String command = "{update: \"blogger_info\"," +
+                "updates: [{" +
+                "q: {\"bloggerId\":" + curBloggerId + "}" +
+                "u: {$pull:{\"followedCategories\":{\"_id\""+ categoryId +"}" + "}}" +
+                "}]}";
+        mongoTemplate.executeCommand(command);
+    }
+    
+    @Transactional
+    public boolean isFollowed(String idolId){
+        String curBloggerId = JwtUtil.getCurBloggerId();
+        BloggerInfo bloggerInfo = bloggerInfoRepository.findByBloggerId(idolId);
+        if(bloggerInfo==null)return false;
+        for(Idol idol:bloggerInfo.getIdols()){
+            if(StrUtil.equals(idol.getId(),idolId))return true;
+        }
+        return false;
+    }
 }

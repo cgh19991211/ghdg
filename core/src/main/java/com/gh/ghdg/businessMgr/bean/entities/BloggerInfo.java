@@ -1,6 +1,8 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gh.ghdg.businessMgr.bean.entities.sub.Idol;
+import com.gh.ghdg.businessMgr.bean.entities.sub.FavoriteBlog;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.gh.ghdg.businessMgr.bean.entities.sub.Address;
@@ -15,22 +17,22 @@ public class BloggerInfo extends BaseMongoEntity{
     private String bloggerName = "unknown";//博主真名
     private String nickname = "unknown";
     private String signature = "unknown";//个性签名
-    private Address address = null;
-    private List<Category> followedCategories = null;//关注的分类
-    private List<Blog> favoriteBlogs = null;//收藏的博客
-    private List<BloggerInfo> followedBloggers = null;//关注的博主   ---这里应该用BloggerInfo才对
+    private Address address;
+    private List<Category> followedCategories;//关注的分类
+    private List<FavoriteBlog> favoriteBlogs;//收藏的博客
+    private List<Idol> idols;//关注的博主   ---这里应该用BloggerInfo才对
+    private List<Idol> fans;
     private Date registrationDate;
     private String phone = "unknown";
     private String email = "unknown";
     private String avatar;//需要一个默认头像
     private Integer blogNums = 0;//发表的博客数
-    private Integer fanNums = 0;//粉丝(关注的人)数
     private Integer likeNums = 0;//点赞数
     
     public BloggerInfo() {
     }
     
-    public BloggerInfo(String bloggerId, String bloggerName, String nickname, String signature, Address address, List<Category> followedCategories, List<Blog> favoriteBlogs, List<BloggerInfo> followedBloggers, Date registrationDate, String phone, String email, String avatar, Integer blogNums, Integer fanNums, Integer likeNums) {
+    public BloggerInfo(String bloggerId, String bloggerName, String nickname, String signature, Address address, List<Category> followedCategories, List<FavoriteBlog> favoriteBlogs, List<Idol> idols, List<Idol> fans, Date registrationDate, String phone, String email, String avatar, Integer blogNums, Integer likeNums) {
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
         this.nickname = nickname;
@@ -38,14 +40,25 @@ public class BloggerInfo extends BaseMongoEntity{
         this.address = address;
         this.followedCategories = followedCategories;
         this.favoriteBlogs = favoriteBlogs;
-        this.followedBloggers = followedBloggers;
+        this.idols = idols;
+        this.fans = fans;
         this.registrationDate = registrationDate;
         this.phone = phone;
         this.email = email;
         this.avatar = avatar;
         this.blogNums = blogNums;
-        this.fanNums = fanNums;
         this.likeNums = likeNums;
+    }
+    
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+    
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
     }
     
     public String getBloggerId() {
@@ -96,31 +109,28 @@ public class BloggerInfo extends BaseMongoEntity{
         this.followedCategories = followedCategories;
     }
     
-    public List<Blog> getFavoriteBlogs() {
+    public List<FavoriteBlog> getFavoriteBlogs() {
         return favoriteBlogs;
     }
     
-    public void setFavoriteBlogs(List<Blog> favoriteBlogs) {
+    public void setFavoriteBlogs(List<FavoriteBlog> favoriteBlogs) {
         this.favoriteBlogs = favoriteBlogs;
     }
     
-    public List<BloggerInfo> getFollowedBloggers() {
-        return followedBloggers;
+    public List<Idol> getIdols() {
+        return idols;
     }
     
-    public void setFollowedBloggers(List<BloggerInfo> followedBloggers) {
-        this.followedBloggers = followedBloggers;
+    public void setIdols(List<Idol> idols) {
+        this.idols = idols;
     }
     
-    @CreatedDate
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    public Date getRegistrationDate() {
-        return registrationDate;
+    public List<Idol> getFans() {
+        return fans;
     }
     
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setFans(List<Idol> fans) {
+        this.fans = fans;
     }
     
     public String getPhone() {
@@ -155,14 +165,6 @@ public class BloggerInfo extends BaseMongoEntity{
         this.blogNums = blogNums;
     }
     
-    public Integer getFanNums() {
-        return fanNums;
-    }
-    
-    public void setFanNums(Integer fanNums) {
-        this.fanNums = fanNums;
-    }
-    
     public Integer getLikeNums() {
         return likeNums;
     }
@@ -181,13 +183,13 @@ public class BloggerInfo extends BaseMongoEntity{
                 ", address=" + address +
                 ", followedCategories=" + followedCategories +
                 ", favoriteBlogs=" + favoriteBlogs +
-                ", followedBloggers=" + followedBloggers +
+                ", idols=" + idols +
+                ", fans=" + fans +
                 ", registrationDate=" + registrationDate +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", blogNums=" + blogNums +
-                ", fanNums=" + fanNums +
                 ", likeNums=" + likeNums +
                 '}';
     }

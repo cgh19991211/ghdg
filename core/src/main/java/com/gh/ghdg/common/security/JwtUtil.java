@@ -160,7 +160,7 @@ public class JwtUtil {
         String id = "";
         try {
             DecodedJWT jwt = JWT.decode(accessToken);
-            id = jwt.getClaim("account").asString();
+            id = jwt.getClaim("_id").asString();
         } catch (JWTDecodeException e) {
             return null;
         }
