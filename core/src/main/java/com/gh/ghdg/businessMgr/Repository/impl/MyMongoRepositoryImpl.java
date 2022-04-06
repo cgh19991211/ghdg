@@ -179,7 +179,8 @@ public class MyMongoRepositoryImpl<T extends BaseMongoEntity,D extends BaseMongo
         if(page.getSort()==null)
             pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(), Sort.Direction.DESC, "_id");
         else
-            pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(),page.getSort());        Query query = new Query();
+            pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(),page.getSort());
+            Query query = new Query();
         if (params != null && !params.isEmpty()) {
             Criteria criteria = criteria(params);
             query = Query.query(criteria);

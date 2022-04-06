@@ -34,4 +34,5 @@ public class LabelController extends BaseMongoController<Label, LabelRepository,
         labelService.delete(t);
         return Result.suc("删除成功");
     }
+    
 }

@@ -1,20 +1,28 @@
 package com.gh.ghdg.api.controller.business;
 
 import cn.hutool.core.util.StrUtil;
-import com.gh.ghdg.businessMgr.bean.entities.Blog;
-import com.gh.ghdg.businessMgr.bean.entities.Category;
 import com.gh.ghdg.businessMgr.Repository.BlogRepository;
-import com.gh.ghdg.businessMgr.bean.entities.TestAutoValue;
+import com.gh.ghdg.businessMgr.Repository.LabelRepository;
+import com.gh.ghdg.businessMgr.bean.entities.Blog;
+import com.gh.ghdg.businessMgr.bean.entities.BloggerInfo;
+import com.gh.ghdg.businessMgr.bean.entities.Category;
+import com.gh.ghdg.businessMgr.bean.entities.Label;
+import com.gh.ghdg.businessMgr.bean.vo.BlogVo;
+import com.gh.ghdg.businessMgr.bean.vo.TopicVo;
 import com.gh.ghdg.businessMgr.service.BlogService;
+import com.gh.ghdg.businessMgr.service.BloggerInfoService;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
+import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.Result;
-import org.checkerframework.framework.qual.RequiresQualifier;
+import com.gh.ghdg.common.utils.constant.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,6 +30,12 @@ import java.util.Optional;
 public class BlogController extends BaseMongoController<Blog, BlogRepository, BlogService> {
     @Autowired
     private BlogService blogService;
+    
+    @Autowired
+    private BloggerInfoService bloggerInfoService;
+    
+    @Autowired
+    private LabelRepository labelRepository;
     
     /**
      * 分页 -- 默认根据_id排序
@@ -33,13 +47,13 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         Sort sort = null;
         if(StrUtil.equals(tab,"hot")){
             //获取最热
-            return Result.suc(queryHotspot(page));
+            return queryHotspot(page);
         }else if(StrUtil.equals(tab,"latest")){
             //获取最新
-            return Result.suc(queryLatest(page));
+            return queryLatest(page);
         }
         //tab不为"hot"||"latest"
-        return Result.suc(queryPage(page));
+        return Result.suc(super.queryPage(page));
     }
 
     /**
@@ -85,6 +99,21 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         return Result.suc("by blogger name",blogService.findByBloggerName(blogger_name));
     }
     
+    /**
+     * 在个人中心展示博主已发表的博客
+     * @param id
+     * @return TopicVo
+     */
+    @GetMapping("/findByBloggerId")
+    public Result findByBloggerId(@RequestParam("id") String id){
+        List<Blog> blogList = service.findByBloggerId(id);
+        List<TopicVo> data = new ArrayList<>();
+        for(Blog blog:blogList){
+            data.add(TopicVo.BlogToTopicVo(blog));
+        }
+        return Result.suc(data);
+    }
+    
     @GetMapping("/findLikeTitle")
     public Result findLikeTitle(@RequestParam String title){
         return Result.suc("like title",blogService.findLikeTitle(title));
@@ -101,14 +130,43 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     }
     
     @PostMapping("/add")
-    public Result saveBlog(@ModelAttribute("t") Blog t){
-        return Result.suc("add",blogService.saveBlog(t));
+    public Result saveBlog(@RequestBody BlogVo blogVo){
+        Blog blog = new Blog();
+        String curBloggerId = JwtUtil.getCurBloggerId();
+        BloggerInfo bloggerInfo = bloggerInfoService.findByBloggerId(curBloggerId);
+        blog.setBloggerId(curBloggerId);
+        blog.setBloggerName(bloggerInfo.getBloggerName());
+        blog.setBloggerAvatar(bloggerInfo.getAvatar());
+        blog.setContent(blogVo.getContent());
+        blog.setTitle(blogVo.getTitle());
+        String[] labelIds = blogVo.getLabelIds();
+        if(labelIds!=null)
+            for(String id:labelIds){
+                Optional<Label> byId = labelRepository.findById(id);
+                if(byId.isPresent()){
+                    blog.addLabel(byId.get());
+                }
+            }
+        return Result.suc("add",blogService.saveBlog(blog));
     }
     
-    @PostMapping("delete")
-    public Result deleteBlog(@RequestParam String blogId){
-        blogService.deleteById(blogId);
-        return Result.suc("删除成功");
+    @PostMapping("/update")
+    public Result updateBlog(@RequestBody BlogVo blogVo){
+        String blogId = blogVo.getBlogId();
+        String title = blogVo.getTitle();
+        String content = blogVo.getContent();
+        String[] labelIds = blogVo.getLabelIds();
+    
+        return Result.suc("update success",service.updateBlog(blogId,title,content,labelIds));
+    }
+    
+    @PostMapping("/delete")
+    public Result deleteBlog(@RequestParam String id) throws IOException {
+        if(blogService.deleteById(id)) {
+            return Result.suc("删除成功");
+        }else{
+            return Result.error(false,"删除失败",null, Constants.WITHOUT_PERMISSION);
+        }
     }
     
     @PostMapping("/addLabels")
@@ -134,5 +192,36 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         return Result.suc(super.queryPage(page));
     }
     
+    @PostMapping("/likeBlog")
+    public Result likeBlog(@RequestParam String blogId){
+        return Result.suc("点赞成功",service.likeBlog(blogId));
+    }
+    
+    @PostMapping("/cancelLike")
+    public Result cancelLike(@RequestParam String blogId){
+        if(service.cancelLike(blogId)){
+            return Result.suc("cancel success");
+        }else{
+            return Result.error("cancel failed");
+        }
+    }
+    
+    @PostMapping("/favoriteBlog")
+    public Result favoriteBlog(@RequestParam String blogId){
+        if(service.favoriteBlog(blogId)){
+            return Result.suc("favorite success");
+        }else{
+            return Result.error("favorite failed");
+        }
+    }
+    
+    @PostMapping("/cancelFavoriteBlog")
+    public Result cancelFavoriteBlog(@RequestParam String blogId){
+        if(service.cancelFavoriteBlog(blogId)){
+            return Result.suc("cancel favorite success");
+        }else{
+            return Result.error("cancel favorite failed");
+        }
+    }
     
 }

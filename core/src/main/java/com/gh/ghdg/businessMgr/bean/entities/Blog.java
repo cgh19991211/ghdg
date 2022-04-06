@@ -1,12 +1,16 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gh.ghdg.businessMgr.bean.entities.sub.ThumbsUp;
 import com.gh.ghdg.common.enums.Status;
+import org.apache.commons.collections.ArrayStack;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -15,21 +19,22 @@ import java.util.Set;
 public class Blog extends BaseMongoEntity{
     
     //博客所属博主
+    @Indexed
     private String bloggerId;
-    private String bloggerName;//实际上用的是Blogger的nickname
+    @Indexed
+    private String bloggerName;
     private String bloggerAvatar;
     //博客内容
     private String title;
     private String content;
-    private Integer likeNums = 0;
-    private Integer badNums = 0;
+    private List<ThumbsUp> likes = new ArrayList<>();//点赞该博客的人
     private Integer viewNums = 0;
-    private Integer favoriteNum=0;
+    private List<ThumbsUp> storeUp = new ArrayList<>();
     private String icon;
     //分类
     private Category category;
     //博客标签
-    private List<Label> labels;
+    private List<Label> labels = new ArrayList<>();
     //状态
     private Status status = Status.审核中;
     private Boolean isPrivate = false;
@@ -40,16 +45,15 @@ public class Blog extends BaseMongoEntity{
     public Blog() {
     }
     
-    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, Integer likeNums, Integer badNums, Integer viewNums, Integer favoriteNum, String icon, Category category, List<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
+    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, List<ThumbsUp> likes, Integer viewNums, List<ThumbsUp> storeUp, String icon, Category category, List<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
         this.bloggerAvatar = bloggerAvatar;
         this.title = title;
         this.content = content;
-        this.likeNums = likeNums;
-        this.badNums = badNums;
+        this.likes = likes;
         this.viewNums = viewNums;
-        this.favoriteNum = favoriteNum;
+        this.storeUp = storeUp;
         this.icon = icon;
         this.category = category;
         this.labels = labels;
@@ -59,7 +63,13 @@ public class Blog extends BaseMongoEntity{
         this.lastModifiedDate = lastModifiedDate;
     }
     
- 
+    public List<ThumbsUp> getStoreUp() {
+        return storeUp;
+    }
+    
+    public void setStoreUp(List<ThumbsUp> storeUp) {
+        this.storeUp = storeUp;
+    }
     
     @CreatedDate
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
@@ -78,7 +88,7 @@ public class Blog extends BaseMongoEntity{
     public Date getLastModifiedDate() {
         return lastModifiedDate;
     }
-    
+
     public String getBloggerId() {
         return bloggerId;
     }
@@ -119,36 +129,20 @@ public class Blog extends BaseMongoEntity{
         this.content = content;
     }
     
-    public Integer getLikeNums() {
-        return likeNums;
+    public List<ThumbsUp> getLikes() {
+        return likes;
     }
     
-    public void setLikeNums(Integer likeNums) {
-        this.likeNums = likeNums;
+    public void setLikes(List<ThumbsUp> likes) {
+        this.likes = likes;
     }
-    
-    public Integer getBadNums() {
-        return badNums;
-    }
-    
-    public void setBadNums(Integer badNums) {
-        this.badNums = badNums;
-    }
-    
+   
     public Integer getViewNums() {
         return viewNums;
     }
     
     public void setViewNums(Integer viewNums) {
         this.viewNums = viewNums;
-    }
-    
-    public Integer getFavoriteNum() {
-        return favoriteNum;
-    }
-    
-    public void setFavoriteNum(Integer favoriteNum) {
-        this.favoriteNum = favoriteNum;
     }
     
     public String getIcon() {
@@ -195,6 +189,12 @@ public class Blog extends BaseMongoEntity{
         this.lastModifiedDate = lastModifiedDate;
     }
     
+    public void addLabel(Label l){
+        if(this.labels==null)
+            this.labels = new ArrayList<>();
+        this.labels.add(l);
+    }
+    
     @Override
     public String toString() {
         return "Blog{" +
@@ -203,10 +203,9 @@ public class Blog extends BaseMongoEntity{
                 ", bloggerAvatar='" + bloggerAvatar + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", likeNums=" + likeNums +
-                ", badNums=" + badNums +
+                ", likes=" + likes +
                 ", viewNums=" + viewNums +
-                ", favoriteNum=" + favoriteNum +
+                ", storeUp=" + storeUp +
                 ", icon='" + icon + '\'' +
                 ", category=" + category +
                 ", labels=" + labels +

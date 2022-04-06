@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("blogger/login")
+@RequestMapping("blogger")
 public class BloggerLogin {
     
     @Autowired
@@ -66,7 +66,7 @@ public class BloggerLogin {
     public Result bloggerLogout(){
         //TODO:缓存里删除RefreshToken
         
-        return null;
+        return Result.suc("logout response");
     }
     
     @PostMapping("/signIn")
@@ -102,9 +102,7 @@ public class BloggerLogin {
 //    @RequiresAuthentication
     public Result getCurBloggerInfo(){
         String curBloggerId = JwtUtil.getCurBloggerId();
-        if(StrUtil.isEmpty(curBloggerId)){
-            return Result.suc("当前用户未登录");
-        }
+
         return Result.suc(bloggerInfoService.findByBloggerId(curBloggerId));
     }
 }

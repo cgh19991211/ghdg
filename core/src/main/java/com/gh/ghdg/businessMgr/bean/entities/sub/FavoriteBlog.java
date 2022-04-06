@@ -1,27 +1,75 @@
 package com.gh.ghdg.businessMgr.bean.entities.sub;
 
+import org.springframework.data.annotation.CreatedDate;
+
+import java.util.Date;
+
 public class FavoriteBlog {
-    private String id;
+    private String blogId;
+    private String bloggerId;
+    private String bloggerName;
+    private String bloggerAvatar;
     private String title;
-    private String likeNum;
-    private String commentNum;
+    @CreatedDate
+    private Date favoriteDate;
+    private String content; //概要
     
     public FavoriteBlog() {
     }
     
-    public FavoriteBlog(String id, String title, String likeNum, String commentNum) {
-        this.id = id;
+    public FavoriteBlog(String blogId, String bloggerId, String bloggerName, String bloggerAvatar, String title, Date favoriteDate, String content) {
+        this.blogId = blogId;
+        this.bloggerId = bloggerId;
+        this.bloggerName = bloggerName;
+        this.bloggerAvatar = bloggerAvatar;
         this.title = title;
-        this.likeNum = likeNum;
-        this.commentNum = commentNum;
+        this.favoriteDate = favoriteDate;
+        this.content = content;
     }
     
-    public String getId() {
-        return id;
+    @Override
+    public String toString() {
+        return "FavoriteBlog{" +
+                "blogId='" + blogId + '\'' +
+                ", bloggerId='" + bloggerId + '\'' +
+                ", bloggerName='" + bloggerName + '\'' +
+                ", bloggerAvatar='" + bloggerAvatar + '\'' +
+                ", title='" + title + '\'' +
+                ", favoriteDate=" + favoriteDate +
+                ", content='" + content + '\'' +
+                '}';
     }
     
-    public void setId(String id) {
-        this.id = id;
+    public String getBlogId() {
+        return blogId;
+    }
+    
+    public void setBlogId(String blogId) {
+        this.blogId = blogId;
+    }
+    
+    public String getBloggerId() {
+        return bloggerId;
+    }
+    
+    public void setBloggerId(String bloggerId) {
+        this.bloggerId = bloggerId;
+    }
+    
+    public String getBloggerName() {
+        return bloggerName;
+    }
+    
+    public void setBloggerName(String bloggerName) {
+        this.bloggerName = bloggerName;
+    }
+    
+    public String getBloggerAvatar() {
+        return bloggerAvatar;
+    }
+    
+    public void setBloggerAvatar(String bloggerAvatar) {
+        this.bloggerAvatar = bloggerAvatar;
     }
     
     public String getTitle() {
@@ -32,27 +80,19 @@ public class FavoriteBlog {
         this.title = title;
     }
     
-    public String getLikeNum() {
-        return likeNum;
+    public Date getFavoriteDate() {
+        return favoriteDate;
     }
     
-    public void setLikeNum(String likeNum) {
-        this.likeNum = likeNum;
+    public void setFavoriteDate(Date favoriteDate) {
+        this.favoriteDate = favoriteDate;
     }
     
-    public String getCommentNum() {
-        return commentNum;
+    public String getContent() {
+        return content;
     }
     
-    public void setCommentNum(String commentNum) {
-        this.commentNum = commentNum;
-    }
-    
-    @Override
-    public String toString() {
-        return  "id:'" + id + '\'' +
-                ", title:'" + title + '\'' +
-                ", likeNum:'" + likeNum + '\'' +
-                ", commentNum:'" + commentNum + '\'';
+    public void setContent(String content) {
+        this.content = content;
     }
 }

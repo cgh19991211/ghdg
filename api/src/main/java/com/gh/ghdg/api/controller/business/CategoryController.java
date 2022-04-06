@@ -13,6 +13,11 @@ public class CategoryController extends BaseMongoController<Category, CategoryRe
     @Autowired
     private CategoryService categoryService;
     
+    @GetMapping("/list")
+    public Result categoryList(){
+        return Result.suc("category list",categoryService.categoryList());
+    }
+    
     @GetMapping("/findByName")
     public Result findByName(@RequestBody String name){
         return Result.suc("by name",categoryService.findByName(name));

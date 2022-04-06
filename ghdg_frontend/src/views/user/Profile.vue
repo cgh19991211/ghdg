@@ -105,11 +105,14 @@
 		},
 		methods: {
 			fetchUserById() {
-				getInfoByName(this.$route.params.username, this.page.current, this.page.size).then((res) => {
+				console.log(this.$route)
+				getInfoByName(this.$route.params.username).then((res) => {
 					const {
 						data
 					} = res
-					this.topicUser = data.user
+					console.log('profile user data')
+					console.log(res)
+					this.topicUser = data
 					this.page.current = data.topics.current
 					this.page.size = data.topics.size
 					this.page.total = data.topics.total

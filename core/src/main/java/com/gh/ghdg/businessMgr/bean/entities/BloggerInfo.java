@@ -4,23 +4,29 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gh.ghdg.businessMgr.bean.entities.sub.Idol;
 import com.gh.ghdg.businessMgr.bean.entities.sub.FavoriteBlog;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.gh.ghdg.businessMgr.bean.entities.sub.Address;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
 
 @Document(collection = "blogger_info")
 public class BloggerInfo extends BaseMongoEntity{
+    @Indexed
+    @NotBlank
     private String bloggerId;//外键，指向Blogger的_id字段
-    private String bloggerName = "unknown";//博主真名
-    private String nickname = "unknown";
+    @NotBlank
+    private String bloggerName = "unknown";//
+    @NotBlank
+    private String nickname = "unknown";//弃用
     private String signature = "unknown";//个性签名
     private Address address;
     private List<Category> followedCategories;//关注的分类
     private List<FavoriteBlog> favoriteBlogs;//收藏的博客
-    private List<Idol> idols;//关注的博主   ---这里应该用BloggerInfo才对
+    private List<Idol> idols; //关注的博主
     private List<Idol> fans;
     private Date registrationDate;
     private String phone = "unknown";

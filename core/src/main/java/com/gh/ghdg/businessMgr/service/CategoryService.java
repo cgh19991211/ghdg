@@ -25,6 +25,10 @@ public class CategoryService extends BaseMongoService<Category, CategoryReposito
     @Autowired
     private LabelRepository labelRepository;
     
+    public List<Category> categoryList(){
+        return dao.findAll();
+    }
+    
     public Category findByName(String name){
         return dao.findByCategoryName(name);
     }

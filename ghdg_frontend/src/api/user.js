@@ -6,7 +6,7 @@ export function getInfoByName(username) {
     url: '/business/bloggerInfo/findByName',
     method: 'get',
     params: {
-	  name: username,
+	  name: username
     }
   })
 }

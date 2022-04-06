@@ -25,11 +25,9 @@ public abstract class BaseMongoService<T extends BaseMongoEntity, S extends Base
     @Autowired
     protected S dao;
     @Autowired
-    protected MyMongoRepositoryImpl template;
+    protected MyMongoRepositoryImpl myTemplate;
     @Autowired
     protected MongoTemplate mongoTemplate;
-    @Autowired
-    protected MyMongoRepositoryImpl myMongoRepository;
     
     @Transactional
     public T save(T t){
@@ -38,7 +36,7 @@ public abstract class BaseMongoService<T extends BaseMongoEntity, S extends Base
     
     @Transactional
     public void delete(String id, String collectionName){
-        template.delete(id,collectionName);
+        myTemplate.delete(id,collectionName);
     }
     
     @Transactional
@@ -52,11 +50,11 @@ public abstract class BaseMongoService<T extends BaseMongoEntity, S extends Base
     
     public Page<T> queryPage(Page page){
         if(page.getFilters()==null)
-            return myMongoRepository.queryPage(page,klass);
+            return myTemplate.queryPage(page,klass);
         else{
             Criteria criteria = parstFilters(page.getFilters());
             Query query = Query.query(criteria);
-            return myMongoRepository.queryPage(page,query,klass);
+            return myTemplate.queryPage(page,query,klass);
         }
     }
     

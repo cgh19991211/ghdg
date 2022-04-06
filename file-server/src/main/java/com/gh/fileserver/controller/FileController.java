@@ -1,8 +1,10 @@
 package com.gh.fileserver.controller;
 
 import com.gh.fileserver.domain.File;
+import com.gh.fileserver.domain.VO.FileVo;
 import com.gh.fileserver.service.FileService;
 import com.gh.fileserver.util.MD5Util;
+import com.gh.fileserver.util.Result;
 import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +20,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600) // 允许所有域名访问
@@ -136,23 +140,47 @@ public class FileController {
 	 * @param file
 	 * @return
 	 */
+	//@PostMapping("/upload")
+//	@ResponseBody
+//	public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
+//		File returnFile = null;
+//		try {
+//			File f = new File(file.getOriginalFilename(), file.getContentType(), file.getSize(),
+//					new Binary(file.getBytes()));
+//			f.setMd5(MD5Util.getMD5(file.getInputStream()));
+//			returnFile = fileService.saveFile(f);
+////			String path = "//" + serverAddress + ":" + serverPort + "/view/" + returnFile.getId();
+//			String path = serverAddress + ":" + serverPort + "/view/" + returnFile.getId();
+//
+//			return ResponseEntity.status(HttpStatus.OK).body(path);
+//		} catch (IOException | NoSuchAlgorithmException ex) {
+//			ex.printStackTrace();
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+//		}
+//	}
+	
 	@PostMapping("/upload")
 	@ResponseBody
-	public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-		File returnFile = null;
-		try {
+	public FileVo uploadFile(@RequestParam("file") MultipartFile file){
+		FileVo result = new FileVo();
+		try{
 			File f = new File(file.getOriginalFilename(), file.getContentType(), file.getSize(),
 					new Binary(file.getBytes()));
 			f.setMd5(MD5Util.getMD5(file.getInputStream()));
-			returnFile = fileService.saveFile(f);
-			String path = "//" + serverAddress + ":" + serverPort + "/view/" + returnFile.getId();
-			return ResponseEntity.status(HttpStatus.OK).body(path);
-
-		} catch (IOException | NoSuchAlgorithmException ex) {
-			ex.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+			File saveFile = fileService.saveFile(f);
+			String path = "http://" + serverAddress + ":" + serverPort + "/view/" + saveFile.getId();
+			FileVo.Data resultData = result.getData();
+			resultData.getSuccMap().put(saveFile.getName(),path);
+			result.setCode(HttpStatus.OK.value());
+			result.setMsg("upload success");
+		}catch (IOException | NoSuchAlgorithmException e){
+			e.printStackTrace();
+			result.setMsg("upload failed!");
+			result.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			FileVo.Data resultData = result.getData();
+			resultData.getErrFiles().add(file.getName());
 		}
-
+		return result;
 	}
 
 	/**

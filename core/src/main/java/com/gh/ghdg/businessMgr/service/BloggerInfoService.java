@@ -44,7 +44,7 @@ public class BloggerInfoService extends BaseMongoService<BloggerInfo, BloggerInf
      * @return
      */
     public BloggerInfo findByName(String name){
-        return dao.findByBloggerNameEquals(name);
+        return dao.findByBloggerName(name);
     }
     
     public List<BloggerInfo> findAllByName(String name){
@@ -121,7 +121,7 @@ public class BloggerInfoService extends BaseMongoService<BloggerInfo, BloggerInf
 
     @Transactional
     public void favoriteBlog(FavoriteBlog favoriteBlog){
-        String blogId = favoriteBlog.getId();
+        String blogId = favoriteBlog.getBlogId();
         Optional<Blog> blogOptional = blogRepository.findById(blogId);
         if(!blogOptional.isPresent())return;
         Blog blog = blogOptional.get();
@@ -135,13 +135,13 @@ public class BloggerInfoService extends BaseMongoService<BloggerInfo, BloggerInf
         command = "{update: \"blog\"," +
                 "updates: [{" +
                 "q: {\"_id\":" + blog.getId() + "}" +
-                "u: {$set:{\"favoriteNum\":" + (blog.getFavoriteNum()+1) + "}}" +
+                "u: {$set:{\"favoriteNum\":" + (blog.getStoreUp().size()) + "}}" +
                 "}]}";
     }
     
     @Transactional
     public void unfavoriteBlog(FavoriteBlog favoriteBlog){
-        String blogId = favoriteBlog.getId();
+        String blogId = favoriteBlog.getBlogId();
         Optional<Blog> blogOptional = blogRepository.findById(blogId);
         if(!blogOptional.isPresent())return;
         Blog blog = blogOptional.get();
@@ -155,7 +155,7 @@ public class BloggerInfoService extends BaseMongoService<BloggerInfo, BloggerInf
         command = "{update: \"blog\"," +
                 "updates: [{" +
                 "q: {\"_id\":" + blog.getId() + "}" +
-                "u: {$set:{\"favoriteNum\":" + (blog.getFavoriteNum()-1) + "}}" +
+                "u: {$set:{\"favoriteNum\":" + (blog.getStoreUp().size()) + "}}" +
                 "}]}";
         mongoTemplate.executeCommand(command);
     }
@@ -186,10 +186,10 @@ public class BloggerInfoService extends BaseMongoService<BloggerInfo, BloggerInf
     }
     
     @Transactional
-    public boolean isFollowed(String idolId){
+    public Boolean isFollowed(String idolId){
         String curBloggerId = JwtUtil.getCurBloggerId();
-        BloggerInfo bloggerInfo = bloggerInfoRepository.findByBloggerId(idolId);
-        if(bloggerInfo==null)return false;
+        BloggerInfo bloggerInfo = bloggerInfoRepository.findByBloggerId(curBloggerId);
+        if(bloggerInfo.getIdols()==null)return false;
         for(Idol idol:bloggerInfo.getIdols()){
             if(StrUtil.equals(idol.getId(),idolId))return true;
         }

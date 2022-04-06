@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface BloggerInfoRepository extends BaseMongoRepository<BloggerInfo> {
-    BloggerInfo findByBloggerNameEquals(String bloggerName);
+    BloggerInfo findByBloggerName(String bloggerName);
     
     List<BloggerInfo> findAllByBloggerNameLike(String bloggerName);
     

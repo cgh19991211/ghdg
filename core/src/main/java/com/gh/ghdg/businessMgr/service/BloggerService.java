@@ -48,7 +48,6 @@ public class BloggerService extends BaseMongoService<Blogger, BloggerRepository>
         return mongoTemplate.find(Query.query(Criteria.where("status").ne(0)),Blogger.class);
     }
     
-    
     public Blogger findByAccount(String account){return dao.findByAccount(account);}
     
     public List<Blogger> findByFilters(List<SearchFilter> filters){

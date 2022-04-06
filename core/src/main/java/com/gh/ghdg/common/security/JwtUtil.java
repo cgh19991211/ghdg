@@ -155,6 +155,15 @@ public class JwtUtil {
     public static String getCurBloggerId(){
         String accessToken = HttpKit.getBloggerAccessToken();
         if(StrUtil.isEmpty(accessToken)){
+            try {
+                HttpKit.getResponse().sendError(403);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                return null;
+            }
+        }
+        if(StrUtil.isEmpty(accessToken)){
             return null;
         }
         String id = "";
@@ -200,6 +209,7 @@ public class JwtUtil {
         return JWT.create()
                 .withClaim("account",blogger.getAccount())
                 .withClaim("_id",blogger.get_id())
+                .withExpiresAt(date)
                 .sign(algorithm);
     }
     

@@ -1,16 +1,18 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gh.ghdg.businessMgr.bean.entities.sub.Response;
+import com.gh.ghdg.businessMgr.bean.entities.sub.ThumbsUp;
 import com.gh.ghdg.common.enums.Status;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Convert;
-import java.time.Instant;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Document(collection = "comment")
 public class Comment extends BaseMongoEntity{
@@ -21,14 +23,14 @@ public class Comment extends BaseMongoEntity{
     private String content;
     private Date createdDate;// = Instant.now()
     private Status status = Status.审核中;//false代表禁用，不可见
-    private HashSet<Comment> responses;
-    private Integer likeNum = 0;
+    private List<Response> responses;
+    private List<ThumbsUp> likes;//点赞该评论的人
     private Integer level = 1;//1级评论，二级评论，三级评论及往后以@的形式显示在二级评论下
     
     public Comment() {
     }
     
-    public Comment(String blogId, String bloggerId, String bloggerName, String bloggerAvatar, String content, Date createdDate, Status status, HashSet<Comment> responses, Integer likeNum, Integer level) {
+    public Comment(String blogId, String bloggerId, String bloggerName, String bloggerAvatar, String content, Date createdDate, Status status, List<Response> responses, List<ThumbsUp> likes, Integer level) {
         this.blogId = blogId;
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
@@ -37,7 +39,7 @@ public class Comment extends BaseMongoEntity{
         this.createdDate = createdDate;
         this.status = status;
         this.responses = responses;
-        this.likeNum = likeNum;
+        this.likes = likes;
         this.level = level;
     }
     
@@ -101,11 +103,11 @@ public class Comment extends BaseMongoEntity{
         this.status = status;
     }
     
-    public HashSet<Comment> getResponses() {
+    public List<Response> getResponses() {
         return responses;
     }
     
-    public void setResponses(HashSet<Comment> responses) {
+    public void setResponses(List<Response> responses) {
         this.responses = responses;
     }
     
@@ -117,12 +119,12 @@ public class Comment extends BaseMongoEntity{
         this.level = level;
     }
     
-    public Integer getLikeNum() {
-        return likeNum;
+    public List<ThumbsUp> getLikes() {
+        return likes;
     }
     
-    public void setLikeNum(Integer likeNum) {
-        this.likeNum = likeNum;
+    public void setLikes(List<ThumbsUp> likes) {
+        this.likes = likes;
     }
     
     @Override
@@ -136,7 +138,7 @@ public class Comment extends BaseMongoEntity{
                 ", createdDate=" + createdDate +
                 ", status=" + status +
                 ", responses=" + responses +
-                ", likeNum=" + likeNum +
+                ", likes=" + likes +
                 ", level=" + level +
                 '}';
     }

@@ -110,13 +110,13 @@ public class BloggerInfoController extends BaseMongoController<BloggerInfo, Blog
     
     @PostMapping("/favoriteBlog")
     public void favoriteBlog(@ModelAttribute FavoriteBlog favoriteBlog){
-        if(StrUtil.isEmpty(favoriteBlog.getId()))return;
+        if(StrUtil.isEmpty(favoriteBlog.getBlogId()))return;
         bloggerInfoService.favoriteBlog(favoriteBlog);
     }
     
     @PostMapping("/unfavoriteBlog")
     public void unfavoriteBlog(@ModelAttribute FavoriteBlog favoriteBlog){
-        if(StrUtil.isEmpty(favoriteBlog.getId()))return;
+        if(StrUtil.isEmpty(favoriteBlog.getBlogId()))return;
         bloggerInfoService.unfavoriteBlog(favoriteBlog);
     }
     
@@ -136,8 +136,8 @@ public class BloggerInfoController extends BaseMongoController<BloggerInfo, Blog
      * @return
      */
     @GetMapping("/isFallowed")
-    public Boolean isFallowed(@RequestParam String idolId){
-        return bloggerInfoService.isFollowed(idolId);
+    public Result isFallowed(@RequestParam String idolId){
+        return Result.suc("是否已关注",bloggerInfoService.isFollowed(idolId));
     }
     
 }

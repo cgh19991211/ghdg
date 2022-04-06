@@ -88,17 +88,14 @@ const actions = {
 		state
 	}) {
 		return new Promise((resolve, reject) => {
-			logout(state.token)
+			logout(state.BloggerAccessToken)
 				.then((response) => {
-					console.log(response);
-					commit("SET_TOKEN_STATE", "");
 					commit("SET_ACCESS_TOKEN", "");
 					commit("SET_REFRESH_TOKEN", "");
 					commit("SET_CUR_BLOGGER", "");
 					removeAll();
 					resolve();
-				})
-				.catch((error) => {
+				}).catch((error) => {
 					reject(error);
 				});
 		});
