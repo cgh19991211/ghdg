@@ -1,16 +1,15 @@
 package com.gh.ghdg.businessMgr.service;
 
 import com.alibaba.fastjson.JSON;
-import com.gh.ghdg.businessMgr.Repository.BloggerInfoRepository;
+import com.gh.ghdg.businessMgr.Repository.*;
 import com.gh.ghdg.businessMgr.Repository.impl.MyMongoRepositoryImpl;
 import com.gh.ghdg.businessMgr.bean.entities.*;
-import com.gh.ghdg.businessMgr.Repository.BlogRepository;
-import com.gh.ghdg.businessMgr.Repository.CommentRepository;
-import com.gh.ghdg.businessMgr.Repository.LabelRepository;
 import com.gh.ghdg.businessMgr.bean.entities.sub.ThumbsUp;
+import com.gh.ghdg.businessMgr.utils.MDToText;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.mongodb.client.result.UpdateResult;
+import org.pegdown.PegDownProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -35,6 +34,9 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
     
     @Resource
     private BloggerInfoRepository bloggerInfoRepository;
+    
+    @Resource
+    private DynamicRepository dynamicRepository;
     
     
     public List<Blog> findByBloggerId(String id){
@@ -143,12 +145,16 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
             update.addToSet("likes",thumbsUp);
     
             mongoTemplate.upsert(query, update, Blog.class);
+            //TODO:博主点赞数+1
+            curBlogger.setLikeNums(curBlogger.getLikeNums()+1);
+            bloggerInfoRepository.save(curBlogger);
         }catch (Exception e){
             e.printStackTrace();
             return false;
         }
         return true;
     }
+
     
     @Transactional
     public boolean cancelLike(String blogId){

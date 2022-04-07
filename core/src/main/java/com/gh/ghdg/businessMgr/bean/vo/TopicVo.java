@@ -1,9 +1,8 @@
 package com.gh.ghdg.businessMgr.bean.vo;
 
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gh.ghdg.businessMgr.bean.entities.Blog;
-import com.gh.ghdg.businessMgr.utils.MDToText;
+import com.gh.ghdg.businessMgr.bean.entities.Comment;
 import org.pegdown.PegDownProcessor;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,22 +10,33 @@ import java.util.Date;
 
 public class TopicVo {
     String action;
-    Date date;
+    Date createdDate;
     String title;
     String bloggerAvatar;
     String bloggerName;
     String content;
     
+    String blogId;
+    
     public TopicVo() {
     }
     
-    public TopicVo(String action, Date date, String title, String bloggerAvatar, String bloggerName, String content) {
+    public TopicVo(String action, Date createdDate, String title, String bloggerAvatar, String bloggerName, String content, String blogId) {
         this.action = action;
-        this.date = date;
+        this.createdDate = createdDate;
         this.title = title;
         this.bloggerAvatar = bloggerAvatar;
         this.bloggerName = bloggerName;
         this.content = content;
+        this.blogId = blogId;
+    }
+    
+    public String getBlogId() {
+        return blogId;
+    }
+    
+    public void setBlogId(String blogId) {
+        this.blogId = blogId;
     }
     
     public String getAction() {
@@ -39,12 +49,12 @@ public class TopicVo {
     
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    public Date getDate() {
-        return date;
+    public Date getCreatedDate() {
+        return createdDate;
     }
     
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
     
     public String getTitle() {
@@ -83,21 +93,23 @@ public class TopicVo {
     public String toString() {
         return "TopicVo{" +
                 "action='" + action + '\'' +
-                ", date=" + date +
+                ", createdDate=" + createdDate +
                 ", title='" + title + '\'' +
                 ", bloggerAvatar='" + bloggerAvatar + '\'' +
                 ", bloggerName='" + bloggerName + '\'' +
                 ", content='" + content + '\'' +
+                ", blogId='" + blogId + '\'' +
                 '}';
     }
     
-    public static TopicVo BlogToTopicVo(Blog blog){
+    public static TopicVo blogToTopicVo(Blog blog){
         TopicVo topicVo = new TopicVo();
-        topicVo.setAction("发表了博客");
+        topicVo.setAction("发表了文章");
         topicVo.setBloggerName(blog.getBloggerName());
         topicVo.setBloggerAvatar(blog.getBloggerAvatar());
         topicVo.setTitle(blog.getTitle());
-        topicVo.setDate(blog.getCreatedDate());
+        topicVo.setCreatedDate(blog.getCreatedDate());
+        topicVo.setBlogId(blog.getId());
         String content = blog.getContent();
         if(content!=null){
             PegDownProcessor pdp = new PegDownProcessor(Integer.MAX_VALUE);
@@ -107,14 +119,29 @@ public class TopicVo {
                 topicVo.setContent(htmlContent.substring(0,300)+"......");
             else
                 topicVo.setContent(htmlContent);
-//            String str = MDToText.mdToText(content);
-//            int length = str.length();
-//            if(length>100)
-//                topicVo.setContent(str.substring(0,100)+"......");
-//            else
-//                topicVo.setContent(str);
         }
-        
+        return topicVo;
+    }
+    
+    public static TopicVo commentToTopicVo(Comment comment,Blog blog){
+        TopicVo topicVo = new TopicVo();
+        topicVo.setAction("发表了回复");
+        topicVo.setCreatedDate(comment.getCreatedDate());
+        topicVo.setTitle(blog.getTitle());//回复的文章的title
+        topicVo.setBloggerName(blog.getBloggerName());
+        topicVo.setBlogId(blog.getId());
+        topicVo.setBloggerAvatar(blog.getBloggerAvatar());
+        String content = comment.getContent();
+    
+        if(content!=null){
+            PegDownProcessor pdp = new PegDownProcessor(Integer.MAX_VALUE);
+            String htmlContent = pdp.markdownToHtml(content);
+            int length = htmlContent.length();
+            if(length>300)
+                topicVo.setContent(htmlContent.substring(0,300)+"......");
+            else
+                topicVo.setContent(htmlContent);
+        }
         return topicVo;
     }
 }

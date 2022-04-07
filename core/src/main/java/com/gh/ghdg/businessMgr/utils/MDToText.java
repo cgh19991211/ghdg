@@ -51,5 +51,10 @@ public class MDToText {
         String htmlContent = pdp.markdownToHtml(mdContent);
         return getTextFromHtml(htmlContent);
     }
+    
+    public static String mdToHtml(String mdContent){
+        PegDownProcessor pdp = new PegDownProcessor(Integer.MAX_VALUE);
+        return pdp.markdownToHtml(mdContent);
+    }
 }
 

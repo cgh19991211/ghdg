@@ -9,6 +9,7 @@ import com.gh.ghdg.businessMgr.Repository.CommentRepository;
 import com.gh.ghdg.businessMgr.bean.entities.sub.Response;
 import com.gh.ghdg.businessMgr.bean.entities.sub.ThumbsUp;
 import com.gh.ghdg.businessMgr.bean.vo.CommentVo;
+import com.gh.ghdg.businessMgr.utils.MDToText;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
@@ -24,9 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CommentService extends BaseMongoService<Comment, CommentRepository>{
@@ -48,8 +47,21 @@ public class CommentService extends BaseMongoService<Comment, CommentRepository>
         return dao.findByBloggerId(id);
     }
     
+    public List<Comment> findAllByBloggerId(String id){
+        return dao.findAllByBloggerId(id);
+    }
+    
     public List<Comment> findByBlogId(String blogId){
         List<Comment> commentList = dao.findByBlogIdAndLevel(blogId, 1);
+        for(Comment comment:commentList){
+            String htmlContent = MDToText.mdToHtml(comment.getContent());
+            comment.setContent(htmlContent);
+        }
+        Collections.sort(commentList,(c1,c2)->{
+            Date c1CreatedDate = c1.getCreatedDate();
+            Date c2CreatedDate = c2.getCreatedDate();
+            return c2CreatedDate.compareTo(c1CreatedDate);
+        });
         return commentList;
     }
     
@@ -79,6 +91,7 @@ public class CommentService extends BaseMongoService<Comment, CommentRepository>
         comment.setBloggerId(commentator.getBloggerId());
         comment.setBloggerName(commentator.getBloggerName());
         comment.setBloggerAvatar(commentator.getAvatar());
+        
         
         
         return dao.save(comment);

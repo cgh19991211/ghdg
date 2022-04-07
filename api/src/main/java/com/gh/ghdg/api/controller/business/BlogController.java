@@ -14,16 +14,21 @@ import com.gh.ghdg.businessMgr.service.BloggerInfoService;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.security.JwtUtil;
+import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.common.utils.constant.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.UnsupportedEncodingException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
+import java.util.*;
 
 @RestController
 @RequestMapping("business/blog")
@@ -37,6 +42,11 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     @Autowired
     private LabelRepository labelRepository;
     
+    @Value("${local.server.port:8080}")
+    private String port;
+    
+    private InetAddress localHost = null;
+    
     /**
      * 分页 -- 默认根据_id排序
      * @param page
@@ -44,7 +54,6 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
      */
     @GetMapping("/queryPage")
     public Result queryByPage(@ModelAttribute Page page, @RequestParam(required = false) String tab){
-        Sort sort = null;
         if(StrUtil.equals(tab,"hot")){
             //获取最热
             return queryHotspot(page);
@@ -105,13 +114,27 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
      * @return TopicVo
      */
     @GetMapping("/findByBloggerId")
-    public Result findByBloggerId(@RequestParam("id") String id){
-        List<Blog> blogList = service.findByBloggerId(id);
+    public Result findByBloggerId(@ModelAttribute Page page,@RequestParam("id") String id){
+        
+        String[] latest = {"createdDate","lastModifiedDate"};
+        Sort sort = Sort.by(Sort.Direction.DESC, latest);
+        page.setSort(sort);
+        List<SearchFilter> filters = new ArrayList<>();
+        SearchFilter searchFilter = SearchFilter.build("bloggerId", SearchFilter.Operator.EQ, id);
+        filters.add(searchFilter);
+        page.setFilters(filters);
+        
+        Page<Blog> blogPage = super.queryPage(page);
         List<TopicVo> data = new ArrayList<>();
-        for(Blog blog:blogList){
-            data.add(TopicVo.BlogToTopicVo(blog));
+        for(Blog blog:blogPage.getRecords()){
+            data.add(TopicVo.blogToTopicVo(blog));
         }
-        return Result.suc(data);
+        Page<TopicVo> topicVoPage = new Page<>();
+        topicVoPage.setTotal(blogPage.getTotal())
+                    .setSize(blogPage.getSize())
+                    .setCurrent(blogPage.getCurrent())
+                    .setRecords(data);
+        return Result.suc(topicVoPage);
     }
     
     @GetMapping("/findLikeTitle")
@@ -194,7 +217,28 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     
     @PostMapping("/likeBlog")
     public Result likeBlog(@RequestParam String blogId){
-        return Result.suc("点赞成功",service.likeBlog(blogId));
+        boolean liked = service.likeBlog(blogId);
+    
+        //添加动态--通过新建http请求的方式，请求dynamic的controller
+        try {
+            localHost = Inet4Address.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        String ip = localHost.getHostAddress();
+        
+        String dynamicUrl = "http://"+ip+":"+port+"/";
+        dynamicUrl += "business/dynamic/addDynamic";
+        Map<String,String> params = new HashMap<>();
+        params.put("blogId",blogId);
+        try{
+            params.put("action", URLEncoder.encode("赞了文章","utf-8"));
+        }catch (UnsupportedEncodingException e){
+            System.out.println("对action的编码失败");
+            return Result.error("点赞成功，但是动态添加失败");
+        }
+        HttpKit.sendPost(dynamicUrl,params);
+        return Result.suc("点赞成功",true);
     }
     
     @PostMapping("/cancelLike")

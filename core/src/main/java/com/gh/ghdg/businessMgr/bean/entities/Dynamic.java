@@ -1,8 +1,10 @@
 package com.gh.ghdg.businessMgr.bean.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -13,31 +15,44 @@ import java.util.Date;
 public class Dynamic extends BaseMongoEntity{
     @Indexed
     private String belongId;//动态所属的博主
-    private String action;//like、reply
     
-    private String bloggerId;//动态的作者id
+    /**
+     * 被点赞(..)的内容的作者的信息
+     */
+    private String bloggerId;
     private String bloggerName;
     private String bloggerAvatar;
     
+    /**
+     * 动态的内容
+     */
+    private String blogId;
+    private String action;//like、reply
     private String title;//动态的title
     private String content;//动态的内容：概要
-    @CreatedDate
     private Date createdDate;
-    private String type;//比如点赞，该动态点赞的是博客还是回复 -- blog,reply
     
     public Dynamic() {
     }
     
-    public Dynamic(String belongId, String action, String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, Date createdDate, String type) {
+    public Dynamic(String belongId, String bloggerId, String bloggerName, String bloggerAvatar, String blogId, String action, String title, String content, Date createdDate) {
         this.belongId = belongId;
-        this.action = action;
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
         this.bloggerAvatar = bloggerAvatar;
+        this.blogId = blogId;
+        this.action = action;
         this.title = title;
         this.content = content;
         this.createdDate = createdDate;
-        this.type = type;
+    }
+    
+    public String getBlogId() {
+        return blogId;
+    }
+    
+    public void setBlogId(String blogId) {
+        this.blogId = blogId;
     }
     
     public String getBelongId() {
@@ -88,6 +103,9 @@ public class Dynamic extends BaseMongoEntity{
         this.content = content;
     }
     
+    @CreatedDate
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -104,26 +122,18 @@ public class Dynamic extends BaseMongoEntity{
         this.action = action;
     }
     
-    public String getType() {
-        return type;
-    }
-    
-    public void setType(String type) {
-        this.type = type;
-    }
-    
     @Override
     public String toString() {
         return "Dynamic{" +
                 "belongId='" + belongId + '\'' +
-                ", action='" + action + '\'' +
                 ", bloggerId='" + bloggerId + '\'' +
                 ", bloggerName='" + bloggerName + '\'' +
                 ", bloggerAvatar='" + bloggerAvatar + '\'' +
+                ", blogId='" + blogId + '\'' +
+                ", action='" + action + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", createdDate=" + createdDate +
-                ", type='" + type + '\'' +
                 '}';
     }
 }

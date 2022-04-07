@@ -11,4 +11,5 @@ public interface BloggerInfoRepository extends BaseMongoRepository<BloggerInfo> 
     List<BloggerInfo> findAllByBloggerNameLike(String bloggerName);
     
     BloggerInfo findByBloggerId(String bloggerId);
+    
 }

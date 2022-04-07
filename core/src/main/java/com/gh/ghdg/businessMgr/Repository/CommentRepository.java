@@ -10,4 +10,5 @@ public interface CommentRepository extends BaseMongoRepository<Comment> {
     Comment findByBloggerName(String name);
     List<Comment> findAllByContentLike(String content);
     List<Comment> findByBlogIdAndLevel(String id,Integer level);
+    List<Comment> findAllByBloggerId(String id);
 }

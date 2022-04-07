@@ -186,7 +186,7 @@ public class MyMongoRepositoryImpl<T extends BaseMongoEntity,D extends BaseMongo
             query = Query.query(criteria);
         }
         List<T> list = mongoTemplate.find(query.with(pageable), klass);
-        Long count = count(klass, params);//每次都count太耗资源、时间了
+        Long count = count(klass, params);
         page.setTotal(count.intValue());
         page.setRecords(list);
         return page;
@@ -202,8 +202,8 @@ public class MyMongoRepositoryImpl<T extends BaseMongoEntity,D extends BaseMongo
         else
             pageable = PageRequest.of(page.getCurrent() - 1, page.getSize(),page.getSort());
         List<T> list = mongoTemplate.find(query.with(pageable), klass);
-        
-        //改成思否的滚动翻页就可以取消page的total计算
+        query.limit(0);//query的limit会限制count的数量，默认是10，改为0是不设限
+        query.skip(0);//接下来要做count，所以也不跳过，也不limit
         Long count = mongoTemplate.count(query,klass);
         page.setTotal(count.intValue());
         
