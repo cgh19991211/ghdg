@@ -54,4 +54,9 @@ public class DynamicService extends BaseMongoService<Dynamic, DynamicRepository>
         dynamic.setContent(htmlContent.length()>200?htmlContent.substring(0,200):htmlContent);
         dao.save(dynamic);
     }
+    
+    @Transactional
+    public void deleteDynamic(String id){
+        dao.deleteById(id);
+    }
 }

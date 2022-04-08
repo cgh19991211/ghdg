@@ -80,8 +80,11 @@ public class CommentController extends BaseMongoController<Comment, CommentRepos
     }
     
     @GetMapping("/findByBlogId")
-    public Result findAllCommentsOfBlog(@RequestParam String id){
-        return Result.suc("comment of blog",commentService.findByBlogId(id));
+    public Result findAllCommentsOfBlog(@RequestParam String id, @ModelAttribute Page page){
+        page.addFilter("blogId", SearchFilter.Operator.EQ,id);
+        page.addFilter("level", SearchFilter.Operator.EQ,1);
+//        return Result.suc("comment of blog",commentService.findByBlogId(id));
+        return Result.suc(service.queryPage(page));
     }
     
     @GetMapping("/findByBloggerName")

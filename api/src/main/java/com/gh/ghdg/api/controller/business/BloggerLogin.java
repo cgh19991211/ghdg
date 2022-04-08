@@ -102,7 +102,9 @@ public class BloggerLogin {
 //    @RequiresAuthentication
     public Result getCurBloggerInfo(){
         String curBloggerId = JwtUtil.getCurBloggerId();
-
+        if(StrUtil.isBlank(curBloggerId)){
+            return Result.error(false,"未登录",null,Constants.NOT_LOGIN);
+        }
         return Result.suc(bloggerInfoService.findByBloggerId(curBloggerId));
     }
 }

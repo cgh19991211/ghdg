@@ -41,4 +41,10 @@ public class DynamicController extends BaseMongoController<Dynamic, DynamicRepos
         service.addDynamic(blogId,action,dynamicContent);
     }
     
+    @PostMapping("/delete")
+    public Result deleteDynamic(String id){
+        service.deleteDynamic(id);
+        return Result.suc("成功删除动态");
+    }
+    
 }

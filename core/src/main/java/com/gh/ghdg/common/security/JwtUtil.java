@@ -16,6 +16,7 @@ import com.gh.ghdg.common.utils.constant.Constants;
 import com.gh.ghdg.sysMgr.bean.entities.system.User;
 import com.gh.ghdg.sysMgr.core.dao.system.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -155,13 +156,14 @@ public class JwtUtil {
     public static String getCurBloggerId(){
         String accessToken = HttpKit.getBloggerAccessToken();
         if(StrUtil.isEmpty(accessToken)){
-            try {
-                HttpKit.getResponse().sendError(403);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }finally {
-                return null;
-            }
+//            try {
+//                HttpKit.getResponse().sendError(HttpStatus.UNAUTHORIZED.value());//401未授权
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }finally {
+//                return null;
+//            }
+            return null;
         }
         if(StrUtil.isEmpty(accessToken)){
             return null;
@@ -171,6 +173,12 @@ public class JwtUtil {
             DecodedJWT jwt = JWT.decode(accessToken);
             id = jwt.getClaim("_id").asString();
         } catch (JWTDecodeException e) {
+            //token解码失败，可能是token非法
+            try {
+                HttpKit.getResponse().sendError(HttpStatus.FORBIDDEN.value());//403
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
             return null;
         }
         return id;

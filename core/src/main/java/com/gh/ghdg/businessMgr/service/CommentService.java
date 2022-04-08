@@ -10,6 +10,7 @@ import com.gh.ghdg.businessMgr.bean.entities.sub.Response;
 import com.gh.ghdg.businessMgr.bean.entities.sub.ThumbsUp;
 import com.gh.ghdg.businessMgr.bean.vo.CommentVo;
 import com.gh.ghdg.businessMgr.utils.MDToText;
+import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
@@ -63,6 +64,11 @@ public class CommentService extends BaseMongoService<Comment, CommentRepository>
             return c2CreatedDate.compareTo(c1CreatedDate);
         });
         return commentList;
+    }
+    
+    @Override
+    public Page<Comment> queryPage(Page page) {
+        return super.queryPage(page);
     }
     
     public Comment findByBloggerName(String name){

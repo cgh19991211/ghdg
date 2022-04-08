@@ -40,6 +40,7 @@ public class Constants {
     //错误码
     public static int SUCCESS = 200;//成功
     public static int FAILED = 999;//失败
+    public static int NOT_LOGIN = 4001;
     public static int WITHOUT_PERMISSION = 403;
     public static int USER_NOT_FOUND = 1024;//用户不存在
     public static int WRONG_PASSWORD = 1025;//密码错误
