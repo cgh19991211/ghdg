@@ -104,7 +104,7 @@ public class CommentController extends BaseMongoController<Comment, CommentRepos
     
     @PostMapping("/add")
     public Result saveComment(@ModelAttribute CommentVo t){
-        if(t.getLevel()==2){
+        if(t.getLevel()>1){
             Boolean result = service.addResponse(t);
             if(result.booleanValue()){
                 return Result.suc("回复成功");
