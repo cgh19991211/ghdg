@@ -78,7 +78,7 @@ public class LoginController {
         //签发登陆token
         token = JwtUtil.signAccessToken(user);
         //签发刷新token
-        refreshToken = JwtUtil.signRereshToken(user);
+        refreshToken = JwtUtil.signRefreshToken(user);
         //设置token
         Map<String, String> result = new HashMap<>(1);
         result.put(Constants.ACCESS_TOKEN_NAME, token);
@@ -149,7 +149,7 @@ public class LoginController {
         // 如果小于2倍accessToken时长 ，则刷新 refreshToken
         if(refreshTokenStartTime == null || (refreshTokenStartTime + Constants.REFRESH_EXPIRE_TIME *1000) - System.currentTimeMillis() <= minTimeOfRefreshToken*1000){
             //刷新refreshToken
-            refreshToken = JwtUtil.signRereshToken(user);
+            refreshToken = JwtUtil.signRefreshToken(user);
             cache.set(Constants.REFRESH_TOKEN_START_TIME+user.getUsername(),System.currentTimeMillis(),(int)Constants.REFRESH_EXPIRE_TIME);
         }
         

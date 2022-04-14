@@ -31,7 +31,8 @@ export default {
     shopMgr:'商铺管理',
     foodMgr:'食品管理',
     orderMgr:'订单管理',
-    sdetail:'我的商铺'
+    sdetail:'我的商铺',
+    bloggerMgr: '博主管理'
   },
   navbar: {
     logOut: '退出登录',

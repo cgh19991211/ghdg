@@ -27,7 +27,8 @@ export default {
     historyMessage:'History',
     messageTemplate:'Template',
     messageSender:'Sender',
-    sdetail: 'My Shop'
+    sdetail: 'My Shop',
+    bloggerMgr: 'Blogger'
   },
   navbar: {
     logOut: 'Log Out',

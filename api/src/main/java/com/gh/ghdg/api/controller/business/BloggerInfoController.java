@@ -33,8 +33,8 @@ public class BloggerInfoController extends BaseMongoController<BloggerInfo, Blog
     }
     
     @PostMapping("/update")
-    public Result updateBloggerInfo(@ModelAttribute("t") BloggerInfo t){
-        if(StrUtil.isEmpty(t.get_id())){
+    public Result updateBloggerInfo(@RequestBody BloggerInfo t){
+        if(StrUtil.isEmpty(t.getId())){
             throw new MyException("博主信息_id不得为空");
         }
         if(t.getBloggerId()==null){

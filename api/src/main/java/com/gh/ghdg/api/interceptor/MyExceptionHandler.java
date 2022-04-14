@@ -45,6 +45,11 @@ public class MyExceptionHandler {
 		return requestForward(req);
     }
     
+    @ExceptionHandler(value = IOException.class)
+	public Result ioExceptionHandler(HttpServletRequest req, Exception e){
+		return Result.error(false,"系统抛出IO异常",null,Constants.FAILED);
+	}
+    
     @ExceptionHandler(value = TokenExpiredException.class)
 	public Result tokenExpiredHandler(HttpServletRequest req, TokenExpiredException e) {
 		return Result.error(false,"access token已过期",null,Constants.ACCESS_TOKEN_EXPIRE_CODE);

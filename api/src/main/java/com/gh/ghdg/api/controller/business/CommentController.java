@@ -113,9 +113,8 @@ public class CommentController extends BaseMongoController<Comment, CommentRepos
             }
         }else{
             Comment comment = commentService.addComment(t);
-            //TODO: 发送请求，添加动态
     
-            //添加动态--通过新建http请求的方式，请求dynamic的controller
+            //添加动态--通过新建http请求的方式，请求dynamic的controller -- 感觉这里应该做成服务之间的调用？
             try {
                 localHost = Inet4Address.getLocalHost();
             } catch (UnknownHostException e) {

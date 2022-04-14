@@ -1,19 +1,23 @@
 package com.gh.ghdg.api.controller.business;
 
 import cn.hutool.core.util.StrUtil;
+import com.gh.ghdg.businessMgr.Repository.BloggerRepository;
 import com.gh.ghdg.businessMgr.bean.entities.Blogger;
 import com.gh.ghdg.businessMgr.bean.entities.BloggerInfo;
 import com.gh.ghdg.businessMgr.service.BloggerInfoService;
 import com.gh.ghdg.businessMgr.service.BloggerService;
+import com.gh.ghdg.common.security.AccountInfo;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.common.utils.constant.Constants;
 import io.swagger.annotations.Authorization;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @RestController
@@ -25,6 +29,9 @@ public class BloggerLogin {
     
     @Autowired
     private BloggerInfoService bloggerInfoService;
+    
+    @Resource
+    private BloggerRepository bloggerRepository;
     
     /**
      * 登陆成功之后给前端发送AccessToken还有RefreshToken
@@ -70,7 +77,7 @@ public class BloggerLogin {
     }
     
     @PostMapping("/signIn")
-    public Result bloggerSignIn(@RequestParam String account, @RequestParam String password){
+    public Result bloggerSignIn(@RequestParam String account, @RequestParam String password, String email){
         Map<String,Object> data = new HashMap<>();
         //注册
         Blogger newBlogger = bloggerService.signIn(account, password);
@@ -81,12 +88,12 @@ public class BloggerLogin {
         data.put(Constants.Blogger_REFRESH_TOKEN,refreshToken);
         BloggerInfo bloggerInfo = new BloggerInfo();
         bloggerInfo.setBloggerId(newBlogger.get_id());
-        bloggerInfo.setBloggerName(newBlogger.getAccount());
+        bloggerInfo.setBloggerName(newBlogger.getAccount());//博主的bloggerName就是账号，是不可更改的
         bloggerInfoService.save(bloggerInfo);
         //TODO: 添加缓存:refreshToken
     
         //前端收到注册成功码，跳转到修改个人信息页面;或者将来使用微信扫码登陆，获取微信信息来设置个人信息
-        return Result.suc("注册用户成功",data, Constants.SIGN_IN_SUC);
+        return Result.suc("注册用户成功",data);
     }
     
     @PostMapping("/signOut")
@@ -101,10 +108,52 @@ public class BloggerLogin {
     @GetMapping("/curBlogger")
 //    @RequiresAuthentication
     public Result getCurBloggerInfo(){
+//        Blogger blogger = bloggerOptional.get();
+        String bloggerAccessToken = HttpKit.getBloggerAccessToken();
+        /**
+         * 验证token是否过期
+         */
+        if(StrUtil.isBlank(bloggerAccessToken)||JwtUtil.isExpiredToken(bloggerAccessToken)){
+//            return Result.suc("未登录或登陆过期了",null,Constants.ACCESS_TOKEN_EXPIRE_CODE);
+            return Result.suc("登陆过期了");
+        }
+//        JwtUtil.verify(bloggerAccessToken,blogger.getAccount(),blogger.getPassword());
         String curBloggerId = JwtUtil.getCurBloggerId();
         if(StrUtil.isBlank(curBloggerId)){
             return Result.error(false,"未登录",null,Constants.NOT_LOGIN);
         }
+        Optional<Blogger> bloggerOptional = bloggerRepository.findById(curBloggerId);
+        if(!bloggerOptional.isPresent()){
+            return Result.error(false,"用户未注册",null,Constants.USER_NOT_FOUND);
+        }
+        
         return Result.suc(bloggerInfoService.findByBloggerId(curBloggerId));
+    }
+    
+    @GetMapping("/refreshToken")
+    public Result refreshToken(String BloggerRefreshToken){
+        //验证刷新token
+        if(JwtUtil.isExpiredToken(BloggerRefreshToken)){
+            return Result.suc("刷新token过期了",null,Constants.REFRESH_TOKEN_EXPIRE_CODE);
+        }
+        
+        AccountInfo bloggerAccount = JwtUtil.getBloggerAccount(BloggerRefreshToken);
+        if(bloggerAccount==null){
+            Result.error(false,"无效的token",null,Constants.INVALID_TOKEN_CODE);
+        }
+        String bloggerId = bloggerAccount.getId();
+        Optional<Blogger> bloggerOptional = bloggerRepository.findById(bloggerId);
+        if(!bloggerOptional.isPresent()){
+            Result.error(false,"用户不存在",null,Constants.USER_NOT_FOUND);
+        }
+        Blogger blogger = bloggerOptional.get();
+        //刷新token没问题，接下来重新签发token
+        Map<String,String> data = new HashMap<>();
+        data.put(Constants.Blogger_ACCESS_TOKEN,JwtUtil.signBloggerAccessToken(blogger));
+        //判断是否需要更新RefreshToken RefreshToken>2*AccessToken
+        //但是这里还没有添加缓存。。先直接更新
+        data.put(Constants.Blogger_REFRESH_TOKEN,JwtUtil.signBloggerAccessToken(blogger));
+    
+        return Result.suc(data);
     }
 }

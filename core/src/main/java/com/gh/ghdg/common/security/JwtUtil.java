@@ -84,6 +84,17 @@ public class JwtUtil {
             e.printStackTrace();
         }
     }
+    
+    public static boolean isExpiredToken(String token){
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            Date expiresAt = jwt.getExpiresAt();
+            int result = expiresAt.compareTo(new Date());
+            return result<0;
+        } catch (JWTDecodeException e) {
+            return true;//true为过期
+        }
+    }
 
     /**
      * 获得token中的信息无需secret解密也能获得
@@ -118,6 +129,16 @@ public class JwtUtil {
     public static AccountInfo getAccountInfo(   ) {
        return getAccountInfo(HttpKit.getAccessToken());
     }
+    public static AccountInfo getBloggerAccount(String token){
+        try{
+            DecodedJWT jwt = JWT.decode(token);
+            String username = jwt.getClaim("username").asString();
+            String userId = jwt.getClaim("_id").asString();
+            return new AccountInfo(userId, username);
+        }catch (JWTDecodeException e) {
+            return null;
+        }
+    }
 
     public static String getUserId() {
         return getUserId(HttpKit.getAccessToken());
@@ -139,8 +160,8 @@ public class JwtUtil {
     
     /**
      * 1. 通过http获取token，根据token获取当前用户信息
-     * 2. 获取spring上下文，从上下文中取UserService
-     * 3. 根据用户信息使用UserService获取当前用户持久化对象的实例(瞬时对象)
+     * 2. 获取spring上下文，从上下文中取UserDao
+     * 3. 根据用户信息使用UserDao获取当前用户持久化对象的实例(瞬时对象)
      * @return 返回当前用户实例
      */
     public static User getCurUser(){
@@ -192,7 +213,7 @@ public class JwtUtil {
     public static User getCurUser(String token){
         RedisUtil cache = SpringContextUtil.getBean(RedisUtil.class);
         Object o = cache.get(token);
-        return (o!=null||o instanceof User)?(User)o:null;
+        return (User)o;
     }
 
     /**
@@ -228,7 +249,7 @@ public class JwtUtil {
      * @param
      * @return
      */
-    public static String signRereshToken(User user){
+    public static String signRefreshToken(User user){
         return sign(user, Constants.REFRESH_EXPIRE_TIME);
     }
     

@@ -71,7 +71,7 @@ export const constantRouterMap = [
   {path: '/404', component: () => import('@/views/404'), hidden: true}
 ]
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
@@ -95,12 +95,18 @@ export const asyncRouterMap = [
     children: [
 
       {
-        path: 'sdetail',
-        name: 'sdetail',
-        component: () => import('@/views/business/sdetail/index'),
-        meta: {title: 'sdetail'}
+        // path: 'sdetail',
+        // name: 'sdetail',
+        // component: () => import('@/views/business/sdetail/index'),
+        // meta: {title: 'sdetail'}
+        path: '/blogger',
+        name: 'Blogger',
+        component: () => import('@/views/business/blogger/index'),
+        meta: {
+          title: 'bloggerMgr'
+        }
       },
-      
+
     ]
   },
   {
