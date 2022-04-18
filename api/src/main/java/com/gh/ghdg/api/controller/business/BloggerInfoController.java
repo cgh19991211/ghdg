@@ -6,11 +6,17 @@ import com.gh.ghdg.businessMgr.Repository.BloggerInfoRepository;
 import com.gh.ghdg.businessMgr.bean.entities.sub.FavoriteBlog;
 import com.gh.ghdg.businessMgr.bean.entities.sub.Idol;
 import com.gh.ghdg.businessMgr.service.BloggerInfoService;
+import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.common.utils.exception.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("business/bloggerInfo")
@@ -139,6 +145,7 @@ public class BloggerInfoController extends BaseMongoController<BloggerInfo, Blog
     public Result isFallowed(@RequestParam String idolId){
         return Result.suc("是否已关注",bloggerInfoService.isFollowed(idolId));
     }
+    
     
 }
 

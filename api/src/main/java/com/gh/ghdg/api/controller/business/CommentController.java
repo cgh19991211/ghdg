@@ -1,5 +1,6 @@
 package com.gh.ghdg.api.controller.business;
 
+import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.businessMgr.Repository.BlogRepository;
 import com.gh.ghdg.businessMgr.bean.entities.Blog;
 import com.gh.ghdg.businessMgr.bean.entities.Comment;
@@ -13,6 +14,7 @@ import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
+import com.odianyun.util.sensi.SensitiveFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -40,6 +42,8 @@ public class CommentController extends BaseMongoController<Comment, CommentRepos
     private String port;
     
     private InetAddress localHost = null;
+    
+    private SensitiveFilter filter = SensitiveFilter.DEFAULT;
     
     @GetMapping("/findByBloggerId")
     public Result findByBloggerId(@RequestBody String id){
@@ -104,6 +108,8 @@ public class CommentController extends BaseMongoController<Comment, CommentRepos
     
     @PostMapping("/add")
     public Result saveComment(@ModelAttribute CommentVo t){
+        if(!StrUtil.isBlank(t.getContent()))
+            t.setContent(filter.filter(t.getContent(),'x'));
         if(t.getLevel()>1){
             Boolean result = service.addResponse(t);
             if(result.booleanValue()){

@@ -60,4 +60,10 @@ public class Label extends BaseMongoEntity{
                 ", blogNums='" + blogNums + '\'' +
                 '}';
     }
+    
+    
+    @Override
+    public boolean isNew(){
+        return this.get_id()==null;
+    }
 }

@@ -17,6 +17,14 @@
             <version>${project.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.odianyun.util</groupId>
+            <artifactId>sensitive-words</artifactId>
+            <version>1.0.2</version>
+            <!--            <version>${project.version}</version>-->
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

@@ -17,11 +17,15 @@ import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
 import com.gh.ghdg.common.utils.constant.Constants;
+import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
+import com.odianyun.util.sensi.SensitiveFilter;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
@@ -46,6 +50,8 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     private String port;
     
     private InetAddress localHost = null;
+    
+    private SensitiveFilter filter = SensitiveFilter.DEFAULT;
     
     /**
      * 分页 -- 默认根据_id排序
@@ -108,6 +114,21 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         return Result.suc("by blogger name",blogService.findByBloggerName(blogger_name));
     }
     
+    @GetMapping("/list")
+    public Result getBlogList(@RequestParam(required = false) Integer curPage,
+                                  @RequestParam(required = false) Integer size,
+                                  @RequestParam(required = false) String keyword){
+        Page page = new Page();
+        if(curPage!=null)
+            page.setCurrent(curPage);
+        if(size!=null)
+            page.setSize(size);
+        if(keyword!=null)
+            page.addFilter("bloggerName", SearchFilter.Operator.EQ,keyword);
+        Page<Blog> blogPage = service.queryPage(page);
+        return Result.suc(blogPage);
+    }
+    
     /**
      * 在个人中心展示博主已发表的博客
      * @param id
@@ -160,8 +181,11 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         blog.setBloggerId(curBloggerId);
         blog.setBloggerName(bloggerInfo.getBloggerName());
         blog.setBloggerAvatar(bloggerInfo.getAvatar());
-        blog.setContent(blogVo.getContent());
-        blog.setTitle(blogVo.getTitle());
+        //敏感词过滤
+        String filtedContent = filter.filter(blogVo.getContent(),'x');
+        blog.setContent(filtedContent);
+        String filtedTitle = filter.filter(blogVo.getTitle(), 'x');
+        blog.setTitle(filtedTitle);
         String[] labelIds = blogVo.getLabelIds();
         if(labelIds!=null)
             for(String id:labelIds){
@@ -177,7 +201,9 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     public Result updateBlog(@RequestBody BlogVo blogVo){
         String blogId = blogVo.getBlogId();
         String title = blogVo.getTitle();
-        String content = blogVo.getContent();
+        //敏感词过滤
+        String filted = filter.filter(blogVo.getContent(),'x');
+        String content = filted;
         String[] labelIds = blogVo.getLabelIds();
     
         return Result.suc("update success",service.updateBlog(blogId,title,content,labelIds));
@@ -190,6 +216,13 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         }else{
             return Result.error(false,"删除失败",null, Constants.WITHOUT_PERMISSION);
         }
+    }
+    
+    @PostMapping("/deleteByMgr")
+    @RequiresPermissions(value = PermissionCode.BLOG_DELETE)
+    public Result deleteBlogByMgr(@RequestParam String id){
+        service.delete(id,"blog");
+        return Result.suc("delete suc");
     }
     
     @PostMapping("/addLabels")
@@ -266,6 +299,20 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         }else{
             return Result.error("cancel favorite failed");
         }
+    }
+    
+    @PostMapping("/freeze")
+    @RequiresPermissions(value = PermissionCode.BLOG_FREEZE)
+    public Result freezeBlog(String id){
+        service.freezeBlog(id);
+        return Result.suc("freezed");
+    }
+    
+    @PostMapping("/unfreeze")
+    @RequiresPermissions(value = PermissionCode.BLOG_FREEZE)
+    public Result unfreezeBlog(String id){
+        service.unfreezeBlog(id);
+        return Result.suc(null);
     }
     
 }

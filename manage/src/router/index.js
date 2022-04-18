@@ -106,7 +106,30 @@ export const asyncRouterMap = [
           title: 'bloggerMgr'
         }
       },
-
+      {
+        path: '/blog',
+        name: 'Blog',
+        component: () => import('@/views/business/blog/index'),
+        meta:{
+          title: 'blogMgr'
+        }
+      },
+      {
+        path: '/category',
+        name: 'Category',
+        component: () => import('@/views/business/category/index'),
+        meta: {
+          title: 'categoryMgr'
+        }
+      },
+      {
+        path: '/label',
+        name: 'Label',
+        component: ()=>import('@/views/business/label/index'),
+        meta: {
+          title: 'labelMgr'
+        }
+      }
     ]
   },
   {

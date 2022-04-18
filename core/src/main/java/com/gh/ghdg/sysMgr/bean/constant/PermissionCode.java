@@ -34,5 +34,7 @@ public interface PermissionCode {
     String OPR = "opr";
     //business
     String BUSINESS = "business";
+    String BLOG_DELETE = "blog.delete";
+    String BLOG_FREEZE = "blog.freeze";
     
 }

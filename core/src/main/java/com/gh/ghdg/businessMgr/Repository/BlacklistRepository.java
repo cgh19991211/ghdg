@@ -7,4 +7,5 @@ import java.util.List;
 public interface BlacklistRepository extends BaseMongoRepository<Blacklist> {
     Blacklist findBlacklistByBloggerName(String bloggerName);
     List<Blacklist> findAllByBloggerNameLike(String bloggerName);
+    Blacklist findBy_id(String id);
 }

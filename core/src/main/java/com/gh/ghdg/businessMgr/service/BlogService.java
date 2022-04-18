@@ -6,6 +6,7 @@ import com.gh.ghdg.businessMgr.Repository.impl.MyMongoRepositoryImpl;
 import com.gh.ghdg.businessMgr.bean.entities.*;
 import com.gh.ghdg.businessMgr.bean.entities.sub.ThumbsUp;
 import com.gh.ghdg.businessMgr.utils.MDToText;
+import com.gh.ghdg.common.enums.Status;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.mongodb.client.result.UpdateResult;
@@ -64,7 +65,9 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
     
     @Transactional
     public Blog saveBlog(Blog blog){
-        return dao.save(blog);
+        Blog save = dao.save(blog);
+        
+        return save;
     }
     
     @Transactional
@@ -216,5 +219,27 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
             return false;
         }
         return true;
+    }
+    
+    @Transactional
+    public void freezeBlog(String id){
+        Optional<Blog> byId = dao.findById(id);
+        Blog blog = null;
+        if(byId.isPresent()){
+            blog = byId.get();
+            blog.setStatus(Status.失效);
+        }
+        dao.save(blog);
+    }
+    
+    @Transactional
+    public void unfreezeBlog(String id){
+        Optional<Blog> byId = dao.findById(id);
+        Blog blog = null;
+        if(byId.isPresent()){
+            blog = byId.get();
+            blog.setStatus(Status.生效);
+        }
+        dao.save(blog);
     }
 }

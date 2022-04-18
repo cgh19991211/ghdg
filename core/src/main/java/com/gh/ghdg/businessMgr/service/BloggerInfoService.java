@@ -6,6 +6,7 @@ import com.gh.ghdg.businessMgr.Repository.*;
 import com.gh.ghdg.businessMgr.Repository.impl.MyMongoRepositoryImpl;
 import com.gh.ghdg.businessMgr.bean.entities.sub.FavoriteBlog;
 import com.gh.ghdg.businessMgr.bean.entities.sub.Idol;
+import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;

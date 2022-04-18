@@ -172,6 +172,7 @@
     <orderEntry type="library" name="Maven: org.elasticsearch.plugin:rank-eval-client:7.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.elasticsearch.plugin:lang-mustache-client:7.6.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.spullara.mustache.java:compiler:0.9.6" level="project" />
+    <orderEntry type="module" module-name="sensitive-words" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:2.1.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.5.4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.5.4" level="project" />

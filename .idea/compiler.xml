@@ -10,6 +10,7 @@
         <module name="core" />
         <module name="file-server" />
         <module name="api" />
+        <module name="sensitive-words" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -18,6 +19,7 @@
       <module name="file-server" target="1.8" />
       <module name="fileCenter" target="1.8" />
       <module name="ghdg" target="1.8" />
+      <module name="sensitive-words" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -26,6 +28,7 @@
       <module name="core" options="-parameters" />
       <module name="file-server" options="-parameters" />
       <module name="fileCenter" options="-parameters" />
+      <module name="sensitive-words" options="-parameters" />
     </option>
   </component>
 </project>

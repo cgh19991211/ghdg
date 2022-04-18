@@ -6,6 +6,7 @@
     <modules>
         <module>api</module>
         <module>core</module>
+        <module>sensitive-words</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

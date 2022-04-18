@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import javax.transaction.Transactional;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class BaseMongoService<T extends BaseMongoEntity, S extends BaseMongoRepository<T>> {
     

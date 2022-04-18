@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/file-server/file-server.iml" filepath="$PROJECT_DIR$/file-server/file-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/ghdg.iml" filepath="$PROJECT_DIR$/ghdg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sensitive-words/sensitive-words.iml" filepath="$PROJECT_DIR$/sensitive-words/sensitive-words.iml" />
     </modules>
   </component>
 </project>

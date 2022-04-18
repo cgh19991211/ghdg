@@ -88,4 +88,9 @@ public class Category extends BaseMongoEntity{
                 ", logo:\"" + logo + '\"' +
                 ", labels:\"" + labels + + '\"';
     }
+    
+    @Override
+    public boolean isNew(){
+        return this.get_id()==null;
+    }
 }

@@ -54,20 +54,20 @@ public class CategoryService extends BaseMongoService<Category, CategoryReposito
      * @return
      */
     @Transactional
-    public Category assignLabels(String categoryId,String labelIds){
-        Category category = dao.findById(categoryId).get();
+    public UpdateResult assignLabels(String categoryId,String... labelIds){
+        Query query = Query.query(Criteria.where("_id").is(categoryId));
+        Update update = new Update();
         List<Label> labels = new ArrayList<>();
-        String[] split = StrUtil.split(labelIds, ",");
-        for(String id:split){
+        for(String id:labelIds){
             Optional<Label> optional = labelRepository.findById(id);
             if(optional.isPresent()){
                 Label label = optional.get();
                 labels.add(label);
             }
         }
-        category.setLabels(labels);
-        
-        return mongoTemplate.save(category);
+        for (Label l:labels)
+            update.addToSet("labels",l);
+        return mongoTemplate.updateFirst(query,update,Category.class);
     }
     
     @Transactional

@@ -28,7 +28,10 @@ export default {
     messageTemplate:'Template',
     messageSender:'Sender',
     sdetail: 'My Shop',
-    bloggerMgr: 'Blogger'
+    bloggerMgr: 'Blogger',
+    blogMgr: 'Blog',
+    categoryMgr: 'Category',
+    labelMgr: 'Label'
   },
   navbar: {
     logOut: 'Log Out',

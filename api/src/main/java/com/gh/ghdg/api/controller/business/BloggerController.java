@@ -4,11 +4,15 @@ import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.businessMgr.bean.entities.Blogger;
 import com.gh.ghdg.businessMgr.Repository.BloggerRepository;
 import com.gh.ghdg.businessMgr.service.BloggerService;
+import com.gh.ghdg.common.commonVo.Page;
+import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("business/blogger")
@@ -22,15 +26,34 @@ public class BloggerController extends BaseMongoController<Blogger, BloggerRepos
     public Result saveBlogger(@ModelAttribute("t") Blogger blogger){
         return Result.suc(bloggerService.save(blogger));
     }
+    
+    
     @PostMapping("/delete")
-    public Result deleteBlogger(@RequestParam String id, @RequestParam String collectionName){
-        bloggerService.delete(id,collectionName);
+    public Result deleteBlogger(@RequestParam String id){
+        bloggerService.deleteById(id);
         return Result.suc("删除成功");
     }
     
     @GetMapping("/findByAccount")
     public Result findByAccount(@RequestParam String account){
         return Result.suc("by account",bloggerService.findByAccount(account));
+    }
+    
+    
+    @GetMapping("/list")
+    public Result getBloggerInfoList(
+            @RequestParam(required = false) Integer curPage,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) String bloggerName){
+        Page page = new Page();
+        if(curPage!=null)
+            page.setCurrent(curPage);
+        if(size!=null)
+            page.setSize(size);
+        if(!StrUtil.isBlank(bloggerName))
+            page.addFilter("account", SearchFilter.Operator.EQ,bloggerName);
+        
+        return Result.suc(service.queryPage(page));
     }
     
     @GetMapping("getAll")

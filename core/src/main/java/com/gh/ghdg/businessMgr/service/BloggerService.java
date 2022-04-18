@@ -1,9 +1,12 @@
 package com.gh.ghdg.businessMgr.service;
 
+import com.gh.ghdg.businessMgr.Repository.BloggerInfoRepository;
 import com.gh.ghdg.businessMgr.bean.entities.Blacklist;
 import com.gh.ghdg.businessMgr.bean.entities.Blogger;
 import com.gh.ghdg.businessMgr.Repository.BloggerRepository;
 import com.gh.ghdg.businessMgr.Repository.impl.MyMongoRepositoryImpl;
+import com.gh.ghdg.businessMgr.bean.entities.BloggerInfo;
+import com.gh.ghdg.businessMgr.bean.vo.BloggerManageVo;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.enums.Status;
@@ -18,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +41,9 @@ public class BloggerService extends BaseMongoService<Blogger, BloggerRepository>
     @Autowired
     private BlacklistService blacklistService;
     
+    @Autowired
+    private BloggerInfoRepository bloggerInfoRepository;
+    
     public List<Blogger> findAllBloggers(){
         return super.findAll();
     }
@@ -54,13 +61,32 @@ public class BloggerService extends BaseMongoService<Blogger, BloggerRepository>
         return mongoTemplate.find(Query.query(parstFilters(filters)),Blogger.class);
     }
     
+    public void deleteById(String id){
+        dao.deleteById(id);
+    }
+    
     public Page queryPage(Page page){
         List filters = page.getFilters();
-        if(filters==null||filters.size()==0)
-            return myMongoRepository.queryPage(page,Blogger.class);
-        else{
-            return myMongoRepository.queryPage(page,Query.query(parstFilters(filters)),Blogger.class);
+        if(filters==null||filters.size()==0) {
+            Page queryPage = myMongoRepository.queryPage(page, Blogger.class);
+            turnToVo(queryPage);
+            return queryPage;
+        } else{
+            Page<Blogger> queryPage = super.queryPage(page);
+            turnToVo(queryPage);
+            return queryPage;
         }
+    }
+    
+    private void turnToVo(Page page){
+        List<BloggerManageVo> data = new ArrayList<>();
+        for (Blogger record : (List<Blogger>)page.getRecords()) {
+            BloggerInfo bloggerInfo = bloggerInfoRepository.findByBloggerId(record.getId());
+            if(bloggerInfo!=null){
+                data.add(BloggerManageVo.buildBloggerManageVo(bloggerInfo,record));
+            }
+        }
+        page.setRecords(data);
     }
     
     @Transactional

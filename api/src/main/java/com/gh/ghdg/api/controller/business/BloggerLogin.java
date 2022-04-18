@@ -1,11 +1,14 @@
 package com.gh.ghdg.api.controller.business;
 
 import cn.hutool.core.util.StrUtil;
+import com.gh.ghdg.businessMgr.Repository.BlacklistRepository;
 import com.gh.ghdg.businessMgr.Repository.BloggerRepository;
+import com.gh.ghdg.businessMgr.bean.entities.Blacklist;
 import com.gh.ghdg.businessMgr.bean.entities.Blogger;
 import com.gh.ghdg.businessMgr.bean.entities.BloggerInfo;
 import com.gh.ghdg.businessMgr.service.BloggerInfoService;
 import com.gh.ghdg.businessMgr.service.BloggerService;
+import com.gh.ghdg.common.enums.Status;
 import com.gh.ghdg.common.security.AccountInfo;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
@@ -33,6 +36,9 @@ public class BloggerLogin {
     @Resource
     private BloggerRepository bloggerRepository;
     
+    @Resource
+    private BlacklistRepository blacklistRepository;
+    
     /**
      * 登陆成功之后给前端发送AccessToken还有RefreshToken
      * @param account
@@ -53,8 +59,12 @@ public class BloggerLogin {
             if(!StrUtil.equals(s,dbpwd)){
                 return Result.error(false,"密码错误",null,Constants.WRONG_PASSWORD);
             }
-    
-            //TODO: blogger login, return AccessToken,FreshToken
+            if(blogger.getStatus()!=Status.生效){
+                Blacklist blacked = blacklistRepository.findBy_id(blogger.getId());
+                if(blacked!=null)
+                    return Result.error(false,"您因："+blacked.getReason()+"，被封禁，截至："+blacked.getUntil(),null,Constants.BLACKED);
+            }
+            //blogger login, return AccessToken,FreshToken
             String refreshToken = JwtUtil.signBloggerRefreshToken(blogger);
             String accessToken = JwtUtil.signBloggerAccessToken(blogger);
             data.put(Constants.Blogger_ACCESS_TOKEN,refreshToken);

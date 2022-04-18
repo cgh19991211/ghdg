@@ -13,6 +13,12 @@
     <artifactId>core</artifactId>
     <dependencies>
         <dependency>
+            <groupId>com.odianyun.util</groupId>
+            <artifactId>sensitive-words</artifactId>
+            <version>1.0.2</version>
+            <!--            <version>${project.version}</version>-->
+        </dependency>
+        <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
         </dependency>

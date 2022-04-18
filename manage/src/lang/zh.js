@@ -32,7 +32,10 @@ export default {
     foodMgr:'食品管理',
     orderMgr:'订单管理',
     sdetail:'我的商铺',
-    bloggerMgr: '博主管理'
+    bloggerMgr: '博主管理',
+    blogMgr: '博客管理',
+    categoryMgr: '分类管理',
+    labelMgr: '标签管理'
   },
   navbar: {
     logOut: '退出登录',

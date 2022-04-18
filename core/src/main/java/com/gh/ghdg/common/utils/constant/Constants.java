@@ -43,6 +43,7 @@ public class Constants {
     public static int NOT_LOGIN = 4001;
     public static int WITHOUT_PERMISSION = 403;
     public static int USER_NOT_FOUND = 1024;//用户不存在
+    public static int BLACKED = 444;
     public static int WRONG_PASSWORD = 1025;//密码错误
     public static int ACCESS_TOKEN_EXPIRE_CODE = 50014;//请求token过期
     public static int REFRESH_TOKEN_EXPIRE_CODE = 50015;//刷新token过期
