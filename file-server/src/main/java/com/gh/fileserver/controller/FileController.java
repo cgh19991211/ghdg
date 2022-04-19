@@ -170,7 +170,8 @@ public class FileController {
 			File saveFile = fileService.saveFile(f);
 			String path = "http://" + serverAddress + ":" + serverPort + "/view/" + saveFile.getId();
 			FileVo.Data resultData = result.getData();
-			resultData.getSuccMap().put(saveFile.getName(),path);
+			resultData.getSuccMap().put("name",saveFile.getName());
+			resultData.getSuccMap().put("url",path);
 			result.setCode(HttpStatus.OK.value());
 			result.setMsg("upload success");
 		}catch (IOException | NoSuchAlgorithmException e){

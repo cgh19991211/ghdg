@@ -1,5 +1,6 @@
 package com.gh.ghdg.businessMgr.bean.vo;
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gh.ghdg.businessMgr.bean.entities.Blog;
 import com.gh.ghdg.businessMgr.bean.entities.Comment;
@@ -111,14 +112,18 @@ public class TopicVo {
         topicVo.setCreatedDate(blog.getCreatedDate());
         topicVo.setBlogId(blog.getId());
         String content = blog.getContent();
-        if(content!=null){
-            PegDownProcessor pdp = new PegDownProcessor(Integer.MAX_VALUE);
-            String htmlContent = pdp.markdownToHtml(content);
-            int length = htmlContent.length();
+        if(!StrUtil.isBlank(content)){
+            /**
+             * md转为html的工作还是交给前端Vditor来完成
+             */
+//            PegDownProcessor pdp = new PegDownProcessor(Integer.MAX_VALUE);
+//            String htmlContent = pdp.markdownToHtml(content);
+//            int length = htmlContent.length();
+            int length = content.length();
             if(length>300)
-                topicVo.setContent(htmlContent.substring(0,300)+"......");
+                topicVo.setContent(content.substring(0,300)+"......");
             else
-                topicVo.setContent(htmlContent);
+                topicVo.setContent(content);
         }
         return topicVo;
     }
@@ -133,14 +138,14 @@ public class TopicVo {
         topicVo.setBloggerAvatar(blog.getBloggerAvatar());
         String content = comment.getContent();
     
-        if(content!=null){
-            PegDownProcessor pdp = new PegDownProcessor(Integer.MAX_VALUE);
-            String htmlContent = pdp.markdownToHtml(content);
-            int length = htmlContent.length();
+        if(!StrUtil.isBlank(content)){
+//            PegDownProcessor pdp = new PegDownProcessor(Integer.MAX_VALUE);
+//            String htmlContent = pdp.markdownToHtml(content);
+            int length = content.length();
             if(length>300)
-                topicVo.setContent(htmlContent.substring(0,300)+"......");
+                topicVo.setContent(content.substring(0,300)+"......");
             else
-                topicVo.setContent(htmlContent);
+                topicVo.setContent(content);
         }
         return topicVo;
     }
