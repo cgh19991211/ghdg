@@ -189,7 +189,9 @@ public class BloggerInfoService extends BaseMongoService<BloggerInfo, BloggerInf
     @Transactional
     public Boolean isFollowed(String idolId){
         String curBloggerId = JwtUtil.getCurBloggerId();
-        BloggerInfo bloggerInfo = bloggerInfoRepository.findByBloggerId(curBloggerId);
+        Optional<BloggerInfo> optional = bloggerInfoRepository.findByBloggerId(curBloggerId);
+        if(!optional.isPresent())return false;
+        BloggerInfo bloggerInfo = optional.get();
         if(bloggerInfo.getIdols()==null)return false;
         for(Idol idol:bloggerInfo.getIdols()){
             if(StrUtil.equals(idol.getId(),idolId))return true;

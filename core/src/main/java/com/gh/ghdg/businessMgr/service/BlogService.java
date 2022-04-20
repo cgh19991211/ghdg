@@ -137,7 +137,9 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
     @Transactional
     public boolean likeBlog(String blogId){
         try {
-            BloggerInfo curBlogger = bloggerInfoRepository.findByBloggerId(JwtUtil.getCurBloggerId());
+            Optional<BloggerInfo> optional = bloggerInfoRepository.findByBloggerId(JwtUtil.getCurBloggerId());
+            if(!optional.isPresent())return false;
+            BloggerInfo curBlogger = optional.get();
             ThumbsUp thumbsUp = new ThumbsUp();
             thumbsUp.setBloggerId(curBlogger.getBloggerId());
             thumbsUp.setBloggerName(curBlogger.getBloggerName());
@@ -163,7 +165,9 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
     public boolean cancelLike(String blogId){
         try{
             String curBloggerId = JwtUtil.getCurBloggerId();
-            BloggerInfo cur = bloggerInfoRepository.findByBloggerId(curBloggerId);
+            Optional<BloggerInfo> optional = bloggerInfoRepository.findByBloggerId(curBloggerId);
+            if(!optional.isPresent())return false;
+            BloggerInfo cur = optional.get();
             Query query = Query.query(Criteria.where("_id").is(blogId));
             Update update = new Update();
             ThumbsUp thumbsUp = new ThumbsUp();
@@ -184,7 +188,9 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
     public boolean favoriteBlog(String blogId){
         try{
             String curBloggerId = JwtUtil.getCurBloggerId();
-            BloggerInfo cur = bloggerInfoRepository.findByBloggerId(curBloggerId);
+            Optional<BloggerInfo> optional = bloggerInfoRepository.findByBloggerId(curBloggerId);
+            if(!optional.isPresent())return false;
+            BloggerInfo cur = optional.get();
             Query query = Query.query(Criteria.where("_id").is(blogId));
             Update update = new Update();
             ThumbsUp thumbsUp = new ThumbsUp();
@@ -205,7 +211,9 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
     public boolean cancelFavoriteBlog(String blogId){
         try{
             String curBloggerId = JwtUtil.getCurBloggerId();
-            BloggerInfo cur = bloggerInfoRepository.findByBloggerId(curBloggerId);
+            Optional<BloggerInfo> optional = bloggerInfoRepository.findByBloggerId(curBloggerId);
+            if(!optional.isPresent())return false;
+            BloggerInfo cur = optional.get();
             Query query = Query.query(Criteria.where("_id").is(blogId));
             Update update = new Update();
             ThumbsUp thumbsUp = new ThumbsUp();

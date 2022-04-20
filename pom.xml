@@ -37,6 +37,8 @@
 <!--        <swagger.version>2.9.2</swagger.version>-->
         <swagger.version>3.0.0</swagger.version>
         <elasticsearch.version>7.6.1</elasticsearch.version>
+        <mail.version>2.6.6</mail.version>
+        <freemarker.version>2.3.8</freemarker.version>
     </properties>
 
     <dependencyManagement>
@@ -50,10 +52,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-freemarker</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${freemarker.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -88,11 +87,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <version>${spring-boot-starter-test.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-test</artifactId>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -165,6 +159,12 @@
                 <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
                 <version>2.5.4</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-mail</artifactId>
+                <version>${mail.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

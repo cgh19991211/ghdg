@@ -65,4 +65,9 @@ public class Blogger extends BaseMongoEntity{
                 ", status='" + status + '\'' +
                 '}';
     }
+    
+    @Override
+    public boolean isNew(){
+        return this.get_id()==null;
+    }
 }

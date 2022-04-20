@@ -10,6 +10,7 @@ import com.gh.ghdg.businessMgr.bean.vo.BloggerManageVo;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
 import com.gh.ghdg.common.enums.Status;
+import com.gh.ghdg.common.utils.PwdEncrypt;
 import com.gh.ghdg.common.utils.ToolUtil;
 import com.gh.ghdg.common.utils.exception.MyException;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -36,7 +37,7 @@ public class BloggerService extends BaseMongoService<Blogger, BloggerRepository>
     private MyMongoRepositoryImpl myMongoRepository;
     
     @Autowired
-    private HashedCredentialsMatcher matcher;
+    private PwdEncrypt pwdEncrypt;
     
     @Autowired
     private BlacklistService blacklistService;
@@ -81,8 +82,9 @@ public class BloggerService extends BaseMongoService<Blogger, BloggerRepository>
     private void turnToVo(Page page){
         List<BloggerManageVo> data = new ArrayList<>();
         for (Blogger record : (List<Blogger>)page.getRecords()) {
-            BloggerInfo bloggerInfo = bloggerInfoRepository.findByBloggerId(record.getId());
-            if(bloggerInfo!=null){
+            Optional<BloggerInfo> optional = bloggerInfoRepository.findByBloggerId(record.getId());
+            if(optional.isPresent()){
+                BloggerInfo bloggerInfo = optional.get();
                 data.add(BloggerManageVo.buildBloggerManageVo(bloggerInfo,record));
             }
         }
@@ -163,7 +165,7 @@ public class BloggerService extends BaseMongoService<Blogger, BloggerRepository>
      * @return hashed password
      */
     public String encryptPassword(String password, String salt) {
-        return new SimpleHash(matcher.getHashAlgorithmName(), password, salt, matcher.getHashIterations()).toString();
+        return pwdEncrypt.encryptPassword(password,salt);
     }
     
 }

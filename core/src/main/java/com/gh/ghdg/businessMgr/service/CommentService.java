@@ -86,9 +86,9 @@ public class CommentService extends BaseMongoService<Comment, CommentRepository>
         String commentatorId = JwtUtil.getCurBloggerId();
         Integer level = commentVo.getLevel();
     
-        BloggerInfo commentator = bloggerInfoRepository.findByBloggerId(commentatorId);
-        if(commentator==null)return null;
-        
+        Optional<BloggerInfo> optional = bloggerInfoRepository.findByBloggerId(commentatorId);
+        if(!optional.isPresent())return null;
+        BloggerInfo commentator = optional.get();
         Comment comment = new Comment();
         comment.setBlogId(blogId);
         comment.setContent(content);
@@ -146,7 +146,9 @@ public class CommentService extends BaseMongoService<Comment, CommentRepository>
     @Transactional
     public boolean likeComment(String commentId){
         try{
-            BloggerInfo curBlogger = bloggerInfoRepository.findByBloggerId(JwtUtil.getCurBloggerId());
+            Optional<BloggerInfo> optional = bloggerInfoRepository.findByBloggerId(JwtUtil.getCurBloggerId());
+            if(!optional.isPresent())return false;
+            BloggerInfo curBlogger = optional.get();
             Query q = Query.query(Criteria.where("_id").is(commentId));
             Update update = new Update();
             ThumbsUp thumbsUp = new ThumbsUp();
@@ -165,7 +167,9 @@ public class CommentService extends BaseMongoService<Comment, CommentRepository>
     @Transactional
     public boolean cancelLike(String commentId){
         try{
-            BloggerInfo curBlogger = bloggerInfoRepository.findByBloggerId(JwtUtil.getCurBloggerId());
+            Optional<BloggerInfo> optional = bloggerInfoRepository.findByBloggerId(JwtUtil.getCurBloggerId());
+            if(!optional.isPresent())return false;
+            BloggerInfo curBlogger = optional.get();
             Query q = Query.query(Criteria.where("_id").is(commentId));
             Update update = new Update();
             ThumbsUp thumbsUp = new ThumbsUp();
