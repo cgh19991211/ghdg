@@ -27,6 +27,7 @@ public class Blog extends BaseMongoEntity{
     //博客内容
     private String title;
     private String content;
+    private String summarize;
     private List<ThumbsUp> likes = new ArrayList<>();//点赞该博客的人
     private Integer viewNums = 0;
     private List<ThumbsUp> storeUp = new ArrayList<>();
@@ -45,12 +46,13 @@ public class Blog extends BaseMongoEntity{
     public Blog() {
     }
     
-    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, List<ThumbsUp> likes, Integer viewNums, List<ThumbsUp> storeUp, String icon, Category category, List<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
+    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, String summarize, List<ThumbsUp> likes, Integer viewNums, List<ThumbsUp> storeUp, String icon, Category category, List<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
         this.bloggerAvatar = bloggerAvatar;
         this.title = title;
         this.content = content;
+        this.summarize = summarize;
         this.likes = likes;
         this.viewNums = viewNums;
         this.storeUp = storeUp;
@@ -195,14 +197,24 @@ public class Blog extends BaseMongoEntity{
         this.labels.add(l);
     }
     
+    public String getSummarize() {
+        return summarize;
+    }
+    
+    public void setSummarize(String summarize) {
+        this.summarize = summarize;
+    }
+    
     @Override
     public String toString() {
         return "Blog{" +
-                "bloggerId='" + bloggerId + '\'' +
+                "_id='" + _id + '\'' +
+                ", bloggerId='" + bloggerId + '\'' +
                 ", bloggerName='" + bloggerName + '\'' +
                 ", bloggerAvatar='" + bloggerAvatar + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
+                ", summarize='" + summarize + '\'' +
                 ", likes=" + likes +
                 ", viewNums=" + viewNums +
                 ", storeUp=" + storeUp +

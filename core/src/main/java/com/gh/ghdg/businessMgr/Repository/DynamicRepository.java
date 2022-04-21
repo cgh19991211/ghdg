@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface DynamicRepository extends BaseMongoRepository<Dynamic>{
     List<Dynamic> findByBelongId(String id);
+    List<Dynamic> findByBloggerName(String bloggerName);
 }

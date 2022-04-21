@@ -102,7 +102,7 @@ public class BloggerLogin {
         String newPwd = c.getPwd();
         String curBloggerId = JwtUtil.getCurBloggerId();
         String cacheCode = redisUtil.get(curBloggerId+"VERRIFY");
-        if(cacheCode==null||!StrUtil.equals(code,cacheCode)){
+        if(cacheCode==null||!StrUtil.equals(code,cacheCode)) {
             return Result.error(false,"验证码错误或者已过期",null, ApiConstants.VERIFY_NOT_FOUND);
         }
         Optional<Blogger> optional = bloggerRepository.findById(curBloggerId);
@@ -128,6 +128,9 @@ public class BloggerLogin {
         //TODO: 取缓存
         
         Blogger blogger = bloggerService.findByAccount(account);
+        if(blogger.getStatus()==Status.失效){
+            return Result.error(false,"该用户已被冻结",null,Constants.FROZEN);
+        }
         Map<String,Object> data = new HashMap<>();
         if(blogger!=null){
             //TODO: 判断密码是否正确

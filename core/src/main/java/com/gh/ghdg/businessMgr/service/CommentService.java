@@ -3,6 +3,7 @@ package com.gh.ghdg.businessMgr.service;
 import cn.hutool.core.util.StrUtil;
 import com.gh.ghdg.businessMgr.Repository.BlogRepository;
 import com.gh.ghdg.businessMgr.Repository.BloggerInfoRepository;
+import com.gh.ghdg.businessMgr.bean.entities.Blog;
 import com.gh.ghdg.businessMgr.bean.entities.BloggerInfo;
 import com.gh.ghdg.businessMgr.bean.entities.Comment;
 import com.gh.ghdg.businessMgr.Repository.CommentRepository;
@@ -11,6 +12,7 @@ import com.gh.ghdg.businessMgr.bean.entities.sub.ThumbsUp;
 import com.gh.ghdg.businessMgr.bean.vo.CommentVo;
 import com.gh.ghdg.businessMgr.utils.MDToText;
 import com.gh.ghdg.common.commonVo.Page;
+import com.gh.ghdg.common.enums.Status;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
@@ -125,6 +127,7 @@ public class CommentService extends BaseMongoService<Comment, CommentRepository>
         }
         if(ids.size()==0)return null;
         Query query = Query.query(Criteria.where("_id").in(ids));
+        query.addCriteria(Criteria.where("status").ne(Status.失效));
         return mongoTemplate.find(query,Comment.class);
     }
     
@@ -185,15 +188,26 @@ public class CommentService extends BaseMongoService<Comment, CommentRepository>
         return true;
     }
     
-    /**
-     * 添加回复
-     * 回复实际上也只是个Comment
-     * 应该把Comment实体类中的response集合类型整一个sub类：存什么呢？
-     * 然后添加回复同样是添加Comment，前端请求Comment时要自动把Comment的response也请求出来。
-     * @return
-     */
-//    @Transactional
-//    public Commentomment addResponse(){
-//
-//    }
+    @Transactional
+    public void freezeComment(String id){
+        Optional<Comment> byId = dao.findById(id);
+        Comment comment = null;
+        if(byId.isPresent()){
+            comment = byId.get();
+            comment.setStatus(Status.失效);
+        }
+        dao.save(comment);
+    }
+    
+    @Transactional
+    public void unfreezeComment(String id){
+        Optional<Comment> byId = dao.findById(id);
+        Comment comment = null;
+        if(byId.isPresent()){
+            comment = byId.get();
+            comment.setStatus(Status.生效);
+        }
+        dao.save(comment);
+    }
+    
 }

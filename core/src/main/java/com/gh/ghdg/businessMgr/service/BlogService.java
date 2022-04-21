@@ -59,7 +59,7 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
     }
     
     public List<Blog> findByLabel(String labelId){
-        Query query = Query.query(Criteria.where("labels.$[]._id").is(labelId));
+        Query query = Query.query(Criteria.where("labels._id").is(labelId));
         return mongoTemplate.find(query,Blog.class);
     }
     
@@ -71,7 +71,7 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
     }
     
     @Transactional
-    public Blog updateBlog(String blogId, String blogTitle, String blogContent, String... labelIds){
+    public Blog updateBlog(String blogId, String blogTitle, String blogContent,String summarize, String... labelIds){
         Optional<Blog> blogOptional = dao.findById(blogId);
         if(!blogOptional.isPresent()){
             return null;
@@ -79,6 +79,7 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
         Blog blog = blogOptional.get();
         blog.setTitle(blogTitle);
         blog.setContent(blogContent);
+        blog.setSummarize(summarize);
         List<Label> labels = new ArrayList<>();
         for(String id: labelIds){
             Optional<Label> byId = labelRepository.findById(id);

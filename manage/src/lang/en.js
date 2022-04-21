@@ -31,7 +31,8 @@ export default {
     bloggerMgr: 'Blogger',
     blogMgr: 'Blog',
     categoryMgr: 'Category',
-    labelMgr: 'Label'
+    labelMgr: 'Label',
+    commentMgr: 'Comment'
   },
   navbar: {
     logOut: 'Log Out',

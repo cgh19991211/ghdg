@@ -23,30 +23,35 @@ import Layout from '../views/layout/Layout'
     icon: 'svg-name'             the icon show in the sidebar,
   }
  **/
-export const constantRouterMap = [
-  {
+export const constantRouterMap = [{
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
   {
-    path: '/',//路由的路径
-    component: Layout,//路由映射的组件，  这里的layout作为父组件
-    redirect: '/dashboard',//重定向路径
+    path: '/', //路由的路径
+    component: Layout, //路由映射的组件，  这里的layout作为父组件
+    redirect: '/dashboard', //重定向路径
     name: 'dashboard',
     hidden: false,
     //children是子组件，子组件会全部渲染到父组件中     此处既是二级路由
     children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: {title: 'dashboard', icon: 'dashboard', noCache: true}
-    },
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: {
+          title: 'dashboard',
+          icon: 'dashboard',
+          noCache: true
+        }
+      },
       {
         path: '/account/profile',
         name: '个人资料',
         component: () => import('@/views/account/profile.vue'),
         hidden: true,
-        meta: {title: '个人资料'}
+        meta: {
+          title: '个人资料'
+        }
 
       },
       {
@@ -54,7 +59,9 @@ export const constantRouterMap = [
         name: '最近活动',
         component: () => import('@/views/account/timeline.vue'),
         hidden: true,
-        meta: {title: '最近活动'}
+        meta: {
+          title: '最近活动'
+        }
 
       },
       {
@@ -62,17 +69,25 @@ export const constantRouterMap = [
         name: '修改密码',
         component: () => import('@/views/account/updatePwd.vue'),
         hidden: true,
-        meta: {title: '修改密码'}
+        meta: {
+          title: '修改密码'
+        }
 
       }
     ]
   },
   //404一定要在最后再加载
-  {path: '/404', component: () => import('@/views/404'), hidden: true}
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  }
 ]
 const createRouter = () => new Router({
   mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRouterMap
 })
 
@@ -80,15 +95,14 @@ const router = createRouter()
 
 export default router
 
-export const asyncRouterMap = [
-  {
+export const asyncRouterMap = [{
     path: '/business',
     component: Layout,
     redirect: '#',
     name: 'Bussiness',
     alwaysShow: true,
     meta: {
-      roles: ['administrator','group_admin'],
+      roles: ['administrator', 'group_admin'],
       title: 'businessMgr',
       icon: 'shopping'
     },
@@ -110,8 +124,16 @@ export const asyncRouterMap = [
         path: '/blog',
         name: 'Blog',
         component: () => import('@/views/business/blog/index'),
-        meta:{
+        meta: {
           title: 'blogMgr'
+        },
+      },
+      {
+        path: '/comment',
+        name: 'Comment',
+        component: () => import('@/views/business/comment/index'),
+        meta: {
+          title: 'commentMgr'
         }
       },
       {
@@ -125,7 +147,7 @@ export const asyncRouterMap = [
       {
         path: '/label',
         name: 'Label',
-        component: ()=>import('@/views/business/label/index'),
+        component: () => import('@/views/business/label/index'),
         meta: {
           title: 'labelMgr'
         }
@@ -143,8 +165,7 @@ export const asyncRouterMap = [
       title: 'systemMgr',
       icon: 'edit'
     },
-    children: [
-      {
+    children: [{
         path: '/menu',
         name: 'Menu',
         component: () => import('@/views/system/menu/index'),
@@ -166,21 +187,27 @@ export const asyncRouterMap = [
         path: 'user',
         name: 'Account',
         component: () => import('@/views/system/user/index'),
-        meta: {title: 'userMgr'}
+        meta: {
+          title: 'userMgr'
+        }
       },
       //角色管理
       {
         path: 'role',
         name: 'roleMgr',
         component: () => import('@/views/system/role/index'),
-        meta: {title: 'roleMgr'}
+        meta: {
+          title: 'roleMgr'
+        }
       },
       //权限管理
       {
         path: 'permission',
         name: 'permissionMgr',
         component: () => import('@/views/system/permission/index'),
-        meta: {title: 'permissionMgr'}
+        meta: {
+          title: 'permissionMgr'
+        }
       },
       // {
       //   path: 'task',
@@ -213,75 +240,92 @@ export const asyncRouterMap = [
     ]
   },
 
+  // {
+  //   path: '/optionMgr',
+  //   component: Layout,
+  //   redirect: '#',
+  //   name: 'optionMgr',
+  //   alwaysShow: true,
+  //   meta: {
+  //     roles: ['administrator', 'developer'],
+  //     title: 'optionMgr',
+  //     icon: 'example'
+  //   },
+  //   children: [{
+  //       path: 'druid',
+  //       name: 'druid',
+  //       component: () => import('@/views/operation/druid/index'),
+  //       meta: {
+  //         title: 'druid'
+  //       }
+  //     },
+  //     {
+  //       path: 'swagger',
+  //       name: 'swagger',
+  //       component: () => import('@/views/operation/api/index'),
+  //       meta: {
+  //         title: 'swagger'
+  //       }
+  //     },
+  //     {
+  //       path: 'loginLog',
+  //       name: 'Login Log',
+  //       component: () => import('@/views/system/loginLog/index'),
+  //       meta: {
+  //         title: 'loginLog'
+  //       }
+  //     },
+  //     {
+  //       path: 'log',
+  //       name: 'Bussiness Log',
+  //       component: () => import('@/views/system/log/index'),
+  //       meta: {
+  //         title: 'bussinessLog'
+  //       }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/message',
+  //   component: Layout,
+  //   redirect: '#',
+  //   name: 'messageMgr',
+  //   alwaysShow: true,
+  //   meta: {
+  //     roles: ['administrator', 'developer'],
+  //     title: 'messageMgr',
+  //     icon: 'message'
+  //   },
+  //   children: [{
+  //       path: 'history',
+  //       name: 'message',
+  //       component: () => import('@/views/message/message/index'),
+  //       meta: {
+  //         title: 'historyMessage'
+  //       }
+  //     },
+  //     {
+  //       path: 'template',
+  //       name: 'template',
+  //       component: () => import('@/views/message/template/index'),
+  //       meta: {
+  //         title: 'messageTemplate'
+  //       }
+  //     },
+  //     {
+  //       path: 'sender',
+  //       name: 'Message Sender',
+  //       component: () => import('@/views/message/sender/index'),
+  //       meta: {
+  //         title: 'messageSender'
+  //       }
+  //     }
+  //   ]
+  // },
+  
   {
-    path: '/optionMgr',
-    component: Layout,
-    redirect: '#',
-    name: 'optionMgr',
-    alwaysShow: true,
-    meta: {
-      roles: ['administrator', 'developer'],
-      title: 'optionMgr',
-      icon: 'example'
-    },
-    children: [
-      {
-        path: 'druid',
-        name: 'druid',
-        component: () => import('@/views/operation/druid/index'),
-        meta: {title: 'druid'}
-      },
-      {
-        path: 'swagger',
-        name: 'swagger',
-        component: () => import('@/views/operation/api/index'),
-        meta: {title: 'swagger'}
-      },
-      {
-        path: 'loginLog',
-        name: 'Login Log',
-        component: () => import('@/views/system/loginLog/index'),
-        meta: {title: 'loginLog'}
-      },
-      {
-        path: 'log',
-        name: 'Bussiness Log',
-        component: () => import('@/views/system/log/index'),
-        meta: {title: 'bussinessLog'}
-      }
-    ]
-  },
-  {
-    path: '/message',
-    component: Layout,
-    redirect: '#',
-    name: 'messageMgr',
-    alwaysShow: true,
-    meta: {
-      roles: ['administrator', 'developer'],
-      title: 'messageMgr',
-      icon: 'message'
-    },
-    children: [
-      {
-        path: 'history',
-        name: 'message',
-        component: () => import('@/views/message/message/index'),
-        meta: {title: 'historyMessage'}
-      },
-      {
-        path: 'template',
-        name: 'template',
-        component: () => import('@/views/message/template/index'),
-        meta: {title: 'messageTemplate'}
-      },
-      {
-        path: 'sender',
-        name: 'Message Sender',
-        component: () => import('@/views/message/sender/index'),
-        meta: {title: 'messageSender'}
-      }
-    ]
-  },
-  {path: '/404', component: () => import('@/views/404'), hidden: true}
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  }
 ]

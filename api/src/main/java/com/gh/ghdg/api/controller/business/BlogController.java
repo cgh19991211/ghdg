@@ -13,6 +13,7 @@ import com.gh.ghdg.businessMgr.service.BlogService;
 import com.gh.ghdg.businessMgr.service.BloggerInfoService;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
+import com.gh.ghdg.common.enums.Status;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
@@ -60,6 +61,7 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
      */
     @GetMapping("/queryPage")
     public Result queryByPage(@ModelAttribute Page page, @RequestParam(required = false) String tab){
+        page.addFilter("status", SearchFilter.Operator.NEQ, Status.失效);
         if(StrUtil.equals(tab,"hot")){
             //获取最热
             return queryHotspot(page);
@@ -140,10 +142,8 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         String[] latest = {"createdDate","lastModifiedDate"};
         Sort sort = Sort.by(Sort.Direction.DESC, latest);
         page.setSort(sort);
-        List<SearchFilter> filters = new ArrayList<>();
-        SearchFilter searchFilter = SearchFilter.build("bloggerId", SearchFilter.Operator.EQ, id);
-        filters.add(searchFilter);
-        page.setFilters(filters);
+        page.addFilter("bloggerId", SearchFilter.Operator.EQ, id);
+        page.addFilter("status", SearchFilter.Operator.NEQ,Status.失效);
         
         Page<Blog> blogPage = super.queryPage(page);
         List<TopicVo> data = new ArrayList<>();
@@ -158,6 +158,27 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         return Result.suc(topicVoPage);
     }
     
+    @GetMapping("/findStoredUpBlog")
+    public Result findStoredUpBlog(@ModelAttribute Page page,@RequestParam("id") String id){
+        String[] latest = {"createdDate","lastModifiedDate"};
+        Sort sort = Sort.by(Sort.Direction.DESC, latest);
+        page.setSort(sort);
+        page.addFilter("storeUp.bloggerId", SearchFilter.Operator.EQ, id);
+        page.addFilter("status", SearchFilter.Operator.NEQ,Status.失效);
+    
+        Page<Blog> blogPage = super.queryPage(page);
+        List<TopicVo> data = new ArrayList<>();
+        for(Blog blog:blogPage.getRecords()){
+            data.add(TopicVo.blogToTopicVo(blog));
+        }
+        Page<TopicVo> topicVoPage = new Page<>();
+        topicVoPage.setTotal(blogPage.getTotal())
+                .setSize(blogPage.getSize())
+                .setCurrent(blogPage.getCurrent())
+                .setRecords(data);
+        return Result.suc(topicVoPage);
+    }
+    
     @GetMapping("/findLikeTitle")
     public Result findLikeTitle(@RequestParam String title){
         return Result.suc("like title",blogService.findLikeTitle(title));
@@ -169,7 +190,7 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     }
     
     @GetMapping("/findByLabel")
-    public Result findByLabel(@RequestParam String labelId){
+    public Result findByLabel(@RequestParam String labelId,Integer page, Integer size){
         return Result.suc("by label id",blogService.findByLabel(labelId));
     }
     
@@ -182,8 +203,14 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         blog.setBloggerName(bloggerInfo.getBloggerName());
         blog.setBloggerAvatar(bloggerInfo.getAvatar());
         //敏感词过滤
-        String filtedContent = filter.filter(blogVo.getContent(),'x');
+        String content = blogVo.getContent();
+        if(StrUtil.isBlank(content)){
+            return Result.error(false,"内容不能为空",null,Constants.FAILED);
+        }
+        String filtedContent = filter.filter(content,'x');
         blog.setContent(filtedContent);
+        String filtedSummarize = filter.filter(blogVo.getSummarize(),'x');
+        blog.setSummarize(filtedSummarize);
         String filtedTitle = filter.filter(blogVo.getTitle(), 'x');
         blog.setTitle(filtedTitle);
         String[] labelIds = blogVo.getLabelIds();
@@ -204,9 +231,10 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         //敏感词过滤
         String filted = filter.filter(blogVo.getContent(),'x');
         String content = filted;
+        String filtedSummarize = filter.filter(blogVo.getSummarize(),'x');
         String[] labelIds = blogVo.getLabelIds();
     
-        return Result.suc("update success",service.updateBlog(blogId,title,content,labelIds));
+        return Result.suc("update success",service.updateBlog(blogId,title,content,filtedSummarize,labelIds));
     }
     
     @PostMapping("/delete")
@@ -245,6 +273,7 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
         page.setLimit(10);
         page.addFilter(SearchFilter.build("_id",SearchFilter.Operator.NEQ,blogId));
         page.addFilter(SearchFilter.build("bloggerId",SearchFilter.Operator.EQ,id));
+        page.addFilter("status", SearchFilter.Operator.NEQ,Status.失效);
         return Result.suc(super.queryPage(page));
     }
     
@@ -285,11 +314,28 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     
     @PostMapping("/favoriteBlog")
     public Result favoriteBlog(@RequestParam String blogId){
-        if(service.favoriteBlog(blogId)){
-            return Result.suc("favorite success");
-        }else{
-            return Result.error("favorite failed");
+        service.favoriteBlog(blogId);
+    
+        //添加动态--通过新建http请求的方式，请求dynamic的controller
+        try {
+            localHost = Inet4Address.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
+        String ip = localHost.getHostAddress();
+    
+        String dynamicUrl = "http://"+ip+":"+port+"/";
+        dynamicUrl += "business/dynamic/addDynamic";
+        Map<String,String> params = new HashMap<>();
+        params.put("blogId",blogId);
+        try{
+            params.put("action", URLEncoder.encode("收藏了文章","utf-8"));
+        }catch (UnsupportedEncodingException e){
+            System.out.println("对action的编码失败");
+            return Result.error("收藏成功，但是动态添加失败");
+        }
+        HttpKit.sendPost(dynamicUrl,params);
+        return Result.suc("收藏成功",true);
     }
     
     @PostMapping("/cancelFavoriteBlog")

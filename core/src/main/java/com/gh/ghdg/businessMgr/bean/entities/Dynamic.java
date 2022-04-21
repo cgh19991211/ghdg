@@ -125,7 +125,8 @@ public class Dynamic extends BaseMongoEntity{
     @Override
     public String toString() {
         return "Dynamic{" +
-                "belongId='" + belongId + '\'' +
+                "_id='" + _id + '\'' +
+                ", belongId='" + belongId + '\'' +
                 ", bloggerId='" + bloggerId + '\'' +
                 ", bloggerName='" + bloggerName + '\'' +
                 ", bloggerAvatar='" + bloggerAvatar + '\'' +

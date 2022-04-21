@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Convert;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,8 +24,8 @@ public class Comment extends BaseMongoEntity{
     private String content;
     private Date createdDate;// = Instant.now()
     private Status status = Status.审核中;//false代表禁用，不可见
-    private List<Response> responses;
-    private List<ThumbsUp> likes;//点赞该评论的人
+    private List<Response> responses = new ArrayList<>();
+    private List<ThumbsUp> likes = new ArrayList<>();//点赞该评论的人
     private Integer level = 1;//1级评论，二级评论，三级评论及往后以@的形式显示在二级评论下
     
     public Comment() {

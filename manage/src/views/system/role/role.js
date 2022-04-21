@@ -34,7 +34,8 @@ export default {
         version: '',
         pName: '',
         num: 1,
-        lastModifiedDate: null
+        lastModifiedDate: null,
+        remark: ''
       },
       rules: {
         code: [
@@ -119,7 +120,8 @@ export default {
         id: '',
         version: '',
         pName: '',
-        num: 1
+        num: 1,
+        remark: ''
 
       }
     },
@@ -137,7 +139,8 @@ export default {
             displaySeq: this.form.num,
             parent: this.form.pid,
             roleName: this.form.name,
-            roleCode: this.form.code
+            roleCode: this.form.code,
+            remark: this.form.remark
           }).then(response => {
             this.$message({
               message: '提交成功',

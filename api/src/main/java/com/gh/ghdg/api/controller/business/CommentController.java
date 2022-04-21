@@ -12,9 +12,12 @@ import com.gh.ghdg.businessMgr.service.CommentService;
 import com.gh.ghdg.businessMgr.utils.MDToText;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
+import com.gh.ghdg.common.enums.Status;
 import com.gh.ghdg.common.utils.HttpKit;
 import com.gh.ghdg.common.utils.Result;
+import com.gh.ghdg.sysMgr.bean.constant.PermissionCode;
 import com.odianyun.util.sensi.SensitiveFilter;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -56,10 +59,8 @@ public class CommentController extends BaseMongoController<Comment, CommentRepos
         String[] latest = {"createdDate","lastModifiedDate"};
         Sort sort = Sort.by(Sort.Direction.DESC, latest);
         page.setSort(sort);
-        List<SearchFilter> filters = new ArrayList<>();
-        SearchFilter searchFilter = SearchFilter.build("bloggerId", SearchFilter.Operator.EQ, bloggerId);
-        filters.add(searchFilter);
-        page.setFilters(filters);
+        page.addFilter("status", SearchFilter.Operator.NEQ, Status.失效);
+        page.addFilter("bloggerId", SearchFilter.Operator.EQ, bloggerId);
     
         Page<Comment> commentPage = super.queryPage(page);
     
@@ -87,6 +88,7 @@ public class CommentController extends BaseMongoController<Comment, CommentRepos
     public Result findAllCommentsOfBlog(@RequestParam String id, @ModelAttribute Page page){
         page.addFilter("blogId", SearchFilter.Operator.EQ,id);
         page.addFilter("level", SearchFilter.Operator.EQ,1);
+        page.addFilter("status", SearchFilter.Operator.NEQ,Status.失效);
 //        return Result.suc("comment of blog",commentService.findByBlogId(id));
         return Result.suc(service.queryPage(page));
     }
@@ -156,6 +158,40 @@ public class CommentController extends BaseMongoController<Comment, CommentRepos
             e.printStackTrace();
             return Result.error(false,HttpStatus.FORBIDDEN.getReasonPhrase(),null,HttpStatus.FORBIDDEN.value());
         }
+    }
+    
+    @PostMapping("/deleteByMgr")
+    public Result deleteCommentByMgr(String commentId){
+        super.delete(commentId,"comment");
+        return Result.suc("删除成功");
+    }
+    
+    @GetMapping("/list")
+    public Result commentList(@RequestParam(required = false) Integer curPage,
+                              @RequestParam(required = false) Integer size,
+                              @RequestParam(required = false) String keyword){
+        Page page = new Page();
+        if(curPage!=null)
+            page.setCurrent(curPage);
+        if(size!=null)
+            page.setSize(size);
+        if(keyword!=null)
+            page.addFilter("bloggerName", SearchFilter.Operator.EQ,keyword);
+        Page<Comment> commentPage = service.queryPage(page);
+        return Result.suc(commentPage);
+    }
+    
+    
+    @PostMapping("/freeze")
+    public Result freezeComment(String id){
+        service.freezeComment(id);
+        return Result.suc("freezed");
+    }
+    
+    @PostMapping("/unfreeze")
+    public Result unfreezeComment(String id){
+        service.unfreezeComment(id);
+        return Result.suc(null);
     }
     
     @PostMapping("/like")

@@ -54,13 +54,13 @@ public class Label extends BaseMongoEntity{
     @Override
     public String toString() {
         return "Label{" +
-                "name='" + name + '\'' +
+                "_id='" + _id + '\'' +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", icon='" + icon + '\'' +
-                ", blogNums='" + blogNums + '\'' +
+                ", blogNums=" + blogNums +
                 '}';
     }
-    
     
     @Override
     public boolean isNew(){

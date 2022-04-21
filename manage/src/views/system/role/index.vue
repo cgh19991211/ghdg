@@ -121,6 +121,11 @@
               <el-input v-model="form.num" type="number"></el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" minlength=1></el-input>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-form-item>
           <el-button type="primary" @click="save">{{ $t('button.submit') }}</el-button>

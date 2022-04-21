@@ -35,7 +35,8 @@ export default {
     bloggerMgr: '博主管理',
     blogMgr: '博客管理',
     categoryMgr: '分类管理',
-    labelMgr: '标签管理'
+    labelMgr: '标签管理',
+    commentMgr: '点评管理'
   },
   navbar: {
     logOut: '退出登录',

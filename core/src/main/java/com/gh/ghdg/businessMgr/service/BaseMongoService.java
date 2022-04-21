@@ -50,6 +50,7 @@ public abstract class BaseMongoService<T extends BaseMongoEntity, S extends Base
     }
     
     public Page<T> queryPage(Page page){
+        
         if(page.getFilters()==null)
             return myTemplate.queryPage(page,klass);
         else{

@@ -26,8 +26,8 @@ public class DynamicService extends BaseMongoService<Dynamic, DynamicRepository>
     @Resource
     private BlogRepository blogRepository;
     
-    public List<Dynamic> getDynamicList(String id){
-        List<Dynamic> dynamicList = dao.findByBelongId(id);
+    public List<Dynamic> getDynamicList(String bloggerName){
+        List<Dynamic> dynamicList = dao.findByBloggerName(bloggerName);
         return dynamicList==null?new ArrayList<Dynamic>():dynamicList;
     }
     

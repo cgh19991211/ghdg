@@ -22,11 +22,11 @@ public class DynamicController extends BaseMongoController<Dynamic, DynamicRepos
     
     @GetMapping("/page")
     public Result dynamicPage(@ModelAttribute Page page,
-                                @RequestParam String bloggerId){
+                                @RequestParam String bloggerName){
         Sort sort = Sort.by(Sort.Direction.DESC,"createdDate");
         page.setSort(sort);
         List<SearchFilter> searchFilterList = new ArrayList<>();
-        SearchFilter searchFilter = SearchFilter.build("bloggerId", SearchFilter.Operator.EQ, bloggerId);
+        SearchFilter searchFilter = SearchFilter.build("bloggerName", SearchFilter.Operator.EQ, bloggerName);
         searchFilterList.add(searchFilter);
         page.setFilters(searchFilterList);
     
