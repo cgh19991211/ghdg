@@ -12,6 +12,7 @@ import com.mongodb.client.result.UpdateResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import org.bson.Document;
@@ -79,45 +80,25 @@ public class BloggerInfoService extends BaseMongoService<BloggerInfo, BloggerInf
     }
     
     @Transactional
-    public void followBlogger(Idol idol){
+    public boolean followBlogger(Idol idol){
         String curBloggerId = JwtUtil.getCurBloggerId();
         BloggerInfo curBloggerInfo = findByBloggerId(curBloggerId);
-        
-        String command = "{update: \"blogger_info\"," +
-                "updates: [{" +
-                    "q: {\"bloggerId\":" + curBloggerId + "}" +
-                    "u: {$push:{\"idols\":" + idol + "}}" +
-                "}]}";
-        mongoTemplate.executeCommand(command);
-        
-        Idol cur = new Idol(curBloggerId,curBloggerInfo.getBloggerName(),curBloggerInfo.getAvatar(),curBloggerInfo.getSignature());
-        command = "{update: \"blogger_info\"," +
-                "updates: [{" +
-                "q: {\"bloggerId\":" + idol.getId() + "}" +
-                "u: {$push:{\"fans\":" + cur + "}}" +
-                "}]}";
-        mongoTemplate.executeCommand(command);
+        Query query = Query.query(Criteria.where("bloggerId").is(curBloggerId));
+        Update update = new Update();
+        update.addToSet("idols",idol);
+        UpdateResult result = mongoTemplate.updateFirst(query, update, BloggerInfo.class);
+        return result.wasAcknowledged();
     }
     
     @Transactional
-    public void unfollowBlogger(Idol idol){
+    public boolean unfollowBlogger(Idol idol){
         String curBloggerId = JwtUtil.getCurBloggerId();
         BloggerInfo curBloggerInfo = findByBloggerId(curBloggerId);
-        
-        String command = "{update: \"blogger_info\"," +
-                "updates: [{" +
-                "q: {\"bloggerId\":" + curBloggerId + "}" +
-                "u: {$pull:{\"idols\":" + idol + "}}" +
-                "}]}";
-        mongoTemplate.executeCommand(command);
-    
-        Idol cur = new Idol(curBloggerId,curBloggerInfo.getBloggerName(),curBloggerInfo.getAvatar(),curBloggerInfo.getSignature());
-        command = "{update: \"blogger_info\"," +
-                "updates: [{" +
-                "q: {\"bloggerId\":" + idol.getId() + "}" +
-                "u: {$pull:{\"fans\":" + cur + "}}" +
-                "}]}";
-        mongoTemplate.executeCommand(command);
+        Query query = Query.query(Criteria.where("bloggerId").is(curBloggerId));
+        Update update = new Update();
+        update.pull("idols",idol);
+        UpdateResult result = mongoTemplate.updateFirst(query, update, BloggerInfo.class);
+        return result.wasAcknowledged();
     }
 
     @Transactional

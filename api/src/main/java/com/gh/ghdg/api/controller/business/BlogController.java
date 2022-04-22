@@ -119,7 +119,8 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     @GetMapping("/list")
     public Result getBlogList(@RequestParam(required = false) Integer curPage,
                                   @RequestParam(required = false) Integer size,
-                                  @RequestParam(required = false) String keyword){
+                                  @RequestParam(required = false) String keyword,
+                              @RequestParam(required = false) Status status){
         Page page = new Page();
         if(curPage!=null)
             page.setCurrent(curPage);
@@ -127,6 +128,8 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
             page.setSize(size);
         if(keyword!=null)
             page.addFilter("bloggerName", SearchFilter.Operator.EQ,keyword);
+        if(status!=null)
+            page.addFilter("status", SearchFilter.Operator.EQ,status);
         Page<Blog> blogPage = service.queryPage(page);
         return Result.suc(blogPage);
     }
@@ -359,6 +362,11 @@ public class BlogController extends BaseMongoController<Blog, BlogRepository, Bl
     public Result unfreezeBlog(String id){
         service.unfreezeBlog(id);
         return Result.suc(null);
+    }
+    
+    @PostMapping("/report")
+    public Result reportBlog(String blogId,@RequestParam(defaultValue = "用户没有填写理由") String reason){
+        return Result.suc("举报成功，管理员审核通过后将会封禁该博客。",service.reportBlog(blogId,reason));
     }
     
 }

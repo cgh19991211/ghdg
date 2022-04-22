@@ -251,4 +251,14 @@ public class BlogService extends BaseMongoService<Blog, BlogRepository> {
         }
         dao.save(blog);
     }
+    
+    @Transactional
+    public boolean reportBlog(String blogId, String reason){
+        Query query = Query.query(Criteria.where("_id").is(blogId));
+        Update update = new Update();
+        update.addToSet("reason",reason);
+        update.set("status", Status.审核中);
+        UpdateResult result = mongoTemplate.updateFirst(query, update, Blog.class);
+        return result.wasAcknowledged();
+    }
 }

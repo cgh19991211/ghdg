@@ -38,6 +38,7 @@ public class Blog extends BaseMongoEntity{
     private List<Label> labels = new ArrayList<>();
     //状态
     private Status status = Status.审核中;
+    private List<String> reason = new ArrayList<>();
     private Boolean isPrivate = false;
     private Date createdDate;
     private Date lastModifiedDate;
@@ -46,7 +47,7 @@ public class Blog extends BaseMongoEntity{
     public Blog() {
     }
     
-    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, String summarize, List<ThumbsUp> likes, Integer viewNums, List<ThumbsUp> storeUp, String icon, Category category, List<Label> labels, Status status, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
+    public Blog(String bloggerId, String bloggerName, String bloggerAvatar, String title, String content, String summarize, List<ThumbsUp> likes, Integer viewNums, List<ThumbsUp> storeUp, String icon, Category category, List<Label> labels, Status status, List<String> reason, Boolean isPrivate, Date createdDate, Date lastModifiedDate) {
         this.bloggerId = bloggerId;
         this.bloggerName = bloggerName;
         this.bloggerAvatar = bloggerAvatar;
@@ -60,6 +61,7 @@ public class Blog extends BaseMongoEntity{
         this.category = category;
         this.labels = labels;
         this.status = status;
+        this.reason = reason;
         this.isPrivate = isPrivate;
         this.createdDate = createdDate;
         this.lastModifiedDate = lastModifiedDate;
@@ -205,6 +207,14 @@ public class Blog extends BaseMongoEntity{
         this.summarize = summarize;
     }
     
+    public List<String> getReason() {
+        return reason;
+    }
+    
+    public void setReason(List<String> reason) {
+        this.reason = reason;
+    }
+    
     @Override
     public String toString() {
         return "Blog{" +
@@ -222,6 +232,7 @@ public class Blog extends BaseMongoEntity{
                 ", category=" + category +
                 ", labels=" + labels +
                 ", status=" + status +
+                ", reason=" + reason +
                 ", isPrivate=" + isPrivate +
                 ", createdDate=" + createdDate +
                 ", lastModifiedDate=" + lastModifiedDate +

@@ -40,7 +40,7 @@ public class Blacklist extends BaseMongoEntity{
         this.bloggerName = bloggerName;
     }
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     public Date getUntil() {
         return until;
@@ -61,10 +61,13 @@ public class Blacklist extends BaseMongoEntity{
     @Override
     public String toString() {
         return "Blacklist{" +
-                "bloggerId='" + bloggerId + '\'' +
+                "_id='" + _id + '\'' +
+                ", bloggerId='" + bloggerId + '\'' +
                 ", bloggerName='" + bloggerName + '\'' +
                 ", reason='" + reason + '\'' +
                 ", until=" + until +
                 '}';
     }
+    @Override
+    public boolean isNew(){return this._id==null;}
 }

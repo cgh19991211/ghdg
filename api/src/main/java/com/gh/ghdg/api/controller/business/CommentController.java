@@ -161,8 +161,8 @@ public class CommentController extends BaseMongoController<Comment, CommentRepos
     }
     
     @PostMapping("/deleteByMgr")
-    public Result deleteCommentByMgr(String commentId){
-        super.delete(commentId,"comment");
+    public Result deleteCommentByMgr(String id){
+        super.delete(id,"comment");
         return Result.suc("删除成功");
     }
     

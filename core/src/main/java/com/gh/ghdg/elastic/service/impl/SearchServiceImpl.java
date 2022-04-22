@@ -42,7 +42,7 @@ public class SearchServiceImpl implements SearchService {
     }
     
     @Override
-    public Object searchBlogger(String keyword, Integer curPage,Integer size) throws IOException {
+    public Page searchBlogger(String keyword, Integer curPage,Integer size) throws IOException {
         if(curPage<=1)curPage = 1;
         //索引不存在则直接返回空集合
         if(!indexIsExists(BLOGGER_INFO)){
@@ -83,7 +83,7 @@ public class SearchServiceImpl implements SearchService {
     }
     
     @Override
-    public Object searchBlog(String keyword,Integer curPage,Integer size ) throws IOException{
+    public Page searchBlog(String keyword,Integer curPage,Integer size ) throws IOException{
         if(curPage<=1)curPage = 1;
         if(!indexIsExists(BLOG)){
             return null;
@@ -119,7 +119,9 @@ public class SearchServiceImpl implements SearchService {
         page.setTotal((int) response.getHits().getTotalHits().value);
         List<Map<String,Object>> records = new ArrayList<>();
         for (SearchHit hit : response.getHits().getHits()) {
-            records.add(0,hit.getSourceAsMap());
+            Map<String, Object> sourceAsMap = hit.getSourceAsMap();
+            sourceAsMap.put("id",hit.getId());
+            records.add(0,sourceAsMap);
         }
         page.setRecords(records);
         return page;

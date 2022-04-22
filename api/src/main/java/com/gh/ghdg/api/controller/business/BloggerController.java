@@ -6,8 +6,10 @@ import com.gh.ghdg.businessMgr.Repository.BloggerRepository;
 import com.gh.ghdg.businessMgr.service.BloggerService;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.commonVo.SearchFilter;
+import com.gh.ghdg.common.enums.Status;
 import com.gh.ghdg.common.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -44,7 +46,8 @@ public class BloggerController extends BaseMongoController<Blogger, BloggerRepos
     public Result getBloggerInfoList(
             @RequestParam(required = false) Integer curPage,
             @RequestParam(required = false) Integer size,
-            @RequestParam(required = false) String bloggerName){
+            @RequestParam(required = false) String bloggerName,
+            @RequestParam(required = false)Status status){
         Page page = new Page();
         if(curPage!=null)
             page.setCurrent(curPage);
@@ -52,7 +55,8 @@ public class BloggerController extends BaseMongoController<Blogger, BloggerRepos
             page.setSize(size);
         if(!StrUtil.isBlank(bloggerName))
             page.addFilter("account", SearchFilter.Operator.EQ,bloggerName);
-        
+        if(status!=null)
+            page.addFilter("status", SearchFilter.Operator.EQ,status);
         return Result.suc(service.queryPage(page));
     }
     
@@ -75,14 +79,14 @@ public class BloggerController extends BaseMongoController<Blogger, BloggerRepos
 //    @RequiresPermissions()
     public Result ban(@RequestParam String bloggerId,
                       @RequestParam(required = false) String reason,
-                      @RequestParam(required = false) Date date){
+                      @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm") Date until){
         if(StrUtil.isEmpty(reason)){
             reason = "no reason";
         }
-        if(date==null){
-            date = new Date(System.currentTimeMillis()+1800000);//默认值是三十分钟之后
+        if(until==null){
+            until = new Date(System.currentTimeMillis()+1800000);//默认值是三十分钟之后
         }
-        bloggerService.ban(bloggerId,reason,date);
+        bloggerService.ban(bloggerId,reason,until);
         return Result.suc("成功拉进黑名单");
     }
     

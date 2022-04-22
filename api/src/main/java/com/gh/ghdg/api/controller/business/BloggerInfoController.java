@@ -9,11 +9,13 @@ import com.gh.ghdg.businessMgr.service.BloggerInfoService;
 import com.gh.ghdg.common.commonVo.Page;
 import com.gh.ghdg.common.security.JwtUtil;
 import com.gh.ghdg.common.utils.Result;
+import com.gh.ghdg.common.utils.constant.Constants;
 import com.gh.ghdg.common.utils.exception.MyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.scanner.Constant;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -103,15 +105,15 @@ public class BloggerInfoController extends BaseMongoController<BloggerInfo, Blog
     }
  
     @PostMapping("/followBlogger")
-    public void followBlogger(@ModelAttribute Idol idol){
-        if(StrUtil.isEmpty(idol.getId()))return;
-        bloggerInfoService.followBlogger(idol);
+    public Result followBlogger(@RequestBody Idol idol){
+        if(StrUtil.isEmpty(idol.getId()))return Result.error(false,"要关注的人不存在",null, Constants.FAILED);
+        return Result.suc(bloggerInfoService.followBlogger(idol));
     }
     
     @PostMapping("/unfollowBlogger")
-    public void unfollowBlogger(@ModelAttribute Idol idol){
-        if(StrUtil.isEmpty(idol.getId()))return;
-        bloggerInfoService.unfollowBlogger(idol);
+    public Result unfollowBlogger(@RequestBody Idol idol){
+        if(StrUtil.isEmpty(idol.getId()))return Result.error(false,"要取关的人不存在",null, Constants.FAILED);
+        return Result.suc(bloggerInfoService.unfollowBlogger(idol));
     }
     
     @PostMapping("/favoriteBlog")
